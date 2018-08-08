@@ -1,71 +1,154 @@
 <template>
   <div class="app-container">
-    <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row>
-      <el-table-column align="center" label='ID' width="95">
+    <div class="filter-container">
+      <el-input style="width: 350px;margin-right:40px" class="filter-item" placeholder="所属桥梁编号" v-model="listQuery.title">
+      </el-input>
+       <el-input style="width: 350px;" class="filter-item" placeholder="服务器编号" v-model="listQuery.importance">
+      </el-input>
+      <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary">查找</el-button>
+      <el-button class="filter-item" style="margin-left: 200px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加服务器</el-button>
+    </div>
+
+    <el-table :key='tableKey' :data="list" v-loading="listLoading" border fit highlight-current-row
+      style="width: 100%;min-height:550px;">
+      <el-table-column width="150px" align="center" label="服务器编号">
         <template slot-scope="scope">
-          {{scope.$index}}
+          <span>{{scope.row.num}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Title">
+      <el-table-column width="150px" align="center" label="采集盒数量">
         <template slot-scope="scope">
-          {{scope.row.title}}
+          <span>{{scope.row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
+      <el-table-column min-width="150px" align="center" label="所属桥梁">
         <template slot-scope="scope">
-          <span>{{scope.row.author}}</span>
+          <span>{{scope.row.address}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Pageviews" width="110" align="center">
+      <el-table-column min-width="200px" align="center" label="备注信息">
         <template slot-scope="scope">
-          {{scope.row.pageviews}}
+          <span>{{scope.row.message}}</span>
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" label="Status" width="110" align="center">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span>{{scope.row.display_time}}</span>
+      <el-table-column align="center" label="Actions" width="230" class-name="small-padding fixed-width">
+        <template slot-scope="scope"> 
+          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button> 
+          <el-button size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
+
+    <div class="pagination-container" style="text-align:center;">
+      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="listQuery.page" :page-size="listQuery.limit" layout="prev, pager, next, jumper" :total="total">
+      </el-pagination>
+    </div>
   </div>
 </template>
 
 <script>
-import { getList } from '@/api/table'
+//  import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
+import waves from '@/directive/waves'
+//  import { parseTime } from '@/utils'
 
 export default {
+  name: 'complexTable',
+  directives: {
+    waves
+  },
   data() {
     return {
+      tableKey: 0,
       list: null,
-      listLoading: true
+      dataList: { total: 20, data: [{ num: 1111, name: '北京科技大学', address: '北京', org: '机电学院', message: '想落户上海，你还差几分？抢人才看出身，清华北大照单全收' }] },
+      total: null,
+      listLoading: true,
+      listQuery: {
+        page: 1,
+        limit: 10,
+        importance: undefined,
+        title: undefined,
+        type: undefined,
+        sort: '+id'
+      },
+      dialogFormVisible: false,
+      dialogStatus: '',
+      textMap: {
+        update: 'Edit',
+        create: 'Create'
+      }
     }
   },
   filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
-      }
-      return statusMap[status]
+    typeFilter(type) {
+
     }
   },
   created() {
-    this.fetchData()
+    this.getList()
   },
   methods: {
-    fetchData() {
+    getList() {
       this.listLoading = true
-      getList(this.listQuery).then(response => {
-        this.list = response.data.items
+      this.list = this.dataList.data
+      this.total = this.dataList.total
+      setTimeout(() => {
         this.listLoading = false
+      }, 1.5 * 1000)
+      /*  fetchList(this.listQuery).then(response => {
+        this.list = this.dataList.data
+        this.total =  this.dataList.total
+        setTimeout(() => {
+          this.listLoading = false
+        }, 1.5 * 1000)
+      })  */
+    },
+    handleFilter() {
+      this.listQuery.page = 1
+      //  this.getList()
+    },
+    handleSizeChange(val) {
+      this.listQuery.limit = val
+      //  this.getList()
+    },
+    handleCurrentChange(val) {
+      this.listQuery.page = val
+      //  this.getList()
+    },
+    handleModifyStatus(row, status) {
+      this.$confirm('已成功删除该传感器', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'success',
+        showCancelButton: false,
+        center: true
+      }).then(() => {
+
+      }).catch(() => {
+
       })
+      /*  this.$confirm('确实要删除:桥梁12324吗？, 是否继续?', '提示', {
+      confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+
+        }); */
+    },
+    resetTemp() {
+
+    },
+    handleCreate() {
+
+    },
+    handleUpdate(row) {
     }
   }
 }
