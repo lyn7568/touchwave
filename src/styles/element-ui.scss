@@ -27,3 +27,27 @@
     }
   }
 }
+.el-dialog{
+  margin: 0 auto 50px;
+}
+.el-dialog__header{
+  border-bottom: 1px solid #ebeef5;
+}
+.el-dialog__body{
+  padding:20px 
+}
+
+.pagination-container{
+  margin:20px;
+  text-align:center;
+}
+
+.el-btn-col{
+  margin: 20px 0;
+  .el-btn-col-box{
+    text-align:center;
+    .el-button{
+      padding: 12px 50px;
+    }
+  }
+}

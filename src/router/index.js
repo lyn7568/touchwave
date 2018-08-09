@@ -8,6 +8,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '../views/layout/Layout'
+import LayoutC from '../views/layout/LayoutC'
 
 /**
 * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
@@ -27,6 +28,25 @@ export const constantRouterMap = [
   { path: '/404', component: () => import('@/views/404'), hidden: true },
 
   {
+    path: '/bridgesConsole',
+    component: LayoutC,
+    redirect: '/bridgesConsole/birdgeLists',
+    hidden: true,
+    children: [
+      {
+        path: 'birdgeLists',
+        name: 'bridgeLists',
+        component: () => import('@/views/bridgesConsole/birdgeLists/index')
+      },
+      {
+        path: 'dashboardC',
+        name: 'dashboardC',
+        component: () => import('@/views/bridgesConsole/dashboardC/index')
+      }
+    ]
+  },
+
+  {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
@@ -37,19 +57,19 @@ export const constantRouterMap = [
       component: () => import('@/views/dashboard/index')
     }]
   },
-
   {
     path: '/peoplesManage',
     component: Layout,
     redirect: '/peoplesManage/infoManage',
     name: 'peoplesManage',
     meta: { title: '用户系统管理', icon: 'peoples' },
+    alwaysShow: true,
     children: [
       {
         path: 'infoManage',
         name: 'infoManage',
         component: () => import('@/views/peoplesManage/infoManage/index'),
-        meta: { title: '用户信息管理', icon: 'peoples' }
+        meta: { title: '用户信息管理' }
       }
     ]
   },
