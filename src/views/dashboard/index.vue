@@ -23,9 +23,9 @@ export default {
     ])
   },
   created() {
-    if (!this.roles.includes('admin')) {
-      this.currentRole = 'otherDashboard'
-    }
+    // if (this.roles !== 1) {
+    //   this.currentRole = 'otherDashboard'
+    // }
   }
 }
 </script>

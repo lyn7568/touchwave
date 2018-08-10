@@ -3,6 +3,9 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const user = {
   state: {
+    user: '',
+    status: '',
+    code: '',
     token: getToken(),
     name: '',
     avatar: '',
@@ -10,6 +13,12 @@ const user = {
   },
 
   mutations: {
+    SET_CODE: (state, code) => {
+      state.code = code
+    },
+    SET_STATUS: (state, status) => {
+      state.status = status
+    },
     SET_TOKEN: (state, token) => {
       state.token = token
     },
@@ -25,14 +34,14 @@ const user = {
   },
 
   actions: {
-    // 登录
-    Login({ commit }, userInfo) {
+    // 用户名登录
+    LoginByUsername({ commit }, userInfo) {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
-        login(username, userInfo.password).then(response => {
-          const data = response.data
-          setToken(data.token)
-          commit('SET_TOKEN', data.token)
+        login(username, userInfo.password, vc).then(response => {
+          // const data = response.data
+          // commit('SET_TOKEN', data.token)
+          setToken(response.data.token)
           resolve()
         }).catch(error => {
           reject(error)
@@ -41,17 +50,21 @@ const user = {
     },
 
     // 获取用户信息
-    GetInfo({ commit, state }) {
+    GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getInfo(state.token).then(response => {
-          const data = response.data
-          if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', data.roles)
-          } else {
-            reject('getInfo: roles must be a non-null array !')
+        getInfo().then(response => {
+          if (response.success) {
+            console.log(response)
           }
-          commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
+          // if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
+          //   reject('error')
+          // }
+          // const data = response.data
+          // if (data.type) { // 验证返回的roles是否是一个非空数组
+          //   commit('SET_ROLES', data.type)
+          // }
+          // commit('SET_NAME', data.name)
+          // commit('SET_AVATAR', data.avatar)
           resolve(response)
         }).catch(error => {
           reject(error)

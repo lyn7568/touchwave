@@ -1,9 +1,9 @@
 <template>
   <div class="dashboard-editor-container">
-
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+  超级管理员，欢迎您
+   <!--  <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <line-chart :chart-data="lineChartData"></line-chart>
-    </el-row>
+    </el-row> -->
 
    <!--  <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">

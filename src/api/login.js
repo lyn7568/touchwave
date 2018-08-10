@@ -1,27 +1,44 @@
 import request from '@/utils/request'
 
-export function login(username, password) {
+export function login(account, pw, vc) {
   return request({
-    url: '/user/login',
+    url: '/ajax/sys/login',
     method: 'post',
     data: {
-      username,
-      password
+      account,
+      pw,
+      vc
     }
   })
 }
 
-export function getInfo(token) {
+export function getInfo(params) {
   return request({
-    url: '/user/info',
+    url: '/ajax/sys/user',
     method: 'get',
-    params: { token }
+    params
   })
 }
 
 export function logout() {
+  // return request({
+  //   url: '/user/logout',
+  //   method: 'post'
+  // })
+}
+
+export function isReg(params) {
   return request({
-    url: '/user/logout',
-    method: 'post'
+    url: '/ajax/sys/check',
+    method: 'get',
+    params
+  })
+}
+
+export function getMsgPhone(params) {
+  return request({
+    url: '/ajax/sys/resetPwMobile',
+    method: 'get',
+    params
   })
 }

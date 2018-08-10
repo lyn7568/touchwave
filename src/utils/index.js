@@ -1,6 +1,7 @@
 /**
  * Created by jiachenpan on 16/11/18.
  */
+export const comUrl = 'http://localhost:90'
 
 export function parseTime(time, cFormat) {
   if (arguments.length === 0) {
@@ -57,6 +58,13 @@ export function formatTime(time, option) {
   }
 }
 
+export function param2Obj(url) {
+  const search = url.split('?')[1]
+  if (!search) {
+    return {}
+  }
+  return JSON.parse('{"' + decodeURIComponent(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}')
+}
 export function debounce(func, wait, immediate) {
   let timeout, args, context, timestamp, result
 
