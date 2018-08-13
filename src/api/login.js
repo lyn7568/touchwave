@@ -1,14 +1,10 @@
 import request from '@/utils/request'
 
-export function login(account, pw, vc) {
+export function login(params) {
   return request({
     url: '/ajax/sys/login',
     method: 'post',
-    data: {
-      account,
-      pw,
-      vc
-    }
+    params
   })
 }
 

@@ -44,11 +44,12 @@ export const constantRouterMap = [
     hidden: true,
     children: [{
       path: 'dashboard',
-      component: () => import('@/views/dashboard/index'),
+      component: () => import('@/views/dashboard'),
       name: 'dashboard',
       meta: { title: '主页', noCache: true }
     }]
   }
+
 ]
 
 // 实例化vue的时候只挂载constantRouter
@@ -66,12 +67,12 @@ export const asyncRouterMap = [
   {
     path: '/peoplesManage',
     component: Layout,
-    redirect: '/peoplesManage/infoManage/index',
+    redirect: '/peoplesManage/infoManage',
     name: 'peoplesManage',
     meta: {
       title: '用户系统管理',
       icon: 'peoples',
-      roles: ['admin']
+      roles: ['1']
     },
     alwaysShow: true,
     children: [
@@ -86,12 +87,12 @@ export const asyncRouterMap = [
   {
     path: '/baseInfoManage',
     component: Layout,
-    redirect: '/baseInfoManage/bridgesInfo/index',
+    redirect: '/baseInfoManage/bridgesInfo',
     name: 'BaseInfoManage',
     meta: {
       title: '基础信息管理',
       icon: 'list',
-      roles: ['admin']
+      roles: ['1']
     },
     children: [
       {
@@ -126,7 +127,7 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/bridgesConsole/bridgeDetail',
     meta: {
-      roles: ['other']
+      roles: ['0']
     },
     children: [
       {

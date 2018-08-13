@@ -53,11 +53,11 @@ export default {
       }
     }
     return {
-      imgVerifyCode: '',
       imgVcUrl: '',
       loginForm: {
         username: '',
-        password: ''
+        password: '',
+        imgVerifyCode: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validPhone }],
@@ -83,10 +83,12 @@ export default {
       }
     },
     handleLogin() {
+      alert(111)
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
           this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
+            alert(333)
             this.loading = false
             this.$router.push({ path: '/' })
           }).catch(() => {

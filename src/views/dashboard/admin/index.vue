@@ -53,6 +53,9 @@ export default {
   components: {
     LineChart
   },
+  created() {
+    this.toPath()
+  },
   data() {
     return {
       lineChartData: lineChartData.newVisitis
@@ -61,6 +64,9 @@ export default {
   methods: {
     handleSetLineChartData(type) {
       this.lineChartData = lineChartData[type]
+    },
+    toPath() {
+      this.$router.push({ path: '/peoplesManage/infoManage' })
     }
   }
 }

@@ -23,9 +23,9 @@ export default {
     ])
   },
   created() {
-    // if (this.roles !== 1) {
-    //   this.currentRole = 'otherDashboard'
-    // }
+    if (this.roles.includes('0')) {
+      this.currentRole = 'otherDashboard'
+    }
   }
 }
 </script>
