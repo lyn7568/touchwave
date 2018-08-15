@@ -5,7 +5,7 @@
     </div>
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
-      	<div>您好，{ name }</div>
+      	<div>您好，{{ name }}</div>
         <i class="el-icon-caret-bottom"></i>
       </div>
       <el-dropdown-menu class="user-dropdown" slot="dropdown">

@@ -24,7 +24,7 @@
             <span>实时监测</span>
           </div>
           <el-row>
-            <line-chart :chart-data="lineChartData"></line-chart>
+            <!-- <line-chart :chart-data="lineChartData"></line-chart> -->
           </el-row>
         </el-card>
       </el-col>

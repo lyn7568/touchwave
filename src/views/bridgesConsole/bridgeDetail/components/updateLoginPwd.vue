@@ -1,6 +1,9 @@
 <template>
   <el-dialog title="修改登录密码" ref="ruleForm" :visible.sync="dialogTableVisible" width="460px">
     <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" class="demo-ruleForm">
+      <el-form-item prop="oldpass">
+        <el-input type="password" v-model="ruleForm2.oldpass" placeholder="请输入您的旧密码" auto-complete="off"></el-input>
+      </el-form-item>
       <el-form-item prop="pass">
         <el-input type="password" v-model="ruleForm2.pass" placeholder="请设置您的新密码" auto-complete="off"></el-input>
       </el-form-item>
@@ -18,6 +21,8 @@
 </template>
 
 <script>
+import { changePw } from '@/api/login'
+import { Alert } from 'element-ui'
 
 export default {
   data() {
@@ -45,10 +50,14 @@ export default {
     return {
       dialogTableVisible: false,
       ruleForm2: {
+        oldpass: '',
         pass: '',
         checkPass: ''
       },
       rules2: {
+        oldpass: [
+          { required: true, message: '请输入您的旧密码', trigger: 'blur' }
+        ],
         pass: [
           { validator: validatePass, trigger: 'blur' }
         ],
@@ -62,41 +71,24 @@ export default {
     resetPwd(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          // this.$axios.post(httpUrl.hQuery.sign.resetpw, {
-          //   code: this.resetCode,
-          //   pw: this.ruleForm2.pass
-          // }).then(res => {
-          //   console.log(res);
-          //   if (res.success) {
-          //     this.$alert('您可以使用新密码登录您的账户了', '恭喜您，您的密码重置成功！', {
-          //       confirmButtonText: '重新登录',
-          //       type: 'success',
-          //       center: true,
-          //       callback: action => {
-          //         if (action === 'confirm') {
-          //           this.$router.push({path: '/loginPlat'});
-          //         };
-          //       }
-          //     });
-          //   } else {
-          //     if (res.code === -600001) {
-          //       this.$alert('小提示：邮件内的链接有效时长为10分钟', '很抱歉，当前的链接已失效。', {
-          //         confirmButtonText: '重新找回密码',
-          //         type: 'warning',
-          //         center: true,
-          //         callback: action => {
-          //           if (action === 'confirm') {
-          //             this.stepFisrt = true;
-          //             this.stepSecond = false;
-          //             this.stepThird = false;
-          //             this.stepVal = 0;
-          //           };
-          //         }
-          //       });
-          //       return;
-          //     };
-          //   };
-          // });
+          const params = {
+            oldPw: this.ruleForm2.oldpass,
+            newpw: this.ruleForm2.checkPass
+          }
+          changePw(params).then((res) => {
+            if (res.success) {
+              Alert('提示', '密码修改成功！', {
+                confirmButtonText: '确定',
+                type: 'success',
+                center: true
+                // callback: action => {
+                //   if (action === 'confirm') {
+                //     this.$router.push({path: '/loginPlat'})
+                //   }
+                // }
+              })
+            }
+          })
         } else {
           return false
         }

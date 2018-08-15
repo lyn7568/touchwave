@@ -1,5 +1,5 @@
 /**
- * Created by jiachenpan on 16/11/18.
+ * Created by luyanan on 18/8/13.
  */
 export const comUrl = 'http://localhost:90'
 

@@ -23,7 +23,7 @@ export default {
     ])
   },
   created() {
-    if (this.roles.includes('0')) {
+    if (this.roles.indexOf('1') === -1) {
       this.currentRole = 'otherDashboard'
     }
   }

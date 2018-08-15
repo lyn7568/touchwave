@@ -13,7 +13,7 @@
         <span class="svg-container">
           <svg-icon icon-class="password"></svg-icon>
         </span>
-        <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
+        <el-input name="password" :type="pwdType" v-model="loginForm.password" autoComplete="on"
           placeholder="请输入登录密码"></el-input>
           <span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye" /></span>
       </el-form-item>
@@ -25,7 +25,7 @@
         <img slot="append" :src="imgVcUrl" @click="changeImgVc" /></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
+        <el-button class="log-btn" type="primary" :loading="loading" @click.native.prevent="handleLogin" @keyup.enter.native="handleLogin">登录</el-button>
       </el-form-item>
       <el-form-item class="el-form-find">
         <el-button type="text" @click.native.prevent="goBackPwd">忘记密码？</el-button>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-// import { isvalidUsername } from '@/utils/validate'
+import { Message } from 'element-ui'
 import { getPictureVC } from '@/api/pictureVc'
 import '@/styles/loginform.scss'
 
@@ -83,14 +83,44 @@ export default {
       }
     },
     handleLogin() {
-      alert(111)
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
-            alert(333)
+          this.$store.dispatch('LoginByUsername', this.loginForm).then((response) => {
             this.loading = false
-            this.$router.push({ path: '/' })
+            if (response.success) {
+              if (response.data) {
+                const dataS = response.data
+                if (dataS.active) {
+                  this.$store.dispatch('GetUserInfo').then(res => {
+                  })
+                  this.$router.push({ path: '/' })
+                } else {
+                  Message.error('您的账号已经被禁用')
+                  return
+                }
+              } else {
+                Message.error('登录账号与密码不匹配')
+                return
+              }
+            } else {
+              const errorCode = [{
+                code: -60001,
+                msg: '图形验证码不存在'
+              }, {
+                code: -60002,
+                msg: '图形验证码超时'
+              }, {
+                code: -60003,
+                msg: '图形验证码不正确'
+              }]
+              for (let i = 0; i < errorCode.length; i++) {
+                if (response.code === errorCode[i].code) {
+                  Message.error(errorCode[i].msg)
+                  return
+                }
+              }
+            }
           }).catch(() => {
             this.loading = false
           })

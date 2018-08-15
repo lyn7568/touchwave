@@ -6,19 +6,17 @@
           <div class="list-item">
             <el-row>
               <el-col :span="12">
-                <el-form-item label="服务器编号">000000001</el-form-item>
+                <el-form-item label="服务器编号">{{item.code}}</el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="采集器数量">2</el-form-item>
+                <el-form-item label="采集器数量">{{item.devices}}</el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="所属桥梁">青岛跨海大桥</el-form-item>
+                <el-form-item label="所属桥梁">{{item.bridgeId}}</el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="备注" class="el-to-block"><br />
-                  <div class="textarea-div">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar sic tempor. Sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus pronin sapien nunc accuan eget.
-                  </div>
+                  <div class="textarea-div">{{item.remark}}</div>
                 </el-form-item>
               </el-col>
             </el-row>

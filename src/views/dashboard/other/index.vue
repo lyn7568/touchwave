@@ -1,13 +1,13 @@
 <template>
   <div class="dashboard-editor-container">
     <el-row class="panel-group" :gutter="40">
-      <el-col :xs="24" :sm="12" :lg="6" class="card-panel-col" v-for="item in [0,1,2,3,4]" :key="item.id" @click.native="goToDashboardC">
+      <el-col :xs="24" :sm="12" :lg="6" class="card-panel-col" v-for="item in dataList" :key="item.index" @click.native="goToDashboardC(item.id)">
         <div class='card-panel'>
           <div class="card-panel-icon-wrapper">
-            <div class="card-image" style="background-image: url(/static/touchwave.png);"></div>
+            <div class="card-image" :style="{ backgroundImage: 'url(/data/bridge'+ item.img +')'}"></div>
           </div>
           <div class="card-panel-description">
-            <div class="card-panel-text">桥梁名称 <span>山东青岛跨海大桥A段</span></div>
+            <div class="card-panel-text">桥梁名称 <span>{{item.shortName}}</span></div>
             <div class="card-panel-text">未读报警 10条</div>
           </div>
         </div>
@@ -16,37 +16,62 @@
     <div class="pagination-container">
       <el-pagination
         background
-        @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page.sync="currentPage"
-        :page-size="4"
+        :page-size="9"
         layout="prev, pager, next, jumper"
-        :total="10">
+        :total="total">
       </el-pagination>
     </div>
   </div>
 </template>
 
 <script>
+import { getBridgeList } from '@/api/table'
 
 export default {
   data() {
     return {
-      currentPage: 1
+      listParameters: {},
+      total: 0,
+      dataList: [],
+      ifDefault: false
     }
   },
+  created() {
+    this.listParameters = {
+      active: 1,
+      pageSize: 10,
+      pageNo: 1
+    }
+    this.getBridgeLists()
+  },
   components: {
-
   },
   methods: {
-    goToDashboardC() {
-      this.$router.push({ path: '/bridgesConsole' })
+    getBridgeLists() {
+      const param = this.listParameters
+      getBridgeList(param).then(res => {
+        if (res.success) {
+          if (res.data.data.length === 0) {
+            this.ifDefault = true
+          } else {
+            this.ifDefault = false
+          }
+          this.dataList = res.data.data
+          // this.disposeData(res.data.data);
+          this.total = res.data.total
+        }
+      })
     },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
+    goToDashboardC(id) {
+      this.$router.push({
+        path: '/bridgesConsole/bridgeDetail',
+        query: { bridgeId: id }
+      })
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
+      this.expertParameters.pageNo = val
+      this.getBridgeLists()
     }
   }
 }

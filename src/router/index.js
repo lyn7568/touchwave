@@ -8,7 +8,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '../views/layout/Layout'
-// import LayoutC from '../views/layout/LayoutC'
+import LayoutC from '../views/layout/LayoutC'
 
 /** note: submenu only apppear when children.length>=1
 *   detail see  https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -48,8 +48,25 @@ export const constantRouterMap = [
       name: 'dashboard',
       meta: { title: '主页', noCache: true }
     }]
-  }
+  },
 
+  {
+    path: '/bridgesConsole',
+    component: LayoutC,
+    redirect: '/bridgesConsole/bridgeDetail',
+    name: 'bridgesConsole',
+    meta: {
+      noCache: true
+    },
+    children: [
+      {
+        path: 'bridgeDetail',
+        name: 'bridgeDetail',
+        component: () => import('@/views/bridgesConsole/bridgeDetail/index'),
+        meta: { noCache: true }
+      }
+    ]
+  }
 ]
 
 // 实例化vue的时候只挂载constantRouter
@@ -72,7 +89,8 @@ export const asyncRouterMap = [
     meta: {
       title: '用户系统管理',
       icon: 'peoples',
-      roles: ['1']
+      roles: ['1'],
+      noCache: true
     },
     alwaysShow: true,
     children: [
@@ -80,7 +98,7 @@ export const asyncRouterMap = [
         path: 'infoManage',
         name: 'infoManage',
         component: () => import('@/views/peoplesManage/infoManage/index'),
-        meta: { title: '用户信息管理' }
+        meta: { title: '用户信息管理', noCache: true }
       }
     ]
   },
@@ -92,48 +110,33 @@ export const asyncRouterMap = [
     meta: {
       title: '基础信息管理',
       icon: 'list',
-      roles: ['1']
+      roles: ['1'],
+      noCache: true
     },
     children: [
       {
         path: 'bridgesInfo',
         name: 'BridgesInfo',
         component: () => import('@/views/baseInfoManage/bridgesInfo/index'),
-        meta: { title: '桥梁信息管理' }
+        meta: { title: '桥梁信息管理', noCache: true }
       },
       {
         path: 'serversConfig',
         name: 'ServersConfig',
         component: () => import('@/views/baseInfoManage/serversConfig/index'),
-        meta: { title: '采集服务器配置' }
+        meta: { title: '采集服务器配置', noCache: true }
       },
       {
         path: 'boxesConfig',
         name: 'BoxesConfig',
         component: () => import('@/views/baseInfoManage/boxesConfig/index'),
-        meta: { title: '采集盒配置' }
+        meta: { title: '采集盒配置', noCache: true }
       },
       {
         path: 'sensorsConfig',
         name: 'SensorsConfig',
         component: () => import('@/views/baseInfoManage/sensorsConfig/index'),
-        meta: { title: '传感器配置' }
-      }
-    ]
-  },
-
-  {
-    path: '/bridgesConsole',
-    component: Layout,
-    redirect: '/bridgesConsole/bridgeDetail',
-    meta: {
-      roles: ['0']
-    },
-    children: [
-      {
-        path: 'bridgeDetail',
-        name: 'bridgeDetail',
-        component: () => import('@/views/bridgesConsole/bridgeDetail/index')
+        meta: { title: '传感器配置', noCache: true }
       }
     ]
   },
