@@ -20,7 +20,7 @@ router.beforeEach((to, from, next) => {
         NProgress.done()
         console.log(1111)
       } else {
-        if (store.getters.roles.indexOf('1') >= 0) {
+        if (store.getters.roles.length === 0) {
           console.log(2222)
           store.dispatch('GetUserInfo').then(res => { // 拉取用户信息
             const dataS = res.data

@@ -13,7 +13,7 @@ export default {
   },
   methods: {
     toPath() {
-      this.$router.push({ path: '/peoplesManage/infoManage' })
+      this.$router.push({ path: '/infoManage' })
     }
   }
 }

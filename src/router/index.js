@@ -51,9 +51,8 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/bridgesConsole',
+    path: '',
     component: LayoutC,
-    redirect: '/bridgesConsole/bridgeDetail',
     name: 'bridgesConsole',
     meta: {
       noCache: true
@@ -66,25 +65,10 @@ export const constantRouterMap = [
         meta: { noCache: true }
       }
     ]
-  }
-]
-
-// 实例化vue的时候只挂载constantRouter
-
-export default new Router({
-  // mode: 'history', //后端支持可开
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRouterMap
-})
-
-// 异步挂载的路由
-// 动态需要根据权限加载的路由表
-
-export const asyncRouterMap = [
+  },
   {
-    path: '/peoplesManage',
+    path: '',
     component: Layout,
-    redirect: '/peoplesManage/infoManage',
     name: 'peoplesManage',
     meta: {
       title: '用户系统管理',
@@ -103,9 +87,8 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '/baseInfoManage',
+    path: '',
     component: Layout,
-    redirect: '/baseInfoManage/bridgesInfo',
     name: 'BaseInfoManage',
     meta: {
       title: '基础信息管理',
@@ -139,7 +122,78 @@ export const asyncRouterMap = [
         meta: { title: '传感器配置', noCache: true }
       }
     ]
-  },
+  }
+]
+
+// 实例化vue的时候只挂载constantRouter
+
+export default new Router({
+  // mode: 'history', //后端支持可开
+  scrollBehavior: () => ({ y: 0 }),
+  routes: constantRouterMap
+})
+
+// 异步挂载的路由
+// 动态需要根据权限加载的路由表
+
+export const asyncRouterMap = [
+  // {
+  //   path: '',
+  //   component: Layout,
+  //   name: 'peoplesManage',
+  //   meta: {
+  //     title: '用户系统管理',
+  //     icon: 'peoples',
+  //     roles: ['1'],
+  //     noCache: true
+  //   },
+  //   alwaysShow: true,
+  //   children: [
+  //     {
+  //       path: 'infoManage',
+  //       name: 'infoManage',
+  //       component: () => import('@/views/peoplesManage/infoManage/index'),
+  //       meta: { title: '用户信息管理', noCache: true }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '',
+  //   component: Layout,
+  //   name: 'BaseInfoManage',
+  //   meta: {
+  //     title: '基础信息管理',
+  //     icon: 'list',
+  //     roles: ['1'],
+  //     noCache: true
+  //   },
+  //   children: [
+  //     {
+  //       path: 'bridgesInfo',
+  //       name: 'BridgesInfo',
+  //       component: () => import('@/views/baseInfoManage/bridgesInfo/index'),
+  //       meta: { title: '桥梁信息管理', noCache: true }
+  //     },
+  //     {
+  //       path: 'serversConfig',
+  //       name: 'ServersConfig',
+  //       component: () => import('@/views/baseInfoManage/serversConfig/index'),
+  //       meta: { title: '采集服务器配置', noCache: true }
+  //     },
+  //     {
+  //       path: 'boxesConfig',
+  //       name: 'BoxesConfig',
+  //       component: () => import('@/views/baseInfoManage/boxesConfig/index'),
+  //       meta: { title: '采集盒配置', noCache: true }
+  //     },
+  //     {
+  //       path: 'sensorsConfig',
+  //       name: 'SensorsConfig',
+  //       component: () => import('@/views/baseInfoManage/sensorsConfig/index'),
+  //       meta: { title: '传感器配置', noCache: true }
+  //     }
+  //   ]
+  // },
 
   { path: '*', redirect: '/404', hidden: true }
 ]

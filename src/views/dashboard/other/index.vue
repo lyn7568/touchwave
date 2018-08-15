@@ -65,7 +65,7 @@ export default {
     },
     goToDashboardC(id) {
       this.$router.push({
-        path: '/bridgesConsole/bridgeDetail',
+        path: '/bridgesConsole',
         query: { bridgeId: id }
       })
     },
