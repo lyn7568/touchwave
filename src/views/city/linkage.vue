@@ -3,7 +3,7 @@
     <el-select
       v-model="sheng"
       @change="choseProvince"
-      placeholder="省级地区">
+      placeholder="省">
       <el-option
         v-for="item in province"
         :key="item.id"
@@ -14,7 +14,7 @@
     <el-select
       v-model="shi"
       @change="choseCity"
-      placeholder="市级地区">
+      placeholder="市">
       <el-option
         v-for="item in shi1"
         :key="item.id"
@@ -25,7 +25,7 @@
     <el-select
       v-model="qu"
       @change="choseBlock"
-      placeholder="区级地区">
+      placeholder="区(县)">
       <el-option
         v-for="item in qu1"
         :key="item.id"
@@ -39,10 +39,11 @@
 <script>
 import axios from 'axios'
 export default {
+  props: ['addrCode'],
   data() {
     return {
       mapJson: '../../static/map.json',
-      province: '',
+      province: [],
       sheng: '',
       shi: '',
       shi1: [],
@@ -52,24 +53,52 @@ export default {
       block: ''
     }
   },
+  watch: {
+    addrCode: function() {
+      if (!this.addrCode) {
+        this.sheng = ''
+        this.shi = ''
+        this.qu = ''
+        return
+      }
+      const s = this.addrCode.substring(0, 2) + '0000'
+      const si = this.addrCode.substring(0, 4) + '00'
+      const x = this.addrCode
+      this.province.map(item => {
+        if (item.id === s) {
+          this.sheng = item.value
+          item.children.map(item => {
+            if (item.id === si) {
+              this.shi = item.value
+              item.children.map(item => {
+                if (x === item.id) {
+                  this.qu = item.value
+                }
+              })
+            }
+          })
+        }
+      })
+    }
+  },
   methods: {
     getCityData: function() {
       var that = this
-      axios.get(this.mapJson).then(function(response) {
+      axios.get('/ajax/dict/items?dict=XZQH').then(function(response) {
         if (response.status === 200) {
-          var data = response.data
+          var data = response.data.data
           that.province = []
           that.city = []
           that.block = []
-          for (var item in data) {
-            if (item.match(/0000$/)) {
-              that.province.push({ id: item, value: data[item], children: [] })
-            } else if (item.match(/00$/)) {
-              that.city.push({ id: item, value: data[item], children: [] })
+          data.map(item => {
+            if (item.code.match(/0000$/)) {
+              that.province.push({ id: item.code, value: item.caption, children: [] })
+            } else if (item.code.match(/00$/)) {
+              that.city.push({ id: item.code, value: item.caption, children: [] })
             } else {
-              that.block.push({ id: item, value: data[item] })
+              that.block.push({ id: item.code, value: item.caption })
             }
-          }
+          })
           for (var index in that.province) {
             for (var index1 in that.city) {
               if (that.province[index].id.slice(0, 2) === that.city[index1].id.slice(0, 2)) {
@@ -100,6 +129,7 @@ export default {
           this.sheng = this.province[index2].value
         }
       }
+      this.$emit('paren', this.E)
     },
     choseCity: function(e) {
       for (var index3 in this.city) {
@@ -110,6 +140,7 @@ export default {
           this.shi = this.city[index3].value
         }
       }
+      this.$emit('paren', this.E)
     },
     choseBlock: function(e) {
       for (var index3 in this.qu1) {
@@ -118,6 +149,7 @@ export default {
         }
       }
       this.E = e
+      this.$emit('paren', this.E)
     }
   },
   created: function() {

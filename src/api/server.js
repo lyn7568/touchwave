@@ -1,60 +1,60 @@
 import request from '@/utils/request'
 
-/*  添加采集盒 */
+/*  添加服务器 */
 export function addDevice(params) {
   return request({
-    url: '/ajax/device',
+    url: '/ajax/server',
     method: 'post',
     params
   })
 }
 
-/*  更新采集盒信息 */
+/*  更新服务器信息 */
 export function updateDevice(params) {
   return request({
-    url: '/ajax/device/update',
+    url: '/ajax/server/update',
     method: 'post',
     params
   })
 }
 
-/*  删除采集盒信息 */
+/*  删除服务器信息 */
 export function deleteDevice(params) {
   return request({
-    url: '/ajax/device/delete',
+    url: '/ajax/server/delete',
     method: 'get',
     params
   })
 }
 
-/*  查询单个采集盒 */
+/*  查询单个服务器 */
 export function queryDevice(params) {
   return request({
-    url: '/ajax/device/qo',
+    url: '/ajax/server/qo',
     method: 'get',
     params
   })
 }
 
-/*  分页查询采集盒 */
+/*  分页查询服务器 */
 export function pageQueryDevice(params) {
   return request({
-    url: '/ajax/device/pq',
+    url: '/ajax/server/pq',
     method: 'get',
     params
   })
 }
 
-/*  采集盒所属服务器编号列表 */
+/*  服务器所属采桥梁列表 */
 export function DeviceOfservice(params) {
   return request({
-    url: '/ajax/server/listByCode',
+    url: '/ajax/bridge/list',
     method: 'get',
     params
   })
 }
 
-/*  校验采集盒编号 */
+/*  校验服务器编号 */
 export function checkDeviceCode(params) {
   return request({
     url: '/ajax/server/checkCode',
@@ -63,7 +63,7 @@ export function checkDeviceCode(params) {
   })
 }
 
-/*  校验采集盒内部编号 */
+/*  校验服务器内部编号 */
 export function checkDeviceInternalCode(params) {
   return request({
     url: '/ajax/server/checkSeq',
@@ -75,7 +75,7 @@ export function checkDeviceInternalCode(params) {
 /*  查询服务器名字 */
 export function queryServer(params) {
   return request({
-    url: '/ajax/server/qo',
+    url: '/ajax/bridge/qo',
     method: 'get',
     params
   })

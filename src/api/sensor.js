@@ -1,81 +1,81 @@
 import request from '@/utils/request'
 
-/*  添加采集盒 */
+/*  添加传感器 */
 export function addDevice(params) {
   return request({
-    url: '/ajax/device',
+    url: '/ajax/transducer',
     method: 'post',
     params
   })
 }
 
-/*  更新采集盒信息 */
+/*  更新传感器信息 */
 export function updateDevice(params) {
   return request({
-    url: '/ajax/device/update',
+    url: '/ajax/transducer/update',
     method: 'post',
     params
   })
 }
 
-/*  删除采集盒信息 */
+/*  删除传感器信息 */
 export function deleteDevice(params) {
   return request({
-    url: '/ajax/device/delete',
+    url: '/ajax/transducer/delete',
     method: 'get',
     params
   })
 }
 
-/*  查询单个采集盒 */
+/*  查询单个传感器 */
 export function queryDevice(params) {
   return request({
-    url: '/ajax/device/qo',
+    url: '/ajax/transducer/qo',
     method: 'get',
     params
   })
 }
 
-/*  分页查询采集盒 */
+/*  分页查询传感器 */
 export function pageQueryDevice(params) {
   return request({
-    url: '/ajax/device/pq',
+    url: '/ajax/transducer/pq',
     method: 'get',
     params
   })
 }
 
-/*  采集盒所属服务器编号列表 */
+/*  传感器所属采集盒编号列表 */
 export function DeviceOfservice(params) {
   return request({
-    url: '/ajax/server/listByCode',
+    url: '/ajax/device/listByCode',
     method: 'get',
     params
   })
 }
 
-/*  校验采集盒编号 */
+/*  校验传感器编号 */
 export function checkDeviceCode(params) {
   return request({
-    url: '/ajax/server/checkCode',
+    url: '/ajax/transducer/checkCode',
     method: 'get',
     params
   })
 }
 
-/*  校验采集盒内部编号 */
+/*  校验传感器内部编号 */
 export function checkDeviceInternalCode(params) {
   return request({
-    url: '/ajax/server/checkSeq',
+    url: '/ajax/transducer/checkSeq',
     method: 'get',
     params
   })
 }
 
-/*  查询服务器名字 */
+/*  查询采集盒名字 */
 export function queryServer(params) {
   return request({
-    url: '/ajax/server/qo',
+    url: '/ajax/device/qo',
     method: 'get',
     params
   })
