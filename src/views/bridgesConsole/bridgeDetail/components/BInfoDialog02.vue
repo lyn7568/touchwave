@@ -2,7 +2,7 @@
   <el-dialog title="采集服务器信息" :visible.sync="dialogTableVisible" width="80%">
     <el-form class="form-main">
       <el-row :gutter="16">
-        <el-col :xs="12" :sm="12" :lg="12" v-for="item in [0,1,2,3]" :key="item.id">
+        <el-col :xs="12" :sm="12" :lg="12" v-for="item in serverShowList" :key="item.index">
           <div class="list-item">
             <el-row>
               <el-col :span="12">
@@ -12,7 +12,7 @@
                 <el-form-item label="采集器数量">{{item.devices}}</el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="所属桥梁">{{item.bridgeId}}</el-form-item>
+                <el-form-item label="所属桥梁">{{bridgeName}}</el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="备注" class="el-to-block"><br />
@@ -26,12 +26,11 @@
       <div class="pagination-container">
         <el-pagination
           background
-          @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page.sync="currentPage"
-          :page-size="4"
+          :current-page.sync="pageNo"
+          :page-size="pageSize"
           layout="prev, pager, next, jumper"
-          :total="10">
+          :total="serverList.length">
         </el-pagination>
       </div>
       <el-row>
@@ -46,36 +45,33 @@
 </template>
 
 <script>
+import './style.scss'
 
 export default {
+  props: {
+    serverList: {
+      type: Array
+    },
+    bridgeName: {
+      type: String
+    }
+  },
   data() {
     return {
       dialogTableVisible: false,
-      currentPage: 1
+      pageSize: 4,
+      pageNo: 1
+    }
+  },
+  computed: {
+    serverShowList() {
+      return this.serverList.slice((this.pageNo - 1) * this.pageSize, this.pageNo * this.pageSize)
     }
   },
   methods: {
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
-    },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
+      this.pageNo = val
     }
   }
 }
 </script>
-
-<style rel="stylesheet/scss" lang="scss" scoped>
-  .el-form-item{
-    margin: 0;
-  }
-  .textarea-div{
-    line-height: 26px;
-    margin-bottom: 10px;
-  }
-  .list-item{
-    border: 1px solid #ccc;
-    margin-bottom: 20px;
-    padding: 10px 15px;
-  }
-</style>

@@ -3,6 +3,7 @@ import { getSession, removeSession } from '@/utils/auth'
 
 const user = {
   state: {
+    account: '',
     userid: '',
     name: '',
     roles: [],
@@ -10,6 +11,9 @@ const user = {
     session: getSession()
   },
   mutations: {
+    SET_ACCOUNT: (state, account) => {
+      state.account = account
+    },
     SET_USERID: (state, userid) => {
       state.userid = userid
     },
@@ -39,6 +43,7 @@ const user = {
             if (response.data) {
               const dataS = response.data
               if (dataS.active) {
+                commit('SET_ACCOUNT', dataS.account)
                 commit('SET_USERID', dataS.id)
                 commit('SET_ROLES', [dataS.type.toString()])
                 commit('SET_NAME', dataS.name)
@@ -61,6 +66,7 @@ const user = {
             if (response.data) {
               const dataS = response.data
               if (dataS.active) {
+                commit('SET_ACCOUNT', dataS.account)
                 commit('SET_USERID', dataS.id)
                 commit('SET_ROLES', [dataS.type.toString()])
                 commit('SET_NAME', dataS.name)
@@ -78,6 +84,7 @@ const user = {
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
         logout().then(() => {
+          commit('SET_ACCOUNT', '')
           commit('SET_USERID', '')
           commit('SET_ROLES', [])
           commit('SET_NAME', '')

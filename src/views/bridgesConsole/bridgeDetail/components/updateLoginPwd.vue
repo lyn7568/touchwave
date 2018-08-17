@@ -1,19 +1,15 @@
 <template>
-  <el-dialog title="修改登录密码" ref="ruleForm" :visible.sync="dialogTableVisible" width="460px">
+  <el-dialog title="修改登录密码" :visible.sync="dialogTableVisible" width="460px">
     <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" class="demo-ruleForm">
-      <el-form-item prop="oldpass">
-        <el-input type="password" v-model="ruleForm2.oldpass" placeholder="请输入您的旧密码" auto-complete="off"></el-input>
-      </el-form-item>
       <el-form-item prop="pass">
         <el-input type="password" v-model="ruleForm2.pass" placeholder="请设置您的新密码" auto-complete="off"></el-input>
       </el-form-item>
       <el-form-item prop="checkPass">
         <el-input type="password" v-model="ruleForm2.checkPass" placeholder="请再次输入密码确认" auto-complete="off"></el-input>
       </el-form-item>
-      <el-form-item></el-form-item>
       <el-form-item class="el-btn-col">
         <div class="el-btn-col-box">
-          <el-button type="primary" @click="resetPwd('ruleForm2')">确定</el-button>
+          <el-button type="primary" @click.native.prevent="resetPwd('ruleForm2')">确定</el-button>
         </div>
       </el-form-item>
     </el-form>
@@ -22,7 +18,7 @@
 
 <script>
 import { changePw } from '@/api/login'
-import { Alert } from 'element-ui'
+import { MessageBox } from 'element-ui'
 
 export default {
   data() {
@@ -50,19 +46,15 @@ export default {
     return {
       dialogTableVisible: false,
       ruleForm2: {
-        oldpass: '',
         pass: '',
         checkPass: ''
       },
       rules2: {
-        oldpass: [
-          { required: true, message: '请输入您的旧密码', trigger: 'blur' }
-        ],
         pass: [
-          { validator: validatePass, trigger: 'blur' }
+          { required: true, validator: validatePass, trigger: 'blur' }
         ],
         checkPass: [
-          { validator: validatePass2, trigger: 'blur' }
+          { required: true, validator: validatePass2, trigger: 'blur' }
         ]
       }
     }
@@ -71,21 +63,19 @@ export default {
     resetPwd(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          const params = {
-            oldPw: this.ruleForm2.oldpass,
-            newpw: this.ruleForm2.checkPass
-          }
-          changePw(params).then((res) => {
+          const newPw = this.ruleForm2.checkPass
+          changePw({ newPw }).then((res) => {
             if (res.success) {
-              Alert('提示', '密码修改成功！', {
+              MessageBox.alert('提示', '密码修改成功！', {
                 confirmButtonText: '确定',
                 type: 'success',
-                center: true
-                // callback: action => {
-                //   if (action === 'confirm') {
-                //     this.$router.push({path: '/loginPlat'})
-                //   }
-                // }
+                center: true,
+                callback: action => {
+                  if (action === 'confirm') {
+                    this.dialogTableVisible = false
+                    this.$refs[formName].resetFields()
+                  }
+                }
               })
             }
           })

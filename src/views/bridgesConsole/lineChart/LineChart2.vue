@@ -44,10 +44,6 @@ export default {
       }, 100)
       window.addEventListener('resize', this.__resizeHanlder)
     }
-
-    // 监听侧边栏的变化
-    const sidebarElm = document.getElementsByClassName('sidebar-container')[0]
-    sidebarElm.addEventListener('transitionend', this.__resizeHanlder)
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -56,9 +52,6 @@ export default {
     if (this.autoResize) {
       window.removeEventListener('resize', this.__resizeHanlder)
     }
-
-    const sidebarElm = document.getElementsByClassName('sidebar-container')[0]
-    sidebarElm.removeEventListener('transitionend', this.__resizeHanlder)
 
     this.chart.dispose()
     this.chart = null
@@ -72,14 +65,15 @@ export default {
     }
   },
   methods: {
-    setOptions({ expectedData, actualData } = {}) {
+    setOptions(datastr) {
       this.chart.setOption({
-        xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-          boundaryGap: false,
-          axisTick: {
-            show: false
-          }
+        title: {
+          text: '传感器' + datastr.tit,
+          textStyle: {
+            color: '#333',
+            fontSize: 14
+          },
+          left: 16
         },
         grid: {
           left: 10,
@@ -95,16 +89,27 @@ export default {
           },
           padding: [5, 10]
         },
+        xAxis: {
+          data: datastr.xData,
+          boundaryGap: false,
+          axisTick: {
+            show: false
+          }
+        },
         yAxis: {
+          type: 'value',
+          axisLabel: {
+            formatter: '{value} mv'
+          },
           axisTick: {
             show: false
           }
         },
         legend: {
-          data: ['expected', 'actual']
+          data: ['最大值', '最小值']
         },
         series: [{
-          name: 'expected', itemStyle: {
+          name: '最大值', itemStyle: {
             normal: {
               color: '#FF005A',
               lineStyle: {
@@ -115,29 +120,24 @@ export default {
           },
           smooth: true,
           type: 'line',
-          data: expectedData,
+          data: datastr.seData.max,
           animationDuration: 2800,
           animationEasing: 'cubicInOut'
-        },
-        {
-          name: 'actual',
-          smooth: true,
-          type: 'line',
-          itemStyle: {
+        }, {
+          name: '最小值', itemStyle: {
             normal: {
               color: '#3888fa',
               lineStyle: {
                 color: '#3888fa',
                 width: 2
-              },
-              areaStyle: {
-                color: '#f3f8ff'
               }
             }
           },
-          data: actualData,
+          smooth: true,
+          type: 'line',
+          data: datastr.seData.min,
           animationDuration: 2800,
-          animationEasing: 'quadraticOut'
+          animationEasing: 'cubicInOut'
         }]
       })
     },

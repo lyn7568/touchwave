@@ -19,13 +19,13 @@
       </el-form-item>
       <el-form-item prop="imgVerifyCode">
         <span class="svg-container">
-          <svg-icon icon-class="password"></svg-icon>
+          <svg-icon icon-class="msgvc"></svg-icon>
         </span>
-        <el-input v-model="loginForm.imgVerifyCode" placeholder="请输入图形验证码" class="code-btn">
+        <el-input v-model="loginForm.imgVerifyCode" placeholder="请输入图形验证码" @keyup.enter.native="handleLogin" class="code-btn">
         <img slot="append" :src="imgVcUrl" @click="changeImgVc" /></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button class="log-btn" type="primary" :loading="loading" @click.native.prevent="handleLogin" @keyup.enter.native="handleLogin">登录</el-button>
+        <el-button class="log-btn" type="primary" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
       </el-form-item>
       <el-form-item class="el-form-find">
         <el-button type="text" @click.native.prevent="goBackPwd">忘记密码？</el-button>
@@ -90,17 +90,11 @@ export default {
             this.loading = false
             if (response.success) {
               if (response.data) {
-                const dataS = response.data
-                if (dataS.active) {
-                  this.$store.dispatch('GetUserInfo').then(res => {
-                  })
-                  this.$router.push({ path: '/' })
-                } else {
-                  Message.error('您的账号已经被禁用')
-                  return
-                }
+                this.$store.dispatch('GetUserInfo').then(res => {
+                })
+                this.$router.push({ path: '/' })
               } else {
-                Message.error('登录账号与密码不匹配')
+                Message.error('登录账号与密码不匹配，请检查后重试')
                 return
               }
             } else {
@@ -113,6 +107,9 @@ export default {
               }, {
                 code: -60003,
                 msg: '图形验证码不正确'
+              }, {
+                code: -60005,
+                msg: '该账号已停用，请联系管理员'
               }]
               for (let i = 0; i < errorCode.length; i++) {
                 if (response.code === errorCode[i].code) {

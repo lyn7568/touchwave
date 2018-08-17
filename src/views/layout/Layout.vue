@@ -2,8 +2,8 @@
   <div class="app-wrapper" :class="classObj">
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"></div>
     <TopNavbar></TopNavbar>
-    <sidebar class="sidebar-container"></sidebar>
-    <div class="main-container">
+    <sidebar class="sidebar-container" v-if="roles.indexOf('1')>=0"></sidebar>
+    <div class="main-container" :style="(roles.indexOf('1')>=0) ? '' : 'marginLeft:0'">
       <navbar></navbar>
       <app-main></app-main>
     </div>
@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { TopNavbar, Navbar, Sidebar, AppMain } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 
@@ -24,6 +25,9 @@ export default {
   },
   mixins: [ResizeMixin],
   computed: {
+    ...mapGetters([
+      'roles'
+    ]),
     sidebar() {
       return this.$store.state.app.sidebar
     },

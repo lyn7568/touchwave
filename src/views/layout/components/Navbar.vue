@@ -1,23 +1,29 @@
 <template>
-  <el-menu class="navbar" mode="horizontal">
-    <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
-    <breadcrumb></breadcrumb>
-  </el-menu>
+  <div>
+    <marqueebox :isShow="roles.indexOf('1')>=0"></marqueebox>
+    <el-menu class="navbar" mode="horizontal">
+      <hamburger v-if="roles.indexOf('1')>=0" class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
+      <breadcrumb></breadcrumb>
+    </el-menu>
+  </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import Marqueebox from '@/components/Marqueebox'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    Marqueebox
   },
   computed: {
     ...mapGetters([
-      'sidebar'
+      'sidebar',
+      'roles'
     ])
   },
   methods: {
@@ -37,6 +43,7 @@ export default {
 .navbar {
   height: 50px;
   line-height: 50px;
+  padding: 0 10px;
   border-radius: 0px !important;
   .hamburger-container {
     line-height: 58px;
@@ -50,6 +57,12 @@ export default {
     top: 16px;
     color: red;
   }
+}
+.message-box{
+  color: #303133;
+  background: #c7e3ff;
+  padding: 0 20px;
+  font-size: 14px;
 }
 </style>
 

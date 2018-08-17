@@ -55,14 +55,43 @@ export function resetPwdByTel(pw, vc) {
 }
 
 // 修改密码
-export function changePw(id, oldPw, newPw) {
+export function changePw(params) {
   return request({
     url: '/ajax/sys/changePw',
     method: 'post',
-    data: {
-      id,
-      oldPw,
-      newPw
-    }
+    data: params
+  })
+}
+
+// 获取修改个人信息
+export function getMyself(params) {
+  return request({
+    url: '/ajax/sys/qo',
+    method: 'get',
+    params
+  })
+}
+
+export function updateMyself(params) {
+  return request({
+    url: '/ajax/sys/update',
+    method: 'post',
+    data: params
+  })
+}
+
+// 获取公告信息
+export function getNotice() {
+  return request({
+    url: '/ajax/sys/notice',
+    method: 'get'
+  })
+}
+
+export function updateNotice(params) {
+  return request({
+    url: '/ajax/sys/notice',
+    method: 'post',
+    data: params
   })
 }

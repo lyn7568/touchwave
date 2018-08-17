@@ -35,7 +35,7 @@
         </el-col>
         <el-col :xs="24" :sm="6" :lg="8">
           <div style="width:100%">
-            <img :src="dataInfo.img" alt="桥梁图片" width="90%">
+            <img :src="dataInfo.img" :alt="dataInfo.shortName" width="90%">
           </div>
         </el-col>
         <el-col :span="24" v-if="dataInfo.descp">
@@ -59,7 +59,8 @@
 </template>
 
 <script>
-import { getBridgeInfo } from '@/api/table'
+import { getBridgeInfo } from '@/api/bridgeInfo'
+import { parseTime } from '@/utils'
 
 export default {
   props: {
@@ -83,6 +84,7 @@ export default {
       }
       getBridgeInfo(param).then(res => {
         if (res.success) {
+          res.data.serviceDay = parseTime(res.data.serviceDay)
           this.dataInfo = res.data
         }
       })

@@ -1,14 +1,14 @@
 <template>
   <div class="dashboard-editor-container">
     <el-row class="panel-group" :gutter="40">
-      <el-col :xs="24" :sm="12" :lg="6" class="card-panel-col" v-for="item in dataList" :key="item.index" @click.native="goToDashboardC(item.id)">
+      <el-col :xs="24" :sm="12" :lg="6" class="card-panel-col" v-for="item in dataList" :key="item.index" @click.native="goToDashboardC(item.id, item.shortName)">
         <div class='card-panel'>
           <div class="card-panel-icon-wrapper">
             <div class="card-image" :style="{ backgroundImage: 'url(/data/bridge'+ item.img +')'}"></div>
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">桥梁名称 <span>{{item.shortName}}</span></div>
-            <div class="card-panel-text">未读报警 10条</div>
+            <div class="card-panel-text" :class="item.alarmNum>0?'card-panel-text-red':''">未读报警 {{item.alarmNum ? item.alarmNum : alarmNum}}条</div>
           </div>
         </div>
       </el-col>
@@ -26,110 +26,102 @@
 </template>
 
 <script>
-import { getBridgeList } from '@/api/table'
+import {
+  getBridgeServers,
+  getBridgeList,
+  getBridgeUnread
+} from '@/api/bridgeInfo'
+import '@/styles/roleuser.scss'
 
 export default {
   data() {
     return {
-      listParameters: {},
+      alarmNum: 0,
       total: 0,
+      pageSize: 10,
+      pageNo: 1,
       dataList: [],
-      ifDefault: false
+      bridgeList: [],
+      serverList: [],
+      serverSeqArr: [],
+      deviceList: [],
+      transducerList: []
     }
   },
   created() {
-    this.listParameters = {
-      active: 1,
-      pageSize: 10,
-      pageNo: 1
-    }
     this.getBridgeLists()
   },
   components: {
   },
   methods: {
     getBridgeLists() {
-      const param = this.listParameters
+      const param = {
+        active: 1,
+        pageSize: this.pageSize,
+        pageNo: this.pageNo
+      }
       getBridgeList(param).then(res => {
         if (res.success) {
-          if (res.data.data.length === 0) {
-            this.ifDefault = true
-          } else {
-            this.ifDefault = false
+          if (res.data.data.length > 0) {
+            this.total = res.data.total
+            this.getBridgeServers(res.data.data)
           }
-          this.dataList = res.data.data
-          // this.disposeData(res.data.data);
-          this.total = res.data.total
         }
       })
     },
-    goToDashboardC(id) {
+    getBridgeServers($data) {
+      var that = this
+      for (let i = 0; i < $data.length; i++) {
+        (function(i) {
+          const param = {
+            active: 1,
+            id: $data[i].id
+          }
+          getBridgeServers(param).then(res => {
+            if (res.success) {
+              console.log(res)
+              var serverSeqArr = []
+              if (res.data.length > 0) {
+                for (let j = 0; j < res.data.length; j++) {
+                  serverSeqArr.push(res.data[j].seq)
+                }
+                that.getBridgeUnread($data[i], serverSeqArr)
+              }
+            }
+          })
+        })(i)
+      }
+      this.dataList = $data
+      console.log(this.dataList)
+    },
+    getBridgeUnread($data, $arr) {
+      var that = this
+      const param = {
+        server: $arr
+      }
+      var alarmNum = 0
+      getBridgeUnread(param).then(res => {
+        if (res.success) {
+          if (res.data.length > 0) {
+            for (let j = 0; j < res.data.length; j++) {
+              alarmNum += res.data[j].num
+            }
+            $data.alarmNum = alarmNum
+            that.$forceUpdate()
+          }
+        }
+      })
+    },
+    goToDashboardC(id, name) {
       this.$router.push({
-        path: '/bridgesConsole',
-        query: { bridgeId: id }
+        path: '/bridgeDetail',
+        query: { id: id, name: name }
       })
     },
     handleCurrentChange(val) {
-      this.expertParameters.pageNo = val
+      this.pageNo = val
       this.getBridgeLists()
     }
   }
 }
 </script>
-
-<style rel="stylesheet/scss" lang="scss" scoped>
-.dashboard-editor-container{
-  padding: 32px;
-  .panel-group {
-    margin-top: 18px;
-    .card-panel-col{
-      margin-bottom: 32px;
-    }
-    .card-panel {
-      cursor: pointer;
-      padding: 15px;
-      font-size: 12px;
-      position: relative;
-      overflow: hidden;
-      color: #666;
-      background: #fff;
-      box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
-      border-color: rgba(0, 0, 0, .05);
-      &:hover {
-        .card-panel-icon-wrapper {
-          color: #fff;
-        }
-      }
-      .card-panel-icon-wrapper {
-        margin: 10px 0;
-        transition: all 0.38s ease-out;
-        border-radius: 6px;
-      }
-      .card-image{
-        width: 100%;
-        max-width: 280px;
-        margin: auto;
-        height: 160px;
-        border: 1px solid #d0d0d0;
-        background-position: center;
-        background-size: cover;
-      }
-      .card-panel-icon {
-        font-size: 48px;
-      }
-      .card-panel-description {
-        font-weight: bold;
-        margin-top:12px;
-        .card-panel-text {
-          line-height: 24px;
-          color: rgba(0, 0, 0, 0.45);
-          font-size: 16px;
-        }
-        .card-panel-num {
-          font-size: 20px;
-        }
-      }
-    }
-  }
-}
-</style>

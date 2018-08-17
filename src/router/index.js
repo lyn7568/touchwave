@@ -8,7 +8,6 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '../views/layout/Layout'
-import LayoutC from '../views/layout/LayoutC'
 
 /** note: submenu only apppear when children.length>=1
 *   detail see  https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -52,7 +51,7 @@ export const constantRouterMap = [
 
   {
     path: '',
-    component: LayoutC,
+    component: Layout,
     name: 'bridgesConsole',
     meta: {
       noCache: true
@@ -63,6 +62,33 @@ export const constantRouterMap = [
         name: 'bridgeDetail',
         component: () => import('@/views/bridgesConsole/bridgeDetail/index'),
         meta: { noCache: true }
+      },
+      {
+        path: 'danger',
+        name: 'danger',
+        redirect: 'noredirect',
+        meta: { title: '历史报警信息查询', noCache: true },
+        component: () => import('@/views/bridgesConsole/bridgeDanger/index'),
+        children: [
+          {
+            path: 'dangerList',
+            name: 'dangerList',
+            component: () => import('@/views/bridgesConsole/bridgeDanger/dangerList'),
+            meta: { noCache: true }
+          },
+          {
+            path: 'dangerDetail',
+            name: 'dangerDetail',
+            component: () => import('@/views/bridgesConsole/bridgeDanger/dangerDetail'),
+            meta: { title: '报警信息浏览', noCache: true }
+          }
+        ]
+      },
+      {
+        path: 'bridgeMonitor',
+        name: 'bridgeMonitor',
+        component: () => import('@/views/bridgesConsole/bridgeMonitor/index'),
+        meta: { title: '历史监测信息查询', noCache: true }
       }
     ]
   },
