@@ -1,15 +1,13 @@
-import store from '@/store'
 import Cookies from 'js-cookie'
 
-export function getSession() {
-  return Cookies.get('JSESSIONID')
+export function getCookiesName() {
+  return Cookies.get('nameKey')
 }
 
-export function removeSession() {
-  return Cookies.remove('JSESSIONID')
+export function setCookiesName(name) {
+  return Cookies.set('nameKey', name)
 }
 
-export function getIfLoginUser() {
-  store.dispatch('GetUserInfo').then(res => { // 判断是否有登录用户
-  })
+export function removeCookiesName() {
+  return Cookies.remove('nameKey')
 }

@@ -95,6 +95,7 @@ export default {
                 this.$router.push({ path: '/' })
               } else {
                 Message.error('登录账号与密码不匹配，请检查后重试')
+                this.changeImgVc()
                 return
               }
             } else {
@@ -114,6 +115,7 @@ export default {
               for (let i = 0; i < errorCode.length; i++) {
                 if (response.code === errorCode[i].code) {
                   Message.error(errorCode[i].msg)
+                  this.changeImgVc()
                   return
                 }
               }

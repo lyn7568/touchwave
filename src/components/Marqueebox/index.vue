@@ -12,9 +12,9 @@
     <el-menu class="message-box" mode="horizontal">
       <div class="marquee_box">
         <span class="tit">系统公告：</span>
-        <div ref="rollul" class="marquee_text" :class="{anim:animate}">
-          {{formNotice.desc}}
-        </div>
+        <el-tooltip :content="formNotice.desc" placement="bottom-end" effect="dark">
+          <div class="marquee_text">{{formNotice.desc}}</div>
+        </el-tooltip>
         <span class="btn-span" v-if="isShow" @click="openNoticeDialog">设置</span>
       </div>
     </el-menu>
@@ -46,7 +46,6 @@ export default {
   },
   created() {
     this.getNotice()
-    setInterval(this.scroll, 3000)
   },
   methods: {
     getNotice() {
@@ -75,16 +74,6 @@ export default {
           return false
         }
       })
-    },
-    scroll() {
-      // const con1 = this.$refs.rollul
-      // con1.style.marginTop = '0px'
-      // this.animate = !this.animate
-      // var that = this
-      // setTimeout(() => {
-      //   con1.style.marginTop = '-50px'
-      //   that.animate = !that.animate
-      // }, 1000)
     }
   }
 }
@@ -109,10 +98,12 @@ export default {
       line-height: 50px;
       position:absolute;
       top:0;
-      padding-left:68px;
-      padding-right: 80px;
-      width:100%;
+      padding-left: 0;
+      left:68px;
+      right:80px;
       box-sizing: border-box;
+      text-overflow: ellipsis;
+      white-space:nowrap;
       overflow: hidden;
     }
     .btn-span{

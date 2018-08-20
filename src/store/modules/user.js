@@ -1,5 +1,5 @@
 import { login, logout, getInfo } from '@/api/login'
-import { getSession, removeSession } from '@/utils/auth'
+import { getCookiesName, setCookiesName, removeCookiesName } from '@/utils/auth'
 
 const user = {
   state: {
@@ -8,7 +8,7 @@ const user = {
     name: '',
     roles: [],
     logins: '',
-    session: getSession()
+    session: getCookiesName()
   },
   mutations: {
     SET_ACCOUNT: (state, account) => {
@@ -47,6 +47,7 @@ const user = {
                 commit('SET_USERID', dataS.id)
                 commit('SET_ROLES', [dataS.type.toString()])
                 commit('SET_NAME', dataS.name)
+                setCookiesName(dataS.name)
               }
             }
           }
@@ -61,7 +62,6 @@ const user = {
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
-          commit('SET_LOGIN', response.success)
           if (response.success) {
             if (response.data) {
               const dataS = response.data
@@ -89,7 +89,7 @@ const user = {
           commit('SET_ROLES', [])
           commit('SET_NAME', '')
           commit('SET_SESSION', '')
-          removeSession()
+          removeCookiesName()
           resolve()
         }).catch(error => {
           reject(error)
@@ -101,7 +101,7 @@ const user = {
     FedLogOut({ commit }) {
       return new Promise(resolve => {
         commit('SET_SESSION', '')
-        removeSession()
+        removeCookiesName()
         resolve()
       })
     }

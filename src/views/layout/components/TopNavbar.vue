@@ -1,13 +1,17 @@
 <template>
   <el-menu class="topnavbar" mode="horizontal">
     <div class="logo-container">
-      <img class="logo-wrapper" src="/static/touchwave.png" alt="">
-      <el-dropdown v-if="roles.indexOf('1')<0" trigger="click" style="cursor: pointer;margin-left:20px">
+      <div class="logo-wrapper">
+        <img width="100%" src="/static/touchwave.png" alt="">
+      </div>
+      <el-dropdown v-if="roles.indexOf('1')<0" trigger="click" class="drop-menu">
         <span class="el-dropdown-link">
           {{showName}}<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
-        <el-dropdown-menu style="min-width:120px;" slot="dropdown">
-          <el-dropdown-item v-for="item in dataList" :key="item.index"@click.native="goToDashboardC(item.id, item.shortName)">{{item.shortName}}</el-dropdown-item>
+        <el-dropdown-menu class="drop-menu-list" style="min-width:120px;" slot="dropdown">
+          <el-dropdown-item v-for="(item,index) in dataList" :key="item.index" :disabled="item.disab" @click.native="goToDashboardC(index, item.id, item.shortName)">{{item.shortName}}
+            <i v-if="item.disab" class="el-icon-check"></i>
+          </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -68,15 +72,23 @@ export default {
       }
       getBridgeList(param).then(res => {
         if (res.success) {
+          for (let i = 0; i < res.data.data.length; i++) {
+            if (res.data.data[i].id === this.bridgeId) {
+              res.data.data[i].disab = true
+            } else {
+              res.data.data[i].disab = false
+            }
+          }
           this.dataList = res.data.data
         }
       })
     },
-    goToDashboardC(id, name) {
+    goToDashboardC(index, id, name) {
       this.$router.push({
         path: '/bridgeDetail',
         query: { id: id, name: name }
       })
+      this.dataList[index].disab = true
       this.showName = name
     }
   }
@@ -98,9 +110,17 @@ export default {
     display: inline-block;
     position: absolute;
     left:10px;
+    overflow: hidden;
     .logo-wrapper {
+      float:left;
       width:260px;
-      margin:14px 20px;
+      margin:10px 12px;
+    }
+    .drop-menu{
+      float:left;
+      cursor: pointer;
+      margin:0;
+      margin-left:20px;
     }
   }
   .avatar-container {
@@ -123,6 +143,19 @@ export default {
         top: 25px;
         font-size: 12px;
       }
+    }
+  }
+}
+.drop-menu-list{
+  .el-dropdown-menu__item{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    &.is-disabled{
+      background: #f3f5f7;
+    }
+    .el-icon-check{
+      font-weight: bold;
     }
   }
 }
