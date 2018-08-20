@@ -8,7 +8,7 @@ import { getCookiesName } from '@/utils/auth' // 验权
 NProgress.configure({ showSpinner: false })// NProgress Configuration
 
 function hasPermission(roles, permissionRoles) {
-  if (roles.indexOf('1') >= 0) return true // admin permission passed directly
+  if (roles.indexOf('1') >= 0) return true
   if (!permissionRoles) return true
   return roles.some(role => permissionRoles.indexOf(role) >= 0)
 }
@@ -37,10 +37,9 @@ router.beforeEach((to, from, next) => {
             })
           })
         } else {
+          console.log(4444)
           if (hasPermission(store.getters.roles, to.meta.roles)) {
-            next()//
-          } else {
-            next({ path: '/401', replace: true, query: { noGoBack: true }})
+            next()
           }
         }
       }

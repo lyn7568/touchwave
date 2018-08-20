@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-editor-container">
-    超级管理员，欢迎您
+    <p class="plat-tit">欢迎使用声脉桥梁云监控平台</p>
   </div>
 </template>
 
@@ -9,24 +9,20 @@
 export default {
   name: 'dashboard-admin',
   created() {
-    this.toPath()
+    // this.toPath()
   },
   methods: {
-    toPath() {
-      this.$router.push({ name: 'infoManage' })
-    }
+    // toPath() {
+    //   this.$router.push({ name: 'infoManage' })
+    // }
   }
 }
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .dashboard-editor-container {
-  padding: 32px;
-  background-color: rgb(240, 242, 245);
-  .chart-wrapper {
-    background: #fff;
-    padding: 16px 16px 0;
-    margin-bottom: 32px;
+  .plat-tit{
+    font-size: 34px;
   }
 }
 </style>
