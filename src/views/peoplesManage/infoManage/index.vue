@@ -10,7 +10,6 @@
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">查找</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加用户</el-button>
     </div>
-
     <el-table :key='tableKey' :data="list" v-loading="listLoading" border fit highlight-current-row
       style="width: 100%;min-height:550px;">
       <el-table-column width="110px" align="center" label="账号">
@@ -64,7 +63,6 @@
       </el-table-column>
     </el-table>
     <editUser :dialog="dialogTableVisible" @chilF='chilF' :id='edit'></editUser>
-    <editSystemMessage></editSystemMessage>
     <editUserPermissions :dialog='dialogPerssion' @chilF='chilF' :id='edit'></editUserPermissions>
     <div class="pagination-container" style="text-align:center;">
       <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="listQuery.page" :page-size="listQuery.limit" layout="prev, pager, next, jumper" :total="total">
@@ -77,7 +75,6 @@
 import { deleteUser, queryResponsibleBridge, pageQueryUser } from '@/api/userManagemen'
 import waves from '@/directive/waves'
 import editUser from './editUser'
-import editSystemMessage from './editSystemMessage'
 import editUserPermissions from './editUserPermissions'
 
 export default {
@@ -98,7 +95,6 @@ export default {
         account: '',
         name: '',
         comp: '',
-        active: 0,
         pageSize: 10,
         pageNo: 1
       }
@@ -114,7 +110,6 @@ export default {
   },
   components: {
     editUser,
-    editSystemMessage,
     editUserPermissions
   },
   methods: {

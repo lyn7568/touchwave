@@ -23,7 +23,7 @@
       </el-table-column>
       <el-table-column min-width="150px" align="center" label="桥梁位置">
         <template slot-scope="scope">
-          <span>{{scope.row.location}}</span>
+          <span>{{citys[scope.row.addrCode]}}</span>
         </template>
       </el-table-column>
       <el-table-column min-width="150px" align="center" label="维护机构">
@@ -147,7 +147,7 @@
 </template>
 
 <script>
-import { addDevice, updateDevice, deleteDevice, pageQueryDevice, DeviceOfservice, checkDeviceCode, checkBridgeShortName, checkBridgeName } from '@/api/bridge'
+import { addDevice, updateDevice, deleteDevice, pageQueryDevice, checkDeviceCode, checkBridgeShortName, checkBridgeName, dictory } from '@/api/bridge'
 import waves from '@/directive/waves'
 import city from '../../city/linkage'
 export default {
@@ -226,6 +226,8 @@ export default {
       }
     }
     return {
+      provinceCityCounties: [],
+      citys: [],
       edit: '',
       imageUrl: '',
       ruleForm2: {
@@ -292,7 +294,17 @@ export default {
     }
   },
   created() {
-    this.getList()
+    dictory().then(response => {
+      if (response.success) {
+        this.provinceCityCounties = response.data.sort((obj1, obj2) => {
+          return obj1.code - obj2.code
+        })
+        response.data.map(item => {
+          this.citys[item.code] = item.fullCaption
+        })
+        this.getList()
+      }
+    })
   },
   components: {
     city
@@ -432,32 +444,6 @@ export default {
       this.resetTemp(row)
       this.dialogTableVisible = true
       this.imageUrl = '/data/bridge' + row.img
-    },
-    querySearchAsync(queryString, cb) {
-      if (queryString === '') {
-        cb([])
-        return
-      }
-      this.ruleForm2.deviceId = ''
-      clearTimeout(this.timeout)
-      this.timeout = setTimeout(() => {
-        DeviceOfservice({ code: this.ruleForm2.device }).then(response => {
-          const $info = response.data
-          if ($info.length) {
-            const $data = $info.map(item => {
-              return { 'value': item.code, 'id': item.id }
-            })
-            cb($data)
-            if ($info.length === 1 && this.ruleForm2.bridge === $info[0].code) {
-              this.ruleForm2.deviceId = $info[0].id
-            } else {
-              this.ruleForm2.deviceId = ''
-            }
-          } else {
-            cb([])
-          }
-        })
-      }, 3000 * Math.random())
     },
     handleSelect(item) {
       this.ruleForm2.deviceId = item.id

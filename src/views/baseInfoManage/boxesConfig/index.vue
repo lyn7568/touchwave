@@ -213,7 +213,7 @@ export default {
             addDevice(this.ruleForm2).then(response => {
               this.getList()
               setTimeout(function() {
-                that.pop('已成功添加传感器')
+                that.pop('已成功添加采集盒')
               }, 1000)
               this.resetForm(this.ruleForm2)
               this.dialogTableVisible = false
@@ -226,7 +226,7 @@ export default {
             updateDevice(par).then(response => {
               if (response.success) {
                 setTimeout(function() {
-                  that.pop('已成功更新传感器')
+                  that.pop('已成功更新采集盒')
                 }, 1000)
                 this.resetForm('ruleForm2')
                 this.getList()
@@ -295,7 +295,7 @@ export default {
         deleteDevice({ id: row.id }).then(response => {
           if (response.success) {
             this.getList()
-            this.pop('已成功删除该传感器')
+            this.pop('已成功删除该采集盒')
             /*  this.$message({
               type: 'success',
               message: '已成功删除该采集盒!'

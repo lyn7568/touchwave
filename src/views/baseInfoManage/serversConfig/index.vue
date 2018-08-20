@@ -213,7 +213,7 @@ export default {
             addDevice(this.ruleForm2).then(response => {
               this.getList()
               setTimeout(function() {
-                that.pop('已成功添加传感器')
+                that.pop('已成功添加服务器')
               }, 1000)
               this.resetForm(this.ruleForm2)
               this.dialogTableVisible = false
@@ -226,7 +226,7 @@ export default {
             updateDevice(par).then(response => {
               if (response.success) {
                 setTimeout(function() {
-                  that.pop('已成功更新传感器')
+                  that.pop('已成功更新服务器')
                 }, 1000)
                 this.resetForm('ruleForm2')
                 this.getList()
@@ -361,7 +361,6 @@ export default {
     },
     handleSelect(item) {
       this.ruleForm2.bridgeId = item.id
-      console.log(item.id)
     }
   }
 }

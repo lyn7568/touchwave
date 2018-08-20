@@ -95,6 +95,8 @@ export default {
       } else {
         if (!regTel.test(value)) {
           callback(new Error('手机号码格式不正确'))
+        } else {
+          callback()
         }
       }
     }
@@ -105,6 +107,8 @@ export default {
       } else {
         if (!regTel.test(value)) {
           callback(new Error('邮箱格式不正确'))
+        } else {
+          callback()
         }
       }
     }

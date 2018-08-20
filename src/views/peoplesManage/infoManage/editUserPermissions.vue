@@ -181,6 +181,10 @@ export default {
       this.tableData3.map(item => {
         this.arr.push(item.address)
       })
+      if (!this.arr.length) {
+        this.$message.error('请至少选择一个桥梁')
+        return
+      }
       updatePermission({ id: this.id, bridges: this.arr }).then(response => {
         if (response.success) {
           this.tableData3 = []

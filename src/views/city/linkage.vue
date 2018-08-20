@@ -35,7 +35,6 @@
     </el-select>
   </div>
 </template>
-
 <script>
 import axios from 'axios'
 export default {
@@ -86,7 +85,9 @@ export default {
       var that = this
       axios.get('/ajax/dict/items?dict=XZQH').then(function(response) {
         if (response.status === 200) {
-          var data = response.data.data
+          var data = response.data.data.sort((obj1, obj2) => {
+            return obj1.code - obj2.code
+          })
           that.province = []
           that.city = []
           that.block = []
