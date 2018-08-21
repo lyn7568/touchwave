@@ -48,14 +48,15 @@ export const constantRouterMap = [
       meta: { title: '主页', noCache: true }
     }]
   },
-
   {
     path: '',
+    hidden: true,
     component: Layout,
     name: 'bridgesConsole',
-    // meta: {
-    //   noCache: true
-    // },
+    meta: {
+      noCache: true,
+      roles: ['0']
+    },
     children: [
       {
         path: 'bridgeDetail',
@@ -88,7 +89,10 @@ export const constantRouterMap = [
         path: 'bridgeMonitor',
         name: 'bridgeMonitor',
         component: () => import('@/views/bridgesConsole/bridgeMonitor/index'),
-        meta: { title: '历史监测信息查询', noCache: true }
+        meta: {
+          title: '历史监测信息查询',
+          roles: ['0'],
+          noCache: true }
       }
     ]
   }

@@ -10,7 +10,7 @@ NProgress.configure({ showSpinner: false })// NProgress Configuration
 function hasPermission(roles, permissionRoles) {
   if (roles.indexOf('1') >= 0) return true
   if (!permissionRoles) return true
-  return roles.some(role => permissionRoles.indexOf(role) >= 0)
+  return roles.some(role => permissionRoles.indexOf('1') >= 0)
 }
 
 const whiteList = ['/login', '/findPwd'] // 不重定向白名单
