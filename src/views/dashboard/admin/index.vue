@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-editor-container">
-    <img class="plat-pic" src="/static/pg.png" alt="桥梁">
+    <img class="plat-pic" src="/static/pg.png">
     <p class="plat-tit">欢迎使用<br />声脉桥梁云监控平台</p>
   </div>
 </template>
