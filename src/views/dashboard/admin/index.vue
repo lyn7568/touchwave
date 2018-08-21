@@ -1,26 +1,21 @@
 <template>
   <div class="dashboard-editor-container">
-    <img class="plat-pic" src="/static/pg.png">
-    <p class="plat-tit">欢迎使用<br />声脉桥梁云监控平台</p>
+    <div>
+      <img class="plat-pic" src="/static/touchwave.png" width="460">
+      <p class="plat-tit">欢迎 <span>{{name}}</span> 使用声脉桥梁云监控平台</p>
+    </div>
   </div>
 </template>
 
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'dashboard-admin',
-  watch: {
-    $route(to, from) {
-      console.log(to.path)
-    }
-  },
-  created() {
-    // this.toPath()
-  },
-  methods: {
-    // toPath() {
-    //   this.$router.push({ name: 'infoManage' })
-    // }
+  computed: {
+    ...mapGetters([
+      'name'
+    ])
   }
 }
 </script>
@@ -32,13 +27,20 @@ export default {
   justify-content: center;
   flex-direction: column;
   text-align: center;
+  margin: 20px;
+  height: 100%;
+  padding: 15% 0;
+  background: #fff;
   .plat-pic{
-    margin: 40px auto 10px;
+    margin: 40px auto 0;
   }
   .plat-tit{
     font-size: 34px;
-    line-height: 60px;
-    letter-spacing: 4px;
+    line-height: 40px;
+    letter-spacing: 2px;
+    span{
+      color: #0f76c4;
+    }
   }
 }
 </style>
