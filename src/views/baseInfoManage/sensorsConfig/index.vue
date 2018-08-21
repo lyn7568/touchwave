@@ -18,12 +18,12 @@
       </el-table-column>
       <el-table-column width="150px" align="center" label="传感器所在主缆">
         <template slot-scope="scope">
-          <span>{{scope.row.cableType}}</span>
+          <span>{{cableMain[scope.row.cableType]}}</span>
         </template>
       </el-table-column>
       <el-table-column width="150px" align="center" label="传感器位置">
         <template slot-scope="scope">
-          <span>{{scope.row.locType}}</span>
+          <span>{{addr[scope.row.locType]}}</span>
         </template>
       </el-table-column>
       <el-table-column min-width="150px" align="center" label="所属采集盒编号">
@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import { addDevice, updateDevice, deleteDevice, pageQueryDevice, DeviceOfservice, checkDeviceCode, checkDeviceInternalCode, queryServer } from '@/api/sensor'
+import { addDevice, updateDevice, deleteDevice, pageQueryDevice, DeviceOfservice, checkDeviceCode, checkDeviceInternalCode, queryServer, dictory } from '@/api/sensor'
 import waves from '@/directive/waves'
 export default {
   name: 'complexTable',
@@ -182,37 +182,18 @@ export default {
       }
     }
     return {
-      options: [{
-        value: '上游主缆',
-        label: '上游主缆'
-      }, {
-        value: '下游主缆',
-        label: '下游主缆'
-      }],
-      options1: [{
-        value: '东跨',
-        label: '东跨'
-      }, {
-        value: '西跨',
-        label: '西跨'
-      }, {
-        value: '南跨',
-        label: '南跨'
-      }, {
-        value: '中跨',
-        label: '中跨'
-      }, {
-        value: '北跨',
-        label: '北跨'
-      }],
+      cableMain: [],
+      addr: [],
+      options: [],
+      options1: [],
       edit: '',
       ruleForm2: {
         code: '',
-        cableType: '上游主缆',
+        cableType: '01',
         device: '',
         seq: '',
         deviceId: '',
-        locType: '东跨',
+        locType: '01',
         remark: ''
       },
       rules2: {
@@ -253,7 +234,27 @@ export default {
     }
   },
   created() {
-    this.getList()
+    dictory({ dict: 'ZLLX' }).then(response => {
+      if (response.success) {
+        response.data.map(item => {
+          this.options.push({ value: item.code, label: item.caption })
+          this.cableMain[item.code] = item.caption
+        })
+      }
+      return Promise.resolve()
+    }).then(response => {
+      dictory({ dict: 'ZLWZ' }).then(response => {
+        if (response.success) {
+          response.data.map(item => {
+            this.options1.push({ value: item.code, label: item.caption })
+            this.addr[item.code] = item.caption
+          })
+        }
+        return Promise.resolve()
+      })
+    }).then(response => {
+      this.getList()
+    })
   },
   methods: {
     submitForm(formName) {
