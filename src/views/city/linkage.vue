@@ -41,7 +41,7 @@ export default {
   props: ['addrCode'],
   data() {
     return {
-      mapJson: '../../static/map.json',
+      firstFlag: false,
       province: [],
       sheng: '',
       shi: '',
@@ -54,30 +54,7 @@ export default {
   },
   watch: {
     addrCode: function() {
-      if (!this.addrCode) {
-        this.sheng = ''
-        this.shi = ''
-        this.qu = ''
-        return
-      }
-      const s = this.addrCode.substring(0, 2) + '0000'
-      const si = this.addrCode.substring(0, 4) + '00'
-      const x = this.addrCode
-      this.province.map(item => {
-        if (item.id === s) {
-          this.sheng = item.value
-          item.children.map(item => {
-            if (item.id === si) {
-              this.shi = item.value
-              item.children.map(item => {
-                if (x === item.id) {
-                  this.qu = item.value
-                }
-              })
-            }
-          })
-        }
-      })
+      this.initpsq()
     }
   },
   methods: {
@@ -113,6 +90,9 @@ export default {
                 that.city[item1].children.push(that.block[item2])
               }
             }
+          }
+          if (!that.firstFlag) {
+            that.initpsq()
           }
         } else {
           console.log(response.status)
@@ -151,6 +131,32 @@ export default {
       }
       this.E = e
       this.$emit('paren', this.E)
+    },
+    initpsq: function() {
+      if (!this.addrCode) {
+        this.sheng = ''
+        this.shi = ''
+        this.qu = ''
+        return
+      }
+      const s = this.addrCode.substring(0, 2) + '0000'
+      const si = this.addrCode.substring(0, 4) + '00'
+      const x = this.addrCode
+      this.province.map(item => {
+        if (item.id === s) {
+          this.sheng = item.value
+          item.children.map(item => {
+            if (item.id === si) {
+              this.shi = item.value
+              item.children.map(item => {
+                if (x === item.id) {
+                  this.qu = item.value
+                }
+              })
+            }
+          })
+        }
+      })
     }
   },
   created: function() {

@@ -320,7 +320,7 @@ export default {
               setTimeout(function() {
                 that.pop('已成功添加桥梁')
               }, 1000)
-              this.resetForm(this.ruleForm2)
+              this.resetForm('ruleForm2')
               this.dialogTableVisible = false
             }).catch(error => {
               console.log(error)
@@ -441,9 +441,12 @@ export default {
       this.dialogTableVisible = true
     },
     handleUpdate(row) {
-      this.resetTemp(row)
+      const that = this
+      setTimeout(function() {
+        that.resetTemp(row)
+        that.imageUrl = '/data/bridge' + row.img
+      }, 500)
       this.dialogTableVisible = true
-      this.imageUrl = '/data/bridge' + row.img
     },
     handleSelect(item) {
       this.ruleForm2.deviceId = item.id
