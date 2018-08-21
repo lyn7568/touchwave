@@ -49,7 +49,7 @@ export const constantRouterMap = [
     }]
   },
   {
-    path: '',
+    path: 'bridgesConsole',
     hidden: true,
     component: Layout,
     name: 'bridgesConsole',
@@ -61,8 +61,8 @@ export const constantRouterMap = [
       {
         path: 'bridgeDetail',
         name: 'bridgeDetail',
-        component: () => import('@/views/bridgesConsole/bridgeDetail/index')
-        // meta: { noCache: true }
+        component: () => import('@/views/bridgesConsole/bridgeDetail/index'),
+        meta: { noCache: true }
       },
       {
         path: 'danger',
@@ -95,21 +95,8 @@ export const constantRouterMap = [
           noCache: true }
       }
     ]
-  }
-]
+  },
 
-// 实例化vue的时候只挂载constantRouter
-
-export default new Router({
-  // mode: 'history', //后端支持可开
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRouterMap
-})
-
-// 异步挂载的路由
-// 动态需要根据权限加载的路由表
-
-export const asyncRouterMap = [
   {
     path: '',
     component: Layout,
@@ -169,4 +156,18 @@ export const asyncRouterMap = [
   },
 
   { path: '*', redirect: '/404', hidden: true }
+]
+
+// 实例化vue的时候只挂载constantRouter
+
+export default new Router({
+  // mode: 'history', //后端支持可开
+  scrollBehavior: () => ({ y: 0 }),
+  routes: constantRouterMap
+})
+
+// 异步挂载的路由
+// 动态需要根据权限加载的路由表
+
+export const asyncRouterMap = [
 ]

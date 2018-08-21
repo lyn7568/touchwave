@@ -9,6 +9,11 @@
 <script>
 export default {
   name: 'dashboard-admin',
+  watch: {
+    $route(to, from) {
+      console.log(to.path)
+    }
+  },
   created() {
     // this.toPath()
   },
