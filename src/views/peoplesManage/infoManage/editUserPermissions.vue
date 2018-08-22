@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="用户数据权限修改" :visible.sync="dialogTableVisible" width="60%" @close='closed'>
+  <el-dialog title="用户数据权限修改" :visible.sync="dialogTableVisible" width="860px" @close='closed'>
     <el-form class="form-main" :model="ruleForm2"  ref="ruleForm2">
       <el-row :gutter="16">
         <el-col :xs="12" :sm="12" :lg="12">

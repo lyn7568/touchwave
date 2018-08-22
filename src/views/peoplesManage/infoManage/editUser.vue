@@ -1,6 +1,6 @@
 <template>
-  <el-dialog title="编辑用户" ref="ruleForm" :visible.sync="dialogTableVisible" width="680px" @close='closed'>
-     <el-form class="form-main" :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="120px" label-position='right' status-icon>
+  <el-dialog title="编辑用户" ref="ruleForm" :visible.sync="dialogTableVisible" width="860px" @close='closed'>
+     <el-form class="form-main" :model="ruleForm2" :rules="rules2" ref="ruleForm2"  label-position='top' status-icon>
         <el-row>
           <el-col :span="12">
             <el-form-item label="账号" prop='account'>
@@ -266,3 +266,18 @@ export default {
   }
 }
 </script>
+
+<style rel="stylesheet/scss" lang="scss" scoped>
+  .el-form-item{
+    margin: 0px 10px
+  }
+  .el-select{
+    width: 100%
+  }
+  .el-col{
+    margin-bottom: 15px
+  }
+  .el-form-item__label{
+    padding: 0px
+  }
+</style>

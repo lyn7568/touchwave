@@ -39,8 +39,8 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="采集盒配置" ref="ruleForm" :visible.sync="dialogTableVisible" width="680px" @close='closed'>
-      <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" class="form-main" label-width="120px" label-position='right' status-icon>
+    <el-dialog title="采集盒配置" ref="ruleForm" :visible.sync="dialogTableVisible" width="860px" @close='closed'>
+      <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" class="form-main" label-position='right' status-icon>
         <el-row>
           <el-col :span="12">
             <el-form-item label="采集盒编号"  prop="code">
@@ -379,5 +379,17 @@ export default {
   }
   .el-btn-col{
     margin-top: 45px
+  }
+  .el-form-item{
+    margin: 0px 10px
+  }
+  .el-select{
+    width: 100%
+  }
+  .el-col{
+    margin-bottom: 15px
+  }
+  .el-form-item__label{
+    padding: 0px
   }
 </style>

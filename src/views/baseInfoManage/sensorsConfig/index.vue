@@ -44,8 +44,8 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="传感器配置" ref="ruleForm" :visible.sync="dialogTableVisible" width="680px" @close='closed'>
-      <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" class="form-main" label-width="120px" label-position='right' status-icon>
+    <el-dialog title="传感器配置" ref="ruleForm" :visible.sync="dialogTableVisible" width="860px" @close='closed'>
+      <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" class="form-main"  label-position='right' status-icon>
         <el-row>
           <el-col :span="12">
             <el-form-item label="采集盒编号" prop="device">
@@ -113,7 +113,8 @@
 </template>
 
 <script>
-import { addDevice, updateDevice, deleteDevice, pageQueryDevice, DeviceOfservice, checkDeviceCode, checkDeviceInternalCode, queryServer, dictory } from '@/api/sensor'
+import { addDevice, updateDevice, deleteDevice, pageQueryDevice, DeviceOfservice, checkDeviceCode, checkDeviceInternalCode, queryServer } from '@/api/sensor'
+import { mainCable, location } from '@/api/numberDictionary'
 import waves from '@/directive/waves'
 export default {
   name: 'complexTable',
@@ -234,7 +235,7 @@ export default {
     }
   },
   created() {
-    dictory({ dict: 'ZLLX' }).then(response => {
+    mainCable().then(response => {
       if (response.success) {
         response.data.map(item => {
           this.options.push({ value: item.code, label: item.caption })
@@ -243,7 +244,7 @@ export default {
       }
       return Promise.resolve()
     }).then(response => {
-      dictory({ dict: 'ZLWZ' }).then(response => {
+      location().then(response => {
         if (response.success) {
           response.data.map(item => {
             this.options1.push({ value: item.code, label: item.caption })
@@ -429,5 +430,17 @@ export default {
   }
   .el-btn-col{
     margin-top: 45px
+  }
+  .el-form-item{
+    margin: 0px 10px
+  }
+  .el-select{
+    width: 100%
+  }
+  .el-col{
+    margin-bottom: 15px
+  }
+  .el-form-item__label{
+    padding: 0px
   }
 </style>

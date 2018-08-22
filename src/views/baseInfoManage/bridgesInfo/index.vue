@@ -44,7 +44,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="桥梁信息" ref="ruleForm" :visible.sync="dialogTableVisible" width="80%" @close='closed'>
+    <el-dialog title="桥梁信息" ref="ruleForm" :visible.sync="dialogTableVisible" width="1100px" @close='closed'>
       <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" class="form-main" label-width="120px" label-position='right' status-icon>
         <el-row :gutter="10">
           <el-col :xs="24" :sm="18" :lg="16">
