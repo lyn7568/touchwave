@@ -6,7 +6,7 @@ export function mainCable() {
     url: '/ajax/dict/items',
     method: 'get',
     params: {
-    	dict: 'ZLLX'
+      dict: 'ZLLX'
     }
   })
 }
@@ -17,7 +17,7 @@ export function location() {
     url: '/ajax/dict/items',
     method: 'get',
     params: {
-    	dict: 'ZLWZ'
+      dict: 'ZLWZ'
     }
   })
 }
@@ -28,7 +28,7 @@ export function provinceCityDistrict() {
     url: '/ajax/dict/items',
     method: 'get',
     params: {
-    	dict: 'XZQH'
+      dict: 'XZQH'
     }
   })
 }

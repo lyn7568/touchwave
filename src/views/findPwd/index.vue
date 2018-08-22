@@ -1,6 +1,8 @@
 <template>
   <div class="login-container">
-    <div class="logo-wrapper"></div>
+    <div class="logo-wrapper">
+      <div class="logo-img"></div>
+    </div>
     <div class="form-wrapper">
       <div class="form-contain login-form">
         <h3 class="title">找回密码</h3>
@@ -18,7 +20,7 @@
             </el-form-item>
             <el-form-item prop="msgVC">
               <el-input v-model="ruleForm.msgVC" placeholder="请输入短信验证码" class="code-btn" style="width:100%">
-                <el-button slot="append" :disabled="phoneCodeBol" @click="clickMsgVcLogin">
+                <el-button slot="append" type="primary" :disabled="phoneCodeBol" @click="clickMsgVcLogin">
                   <span v-if="sendMsgDisabled">{{seconds + '秒后获取'}}</span>
                   <span v-if="!sendMsgDisabled">获取验证码</span>
                 </el-button>
@@ -39,7 +41,7 @@
               <el-input type="password" v-model="ruleForm2.checkPass" placeholder="请再次输入密码确认" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" :disabled="isDisabl" @click.native.prevent="resetPwd('ruleForm2')">重置密码</el-button>
+              <el-button class="log-btn" type="primary" :disabled="isDisabl" @click.native.prevent="resetPwd('ruleForm2')">重置密码</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -198,23 +200,12 @@
           })
         } else {
           this.userRegisterOk()
-          const me = this
-          me.sendMsgDisabled = true
-          me.phoneCodeBol = true
-          const interval = window.setInterval(function() {
-            if ((me.seconds--) <= 0) {
-              me.seconds = 60
-              me.sendMsgDisabled = false
-              me.phoneCodeBol = false
-              window.clearInterval(interval)
-            }
-          }, 1000)
         }
       },
       resetPwd(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            resetPwdByTel(this.ruleForm.msgVC, this.ruleForm2.pass).then((res) => {
+            resetPwdByTel(this.ruleForm2.pass, this.ruleForm.msgVC).then((res) => {
               if (res.success) {
                 this.$alert('提示', '密码已重置，快去登录吧！', {
                   confirmButtonText: '确定',

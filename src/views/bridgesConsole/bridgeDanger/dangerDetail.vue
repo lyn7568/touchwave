@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import '@/styles/roleuser.scss'
 import { urlParse, parseTime } from '@/utils'
 import { getDangerDetail, setUnreadToRead } from '@/api/bridgeInfo'
 import lineChart from '../lineChart/LineChart'

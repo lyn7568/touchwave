@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-editor-container">
-    <BInfoDialog01 ref="BInfoDialog01" :bridgeId="bridgeId"></BInfoDialog01>
-    <BInfoDialog02 ref="BInfoDialog02" :serverList="serverList" :bridgeName="bridgeName"></BInfoDialog02>
+    <BInfoDialog01 ref="BInfoDialog01"></BInfoDialog01>
+    <BInfoDialog02 ref="BInfoDialog02" :serverList="serverList"></BInfoDialog02>
     <BInfoDialog03 ref="BInfoDialog03" :deviceList="deviceList"></BInfoDialog03>
     <BInfoDialog04 ref="BInfoDialog04" :transducerList="transducerList"></BInfoDialog04>
 
@@ -77,8 +77,10 @@
 
 <script>
 import '@/styles/roleuser.scss'
-import { urlParse, parseTime, turnTime } from '@/utils'
+import Cookies from 'js-cookie'
+import { parseTime, turnTime } from '@/utils'
 import { getUserAllResource, getDangerList, getTimingMonitor, getServerInfo, getDeviceInfo } from '@/api/bridgeInfo'
+import { mainCable, location, provinceCityDistrict } from '@/api/numberDictionary'
 
 import lineChart2 from '../lineChart/LineChart2'
 import BInfoDialog01 from './components/BInfoDialog01'
@@ -102,8 +104,10 @@ export default {
   },
   data() {
     return {
-      bridgeId: '',
-      bridgeName: '',
+      dialogW: '880px',
+      citys: [],
+      cableMain: [],
+      addr: [],
       dangerList: '',
       bridgeList: [],
       serverList: [],
@@ -124,14 +128,16 @@ export default {
     }
   },
   created() {
-    this.bridgeId = urlParse('id')
-    this.bridgeName = urlParse('name')
+    this.bridgeId = Cookies.get('bridgeId')
+    this.bridgeName = Cookies.get('bridgeName')
+    this.getDictoryData()
     this.getUserAllResource()
     this.getDangerList()
+
     // setInterval(() => {
     //   this.addData(true)
     //   this.getTimingMonitor()
-    // }, 500)
+    // }, 60000)
   },
   methods: {
     getDangerList() {
@@ -237,6 +243,30 @@ export default {
         })
       }
     },
+    getDictoryData() {
+      mainCable().then(response => {
+        if (response.success) {
+          response.data.map(item => {
+            this.cableMain[item.code] = item.caption
+          })
+        }
+      }).then(response => {
+        location().then(response => {
+          if (response.success) {
+            response.data.map(item => {
+              this.addr[item.code] = item.caption
+            })
+          }
+        })
+      })
+      provinceCityDistrict().then(response => {
+        if (response.success) {
+          response.data.map(item => {
+            this.citys[item.code] = item.fullCaption
+          })
+        }
+      })
+    },
     addData(shift) {
       this.dateArr.push(this.currentTime)
       if (shift) {
@@ -254,10 +284,7 @@ export default {
       })
     },
     queryDangerInfo() {
-      this.$router.push({
-        name: 'dangerList',
-        query: { name: this.bridgeName }
-      })
+      this.$router.push({ name: 'dangerList' })
     },
     queryMonitorInfo() {
       this.$router.push({

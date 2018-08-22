@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="传感器信息" :visible.sync="dialogTableVisible" width="80%">
+  <el-dialog title="传感器信息" :visible.sync="dialogTableVisible" :width="dialogW">
     <el-form class="form-main">
       <el-row :gutter="16">
         <el-col :xs="12" :sm="12" :lg="12" v-for="item in transducerShowList" :key="item.index">
@@ -12,10 +12,10 @@
                 <el-form-item label="传感器编号">{{item.code}}</el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="所属主缆">{{item.cableType}}</el-form-item>
+                <el-form-item label="所属主缆">{{childCableMain[item.cableType]}}</el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="传感器位置">{{item.locType}}</el-form-item>
+                <el-form-item label="传感器位置">{{childAddr[item.locType]}}</el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="备注" class="el-to-block"><br />
@@ -58,10 +58,18 @@ export default {
   },
   data() {
     return {
+      dialogW: '',
+      childCableMain: [],
+      childAddr: [],
       dialogTableVisible: false,
       pageSize: 4,
       pageNo: 1
     }
+  },
+  created() {
+    this.childCableMain = this.$parent.cableMain
+    this.childAddr = this.$parent.addr
+    this.dialogW = this.$parent.dialogW
   },
   computed: {
     transducerShowList() {

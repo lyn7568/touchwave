@@ -8,15 +8,12 @@ $light_black:#555;
   height: 100%;
   width: 100%;
   background-color: $bg;
-  .logo-wrapper {
-    display:block;
-    position:absolute;
-    top:30px;
-    left:30px;
-    height:30px;
-    width:320px;
-    background-image: url('/static/touchwave.png');
-    background-size: 320px 30px;
+  background-image: url(/static/login_bg.jpg);
+  background-size: cover;
+  background-position: center center;
+  .logo-wrapper{
+    padding: 20px 30px;
+    background-color: $bg;
   }
   .step-wrapper{
     margin-bottom:30px;
@@ -56,9 +53,13 @@ $light_black:#555;
     position: absolute;
     left: 0;
     right: 0;
+    top: 10%;
     width: 520px;
     padding: 50px 35px 15px 35px;
     margin: 120px auto;
+    border-radius: 4px;
+    background-color: $bg;
+    box-shadow: 1px 1px 18px 6px rgba(24, 24, 24, .4);
     .log-btn.el-button--primary {
       width:100%;
     }

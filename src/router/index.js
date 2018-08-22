@@ -49,7 +49,7 @@ export const constantRouterMap = [
     }]
   },
   {
-    path: 'bridgesConsole',
+    path: '',
     hidden: true,
     component: Layout,
     name: 'bridgesConsole',
@@ -59,40 +59,48 @@ export const constantRouterMap = [
     },
     children: [
       {
-        path: 'bridgeDetail',
-        name: 'bridgeDetail',
-        component: () => import('@/views/bridgesConsole/bridgeDetail/index'),
-        meta: { noCache: true }
-      },
-      {
-        path: 'danger',
-        name: 'danger',
-        redirect: 'noredirect',
-        meta: { title: '历史报警信息查询', noCache: true },
-        component: () => import('@/views/bridgesConsole/bridgeDanger/index'),
+        path: 'bridgeHome',
+        name: 'bridgeHome',
+        component: () => import('@/views/bridgesConsole/index'),
+        redirect: '/bridgeHome/bridgeDetail',
+        meta: { title: '主页', noCache: true },
         children: [
           {
-            path: 'dangerList',
-            name: 'dangerList',
-            component: () => import('@/views/bridgesConsole/bridgeDanger/dangerList'),
-            meta: { noCache: true }
+            path: 'bridgeDetail',
+            name: 'bridgeDetail',
+            component: () => import('@/views/bridgesConsole/bridgeDetail/index')
           },
           {
-            path: 'dangerDetail',
-            name: 'dangerDetail',
-            component: () => import('@/views/bridgesConsole/bridgeDanger/dangerDetail'),
-            meta: { title: '报警信息浏览' }
+            path: 'danger',
+            name: 'danger',
+            redirect: 'dangerList',
+            meta: { title: '历史报警信息查询', noCache: true },
+            component: () => import('@/views/bridgesConsole/bridgeDanger/index'),
+            children: [
+              {
+                path: 'dangerList',
+                name: 'dangerList',
+                component: () => import('@/views/bridgesConsole/bridgeDanger/dangerList'),
+                meta: { noCache: true }
+              },
+              {
+                path: 'dangerDetail',
+                name: 'dangerDetail',
+                component: () => import('@/views/bridgesConsole/bridgeDanger/dangerDetail'),
+                meta: { title: '报警信息浏览' }
+              }
+            ]
+          },
+          {
+            path: 'bridgeMonitor',
+            name: 'bridgeMonitor',
+            component: () => import('@/views/bridgesConsole/bridgeMonitor/index'),
+            meta: {
+              title: '历史监测信息查询',
+              roles: ['0'],
+              noCache: true }
           }
         ]
-      },
-      {
-        path: 'bridgeMonitor',
-        name: 'bridgeMonitor',
-        component: () => import('@/views/bridgesConsole/bridgeMonitor/index'),
-        meta: {
-          title: '历史监测信息查询',
-          roles: ['0'],
-          noCache: true }
       }
     ]
   },

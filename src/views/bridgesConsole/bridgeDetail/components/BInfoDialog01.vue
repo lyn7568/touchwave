@@ -1,8 +1,8 @@
 <template>
-  <el-dialog title="桥梁信息" :visible.sync="dialogTableVisible" width="80%">
+  <el-dialog title="桥梁信息" :visible.sync="dialogTableVisible" :width="dialogW">
     <el-form class="form-main">
       <el-row :gutter="10">
-        <el-col :xs="24" :sm="18" :lg="16">
+        <el-col :xs="14" :sm="14" :lg="14">
           <el-row>
             <el-col :span="12">
               <el-form-item label="桥梁编号">{{dataInfo.code}}</el-form-item>
@@ -14,7 +14,7 @@
               <el-form-item label="桥梁全称">{{dataInfo.name}}</el-form-item>
             </el-col>
             <el-col :span="24">
-              <el-form-item label="桥梁位置信息">{{dataInfo.addrCode}}</el-form-item>
+              <el-form-item label="桥梁位置信息">{{childCitys[dataInfo.addrCode]}}</el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="地理位置信息">{{dataInfo.location}}</el-form-item>
@@ -33,9 +33,9 @@
             </el-col>
           </el-row>
         </el-col>
-        <el-col :xs="24" :sm="6" :lg="8">
+        <el-col :xs="10" :sm="10" :lg="10">
           <div style="width:100%">
-            <img :src="dataInfo.img" :alt="dataInfo.shortName" width="90%">
+            <img :src="'/data/bridge'+ dataInfo.img" :alt="dataInfo.shortName" width="90%">
           </div>
         </el-col>
         <el-col :span="24" v-if="dataInfo.descp">
@@ -63,24 +63,26 @@ import { getBridgeInfo } from '@/api/bridgeInfo'
 import { parseTime } from '@/utils'
 
 export default {
-  props: {
-    bridgeId: {
-      type: String
-    }
-  },
   data() {
     return {
+      dialogW: '',
+      childCitys: [],
       dialogTableVisible: false,
       dataInfo: ''
     }
   },
   created() {
     this.bridgeInfo()
+    this.callParent()
   },
   methods: {
+    callParent() {
+      this.childCitys = this.$parent.citys
+      this.dialogW = this.$parent.dialogW
+    },
     bridgeInfo() {
       const param = {
-        id: this.bridgeId
+        id: this.$parent.bridgeId
       }
       getBridgeInfo(param).then(res => {
         if (res.success) {

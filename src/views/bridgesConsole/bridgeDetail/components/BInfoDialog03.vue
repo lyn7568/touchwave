@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="采集盒信息" :visible.sync="dialogTableVisible" width="80%">
+  <el-dialog title="采集盒信息" :visible.sync="dialogTableVisible" :width="dialogW">
     <el-form class="form-main">
       <el-row :gutter="16">
         <el-col :xs="12" :sm="12" :lg="12" v-for="item in deviceShowList" :key="item.index">
@@ -55,10 +55,14 @@ export default {
   },
   data() {
     return {
+      dialogW: '',
       dialogTableVisible: false,
       pageSize: 4,
       pageNo: 1
     }
+  },
+  created() {
+    this.dialogW = this.$parent.dialogW
   },
   computed: {
     deviceShowList() {

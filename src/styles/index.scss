@@ -77,3 +77,15 @@ a:hover {
 .app-container {
   padding: 20px;
 }
+
+.logo-wrapper {
+  display:block;
+  width: 100%;
+  .logo-img{
+    display:block;
+    height:28px;
+    width:300px;
+    background-image: url('/static/touchwave.png');
+    background-size: 300px 28px;
+  }
+}

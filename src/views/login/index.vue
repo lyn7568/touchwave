@@ -1,6 +1,8 @@
 <template>
   <div class="login-container">
-    <div class="logo-wrapper"></div>
+    <div class="logo-wrapper">
+      <div class="logo-img"></div>
+    </div>
     <el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
       <h3 class="title">登录</h3>
       <el-form-item prop="username">

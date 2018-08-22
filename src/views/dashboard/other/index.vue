@@ -32,6 +32,7 @@ import {
   getBridgeUnread
 } from '@/api/bridgeInfo'
 import '@/styles/roleuser.scss'
+import Cookies from 'js-cookie'
 
 export default {
   data() {
@@ -79,7 +80,6 @@ export default {
           }
           getBridgeServers(param).then(res => {
             if (res.success) {
-              console.log(res)
               var serverSeqArr = []
               if (res.data.length > 0) {
                 for (let j = 0; j < res.data.length; j++) {
@@ -92,7 +92,6 @@ export default {
         })(i)
       }
       this.dataList = $data
-      console.log(this.dataList)
     },
     getBridgeUnread($data, $arr) {
       var that = this
@@ -113,10 +112,9 @@ export default {
       })
     },
     goToDashboardC(id, name) {
-      this.$router.push({
-        name: 'bridgeDetail',
-        query: { id: id, name: name }
-      })
+      this.$router.push({ name: 'bridgeHome' })
+      Cookies.set('bridgeId', id)
+      Cookies.set('bridgeName', name)
     },
     handleCurrentChange(val) {
       this.pageNo = val

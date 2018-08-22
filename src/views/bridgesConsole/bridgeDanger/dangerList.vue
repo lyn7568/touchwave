@@ -29,14 +29,17 @@
 
 
 <script>
-import '@/styles/roleuser.scss'
-import { urlParse, parseTime } from '@/utils'
+import { parseTime } from '@/utils'
 import { getDangerList } from '@/api/bridgeInfo'
 
 export default {
+  props: {
+    bridgeName: {
+      type: String
+    }
+  },
   data() {
     return {
-      bridgeName: '',
       dangerList: [],
       total: 0,
       pageSize: 4,
@@ -49,7 +52,6 @@ export default {
     }
   },
   created() {
-    this.bridgeName = urlParse('name')
     this.getDangerList()
   },
   methods: {

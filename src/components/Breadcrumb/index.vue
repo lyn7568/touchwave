@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   created() {
     this.getBreadcrumb()
@@ -19,6 +20,11 @@ export default {
       levelList: null
     }
   },
+  computed: {
+    ...mapGetters([
+      'roles'
+    ])
+  },
   watch: {
     $route() {
       this.getBreadcrumb()
@@ -27,9 +33,16 @@ export default {
   methods: {
     getBreadcrumb() {
       let matched = this.$route.matched.filter(item => item.name)
-      const first = matched[0]
-      if (first && first.name !== 'dashboard') {
-        matched = [{ path: '/dashboard', meta: { title: '主页' }}].concat(matched)
+      if (this.roles.indexOf('1') >= 0) {
+        const first = matched[0]
+        if (first && first.name !== 'dashboard') {
+          matched = [{ path: '/dashboard', meta: { title: '主页' }}].concat(matched)
+        }
+      } else {
+        const firstF = matched[1]
+        if (firstF && firstF.name !== 'bridgeHome') {
+          matched = [{ path: 'bridgeHome', meta: { title: '主页' }}].concat(matched)
+        }
       }
       this.levelList = matched
     }
