@@ -39,7 +39,7 @@
       </el-table-column>
       <el-table-column width="100px" align="center" label="账户状态">
         <template slot-scope="scope">
-          <span>{{(scope.row.active) ? '未停用' : '已停用'}}</span>
+          <span :class="{ active: !scope.row.active}">{{(scope.row.active) ? '未停用' : '已停用'}}</span>
         </template>
       </el-table-column>
       <el-table-column min-width="200px" align="center" label="所在机构">
@@ -54,12 +54,13 @@
       </el-table-column>
       <el-table-column align="center" label="Actions" width="260px" class-name="small-padding fixed-width">
         <template slot-scope="scope"> 
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button> 
-          <el-button size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">停用
+          <el-button :type="((!scope.row.active) ? 'info' : 'primary')" size="mini" @click="handleUpdate(scope.row)" :disabled='!scope.row.active'>编辑</el-button> 
+          <el-button size="mini" :type="((!scope.row.active) ? 'info' : 'danger')" @click="handleModifyStatus(scope.row,'deleted')" :disabled='!scope.row.active'>停用
           </el-button>
-           <el-button size="mini" type="primary" @click="distribution(scope.row)">分配权限
+           <el-button size="mini" :type="((!scope.row.active) ? 'info' : 'primary')" @click="distribution(scope.row)" :disabled='!scope.row.active'>分配权限
           </el-button>
         </template>
+        
       </el-table-column>
     </el-table>
     <editUser :dialog="dialogTableVisible" @chilF='chilF' :id='edit'></editUser>
@@ -197,5 +198,8 @@ export default {
   }
   .editTe{
     margin: 10px 0 0 22px
+  }
+  .active{
+    color: red
   }
 </style>

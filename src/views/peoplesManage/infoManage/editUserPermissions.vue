@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="用户数据权限修改" :visible.sync="dialogTableVisible" width="80%" @close='closed'>
+  <el-dialog title="用户数据权限修改" :visible.sync="dialogTableVisible" width="60%" @close='closed'>
     <el-form class="form-main" :model="ruleForm2"  ref="ruleForm2">
       <el-row :gutter="16">
         <el-col :xs="12" :sm="12" :lg="12">
@@ -122,10 +122,6 @@ export default {
   },
   methods: {
     querySearchAsync(queryString, cb) {
-      if (queryString === '') {
-        cb([])
-        return
-      }
       clearTimeout(this.timeout)
       this.timeout = setTimeout(() => {
         DeviceOfservice({ key: this.state4, active: 1 }).then(response => {
@@ -136,13 +132,19 @@ export default {
             })
             cb($data)
           } else {
-            cb([])
+            cb([{ 'value': '暂无数据', 'id': '' }])
+            setTimeout(function() {
+              cb([])
+            }, 300)
           }
         })
       }, 3000 * Math.random())
     },
     handleSelect(item) {
       this.state4 = ''
+      if (item.value === '暂无数据' && item.id === '') {
+        return
+      }
       let flag = false
       for (let i = 0; i < this.tableData3.length; i++) {
         if (item.id === this.tableData3[i].address) {
@@ -211,8 +213,10 @@ export default {
     margin-bottom: 10px;
   }
   .list-item{
-    
     margin-bottom: 20px;
     padding: 10px 15px;
+  }
+  .el-autocomplete {
+    width: 100%
   }
 </style>

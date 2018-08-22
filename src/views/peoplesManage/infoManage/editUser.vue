@@ -4,7 +4,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="账号" prop='account'>
-              <el-input placeholder="请输入账号" v-model="ruleForm2.account"></el-input>
+              <el-input placeholder="请输入账号" v-model="ruleForm2.account" maxlength=11></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -66,25 +66,30 @@ export default {
   props: ['dialog', 'id'],
   data() {
     var account = (rule, value, callback) => {
+      const regTel = /^1[3|4|5|7|8][0-9]\d{8}$/
       if (value === '') {
         callback(new Error('请输入账号'))
       } else {
-        if (this.edit) {
-          checkRegister({ account: value, id: this.edit }).then(response => {
-            if (!response.data) {
-              callback(new Error('账户已存在，请重新输入'))
-            } else {
-              callback()
-            }
-          })
+        if (!regTel.test(value)) {
+          callback(new Error('账号为手机号格式'))
         } else {
-          checkRegister({ account: value }).then(response => {
-            if (!response.data) {
-              callback(new Error('账户已存在，请重新输入'))
-            } else {
-              callback()
-            }
-          })
+          if (this.edit) {
+            checkRegister({ account: value, id: this.edit }).then(response => {
+              if (!response.data) {
+                callback(new Error('账户已存在，请重新输入'))
+              } else {
+                callback()
+              }
+            })
+          } else {
+            checkRegister({ account: value }).then(response => {
+              if (!response.data) {
+                callback(new Error('账户已存在，请重新输入'))
+              } else {
+                callback()
+              }
+            })
+          }
         }
       }
     }
