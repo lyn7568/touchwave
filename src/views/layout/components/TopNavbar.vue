@@ -52,7 +52,7 @@ export default {
       'roles'
     ])
   },
-  watch:{
+  watch: {
     '$route'(to, from) {
       if (this.$route.path === '/') {
         this.showName = ''
