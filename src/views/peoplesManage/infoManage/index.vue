@@ -117,6 +117,14 @@ export default {
     getList() {
       this.listLoading = true
       pageQueryUser(this.listQuery).then(response => {
+        if (response.data === null) {
+          this.list = []
+          this.total = 0
+          setTimeout(() => {
+            this.listLoading = false
+          }, 1.5 * 1000)
+          return
+        }
         const $data = response.data.data
         for (let i = 0; i < $data.length; i++) {
           $data[i].bridgeName = ''
