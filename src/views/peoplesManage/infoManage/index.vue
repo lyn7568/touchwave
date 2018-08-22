@@ -128,7 +128,7 @@ export default {
         const $data = response.data.data
         for (let i = 0; i < $data.length; i++) {
           $data[i].bridgeName = ''
-          queryResponsibleBridge({ uid: $data[i].id }).then(response => {
+          queryResponsibleBridge({ uid: $data[i].id, active: 1 }).then(response => {
             if (response.success) {
               const arr = []
               const $info = response.data
