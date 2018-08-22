@@ -44,10 +44,10 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="桥梁信息" ref="ruleForm" :visible.sync="dialogTableVisible" width="1100px" @close='closed'>
-      <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" class="form-main" label-width="120px" label-position='right' status-icon>
+    <el-dialog title="桥梁信息" ref="ruleForm" :visible.sync="dialogTableVisible" width="860px" @close='closed'>
+      <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" class="form-main"  label-position='top' status-icon>
         <el-row :gutter="10">
-          <el-col :xs="24" :sm="18" :lg="16">
+          <el-col :xs="16" :sm="16" :lg="16">
             <el-row>
               <el-col :span="12">
                 <el-form-item label="桥梁编号" prop="code">
@@ -101,8 +101,7 @@
               </el-col>
             </el-row>
           </el-col>
-          <el-col :xs="24" :sm="6" :lg="8">
-            <div style="width:100%;display: flex;justify-content:center">
+          <el-col :xs="8" :sm="8" :lg="8">
               <el-upload
                 class="avatar-uploader"
                 action="/ajax/bridge/upload"
@@ -113,9 +112,7 @@
                 <img v-if="imageUrl" :src="imageUrl" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
-
-            </div>
-            <p style="width:100%;text-align:center;font-size:20px;color:#999;">上传桥梁图片<br>
+            <p style="width:100%;text-align:center;font-size:14px;color:#999;">上传桥梁图片<br>
                 JPEG/JPG/PNG格式大小5M以内</p>
           </el-col>
         </el-row>
@@ -491,14 +488,32 @@ export default {
   .avatar-uploader {
     font-size: 28px;
     color: #8c939d;
-    width: 300px;
-    height: 300px;
-    line-height: 300px;
+    width: 260px;
+    height: 260px;
+    line-height: 260px;
     text-align: center;
   }
   .avatar {
-    width: 300px;
-    height: 300px;
+    width: 260px;
+    height: 260px;
     display: block;
+  }
+  .el-autocomplete{
+    display: block
+  }
+  .el-btn-col{
+    margin-top: 45px
+  }
+  .el-form-item{
+    margin: 0px 10px
+  }
+  .el-select,.el-date-editor--date{
+    width: 100%
+  }
+  .el-col{
+    margin-bottom: 15px
+  }
+  .el-form--label-top .el-form-item__label{
+    line-height: 20px
   }
 </style>

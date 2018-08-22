@@ -1,38 +1,46 @@
 <template>
   <div class="linkage">
-    <el-select
-      v-model="sheng"
-      @change="choseProvince"
-      placeholder="省">
-      <el-option
-        v-for="item in province"
-        :key="item.id"
-        :label="item.value"
-        :value="item.id">
-      </el-option>
-    </el-select>
-    <el-select
-      v-model="shi"
-      @change="choseCity"
-      placeholder="市">
-      <el-option
-        v-for="item in shi1"
-        :key="item.id"
-        :label="item.value"
-        :value="item.id">
-      </el-option>
-    </el-select>
-    <el-select
-      v-model="qu"
-      @change="choseBlock"
-      placeholder="区(县)">
-      <el-option
-        v-for="item in qu1"
-        :key="item.id"
-        :label="item.value"
-        :value="item.id">
-      </el-option>
-    </el-select>
+    <el-row :gutter='10'>
+      <el-col :span='8'>
+        <el-select
+          v-model="sheng"
+          @change="choseProvince"
+          placeholder="省">
+          <el-option
+            v-for="item in province"
+            :key="item.id"
+            :label="item.value"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-col>
+      <el-col :span='8'>
+        <el-select
+          v-model="shi"
+          @change="choseCity"
+          placeholder="市">
+          <el-option
+            v-for="item in shi1"
+            :key="item.id"
+            :label="item.value"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-col>
+      <el-col :span='8'>
+        <el-select
+          v-model="qu"
+          @change="choseBlock"
+          placeholder="区(县)">
+          <el-option
+            v-for="item in qu1"
+            :key="item.id"
+            :label="item.value"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script>
@@ -164,3 +172,7 @@ export default {
   }
 }
 </script>
+
+<style rel="stylesheet/scss" lang="scss" scoped>
+ 
+</style>
