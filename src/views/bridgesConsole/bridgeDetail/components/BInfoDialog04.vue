@@ -1,7 +1,7 @@
 <template>
   <el-dialog title="传感器信息" :visible.sync="dialogTableVisible" :width="dialogW">
     <el-form class="form-main">
-      <el-row :gutter="16">
+      <el-row :gutter="16" v-if="transducerList.length">
         <el-col :xs="12" :sm="12" :lg="12" v-for="item in transducerShowList" :key="item.index">
           <div class="list-item">
             <el-row>
@@ -26,6 +26,7 @@
           </div>
         </el-col>
       </el-row>
+      <DefaultPage v-if="!transducerList.length"></DefaultPage>
       <div class="pagination-container">
         <el-pagination
           background
@@ -49,16 +50,18 @@
 
 <script>
 import './style.scss'
+import DefaultPage from '@/components/DefaultPage'
+import queryInfo from '@/utils/queryInfo'
 
 export default {
-  props: {
-    transducerList: {
-      type: Array
-    }
+  components: {
+    DefaultPage
   },
   data() {
     return {
       dialogW: '',
+      bridgeId: '',
+      transducerList: [],
       childCableMain: [],
       childAddr: [],
       dialogTableVisible: false,
@@ -70,6 +73,8 @@ export default {
     this.childCableMain = this.$parent.cableMain
     this.childAddr = this.$parent.addr
     this.dialogW = this.$parent.dialogW
+    this.bridgeId = this.$parent.bridgeId
+    this.transducerList = queryInfo.queryTrans(this.bridgeId)
   },
   computed: {
     transducerShowList() {

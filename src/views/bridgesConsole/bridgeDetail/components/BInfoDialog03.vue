@@ -1,7 +1,7 @@
 <template>
   <el-dialog title="采集盒信息" :visible.sync="dialogTableVisible" :width="dialogW">
     <el-form class="form-main">
-      <el-row :gutter="16">
+      <el-row :gutter="16" v-if="deviceList.length">
         <el-col :xs="12" :sm="12" :lg="12" v-for="item in deviceShowList" :key="item.index">
           <div class="list-item">
             <el-row>
@@ -23,6 +23,7 @@
           </div>
         </el-col>
       </el-row>
+      <DefaultPage v-if="!deviceList.length"></DefaultPage>
       <div class="pagination-container">
         <el-pagination
           background
@@ -46,23 +47,27 @@
 
 <script>
 import './style.scss'
+import DefaultPage from '@/components/DefaultPage'
+import queryInfo from '@/utils/queryInfo'
 
 export default {
-  props: {
-    deviceList: {
-      type: Array
-    }
+  components: {
+    DefaultPage
   },
   data() {
     return {
       dialogW: '',
+      deviceList: [],
+      bridgeId: '',
       dialogTableVisible: false,
       pageSize: 4,
       pageNo: 1
     }
   },
   created() {
+    this.bridgeId = this.$parent.bridgeId
     this.dialogW = this.$parent.dialogW
+    this.deviceList = queryInfo.queryDevices(this.bridgeId)
   },
   computed: {
     deviceShowList() {

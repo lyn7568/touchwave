@@ -2,8 +2,9 @@
   <div>
     <el-dialog title="系统消息编辑" :visible.sync="dialogFormVisible">
       <el-form :model="formNotice" ref="formNotice" :rules="rules">
-        <el-input type="textarea" v-model="formNotice.desc"></el-input>
+        <el-input type="textarea" rows="6" maxlength="100" v-model="formNotice.desc" @input="limitFn"></el-input>
       </el-form>
+      <div class="limit_num">还可以输入{{ableNum}}字</div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="setNotice('formNotice')">确 定</el-button>
@@ -12,7 +13,8 @@
     <el-menu class="message-box" mode="horizontal">
       <div class="marquee_box">
         <span class="tit">系统公告：</span>
-        <el-tooltip :content="formNotice.desc" placement="bottom-end" effect="dark">
+        <el-tooltip placement="bottom-end" effect="dark">
+          <div slot="content" class="popper-tips">{{formNotice.desc}}</div>
           <div class="marquee_text">{{formNotice.desc}}</div>
         </el-tooltip>
         <span class="btn-span" v-if="isShow" @click="openNoticeDialog">设置</span>
@@ -32,7 +34,7 @@ export default {
   data() {
     return {
       dialogFormVisible: false,
-      animate: true,
+      ableNum: 100,
       formNotice: {
         desc: ''
       },
@@ -48,10 +50,14 @@ export default {
     this.getNotice()
   },
   methods: {
+    limitFn() {
+      this.ableNum = 100 - this.formNotice.desc.length
+    },
     getNotice() {
       getNotice().then(res => {
         if (res.success) {
           this.formNotice.desc = res.data
+          this.limitFn()
         }
       })
     },
@@ -113,11 +119,17 @@ export default {
       cursor: pointer;
     }
   }
-  .anim{
-    transition: all 0.5s;
-  }
 }
-.el-textarea .el-textarea__inner{
-  height: 160px;
+.limit_num{
+  font-size: 14px;
+  color: #ff0000;
+  text-align: right;
+}
+.popper-tips{
+  font-size:14px;
+  line-height: 20px;
+  display:block;
+  max-width: 500px;
+  word-break: break-all;
 }
 </style>

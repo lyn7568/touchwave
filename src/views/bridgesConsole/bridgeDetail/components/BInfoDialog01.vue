@@ -35,7 +35,7 @@
         </el-col>
         <el-col :xs="10" :sm="10" :lg="10">
           <div style="width:100%">
-            <img :src="'/data/bridge'+ dataInfo.img" :alt="dataInfo.shortName" width="90%">
+            <img :src="'/data/bridge'+ dataInfo.img" :alt="dataInfo.shortName" width="100%">
           </div>
         </el-col>
         <el-col :span="24" v-if="dataInfo.descp">

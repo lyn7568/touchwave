@@ -1,7 +1,7 @@
 <template>
   <el-dialog title="采集服务器信息" :visible.sync="dialogTableVisible" :width="dialogW">
     <el-form class="form-main">
-      <el-row :gutter="16">
+      <el-row :gutter="16" v-if="serverList.length">
         <el-col :xs="12" :sm="12" :lg="12" v-for="item in serverShowList" :key="item.index">
           <div class="list-item">
             <el-row>
@@ -23,6 +23,7 @@
           </div>
         </el-col>
       </el-row>
+      <DefaultPage v-if="!serverList.length"></DefaultPage>
       <div class="pagination-container">
         <el-pagination
           background
@@ -46,16 +47,18 @@
 
 <script>
 import './style.scss'
+import DefaultPage from '@/components/DefaultPage'
+import queryInfo from '@/utils/queryInfo'
 
 export default {
-  props: {
-    serverList: {
-      type: Array
-    }
+  components: {
+    DefaultPage
   },
   data() {
     return {
+      serverList: [],
       dialogW: '',
+      bridgeId: '',
       bridgeName: '',
       dialogTableVisible: false,
       pageSize: 4,
@@ -63,8 +66,10 @@ export default {
     }
   },
   created() {
+    this.bridgeId = this.$parent.bridgeId
     this.bridgeName = this.$parent.bridgeName
     this.dialogW = this.$parent.dialogW
+    this.serverList = queryInfo.queryServers(this.bridgeId)
   },
   computed: {
     serverShowList() {

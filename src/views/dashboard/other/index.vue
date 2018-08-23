@@ -27,12 +27,12 @@
 
 <script>
 import {
-  getBridgeServers,
   getBridgeList,
   getBridgeUnread
 } from '@/api/bridgeInfo'
 import '@/styles/roleuser.scss'
 import Cookies from 'js-cookie'
+import queryInfo from '@/utils/queryInfo'
 
 export default {
   data() {
@@ -41,18 +41,12 @@ export default {
       total: 0,
       pageSize: 10,
       pageNo: 1,
-      dataList: [],
-      bridgeList: [],
-      serverList: [],
-      serverSeqArr: [],
-      deviceList: [],
-      transducerList: []
+      dataList: []
     }
   },
   created() {
+    queryInfo.queryAllInfo()
     this.getBridgeLists()
-  },
-  components: {
   },
   methods: {
     getBridgeLists() {
@@ -63,53 +57,34 @@ export default {
       }
       getBridgeList(param).then(res => {
         if (res.success) {
-          if (res.data.data.length > 0) {
+          var $data = res.data.data
+          if ($data.length > 0) {
             this.total = res.data.total
-            this.getBridgeServers(res.data.data)
+            for (let i = 0; i < $data.length; i++) {
+              var svrs = queryInfo.queryServers($data[i].id, true)
+              this.getBridgeUnread($data[i], svrs)
+            }
+            this.dataList = $data
           }
         }
       })
     },
-    getBridgeServers($data) {
+    getBridgeUnread($data, svrs) {
       var that = this
-      for (let i = 0; i < $data.length; i++) {
-        (function(i) {
-          const param = {
-            active: 1,
-            id: $data[i].id
-          }
-          getBridgeServers(param).then(res => {
-            if (res.success) {
-              var serverSeqArr = []
-              if (res.data.length > 0) {
-                for (let j = 0; j < res.data.length; j++) {
-                  serverSeqArr.push(res.data[j].seq)
-                }
-                that.getBridgeUnread($data[i], serverSeqArr)
-              }
-            }
-          })
-        })(i)
-      }
-      this.dataList = $data
-    },
-    getBridgeUnread($data, $arr) {
-      var that = this
-      const param = {
-        server: $arr
-      }
       var alarmNum = 0
-      getBridgeUnread(param).then(res => {
-        if (res.success) {
-          if (res.data.length > 0) {
-            for (let j = 0; j < res.data.length; j++) {
-              alarmNum += res.data[j].num
+      if (svrs.length) {
+        getBridgeUnread({ server: svrs }).then(res => {
+          if (res.success) {
+            if (res.data.length > 0) {
+              for (let j = 0; j < res.data.length; j++) {
+                alarmNum += res.data[j].num
+              }
+              $data.alarmNum = alarmNum
+              that.$forceUpdate()
             }
-            $data.alarmNum = alarmNum
-            that.$forceUpdate()
           }
-        }
-      })
+        })
+      }
     },
     goToDashboardC(id, name) {
       this.$router.push({ name: 'bridgeHome' })

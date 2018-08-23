@@ -1,9 +1,9 @@
 <template>
   <div class="dashboard-editor-container">
     <BInfoDialog01 ref="BInfoDialog01"></BInfoDialog01>
-    <BInfoDialog02 ref="BInfoDialog02" :serverList="serverList"></BInfoDialog02>
-    <BInfoDialog03 ref="BInfoDialog03" :deviceList="deviceList"></BInfoDialog03>
-    <BInfoDialog04 ref="BInfoDialog04" :transducerList="transducerList"></BInfoDialog04>
+    <BInfoDialog02 ref="BInfoDialog02"></BInfoDialog02>
+    <BInfoDialog03 ref="BInfoDialog03"></BInfoDialog03>
+    <BInfoDialog04 ref="BInfoDialog04"></BInfoDialog04>
 
     <updatePersonInfo ref="updatePersonInfo"></updatePersonInfo>
     <updateLoginPwd ref="updateLoginPwd"></updateLoginPwd>
@@ -15,7 +15,7 @@
             <span>报警信息</span>
             <el-button type="text" @click="queryDangerInfo">查看全部</el-button>
           </div>
-          <ul class="item-ul">
+          <ul class="item-ul" v-if="dangerList.length">
             <li :class="!item.readed ? 'readed-li' : ''" v-for="item in dangerList" :key="item.index" @click="alarmShow(item.aid, item.device)">
               <span>{{item.alarmTime}}</span>
               <span>{{item.device}}，请点击查看。</span>
@@ -24,16 +24,18 @@
               </span>
             </li>
           </ul>
+          <DefaultPage v-if="!dangerList.length"></DefaultPage>
         </el-card>
         <el-card class="box-card block-group">
           <div slot="header" class="block-title">
             <span>实时监测</span>
           </div>
-          <el-row class="line-chart-box">
+          <el-row class="line-chart-box" v-if="monitorList.length">
             <el-col :xs="24" :sm="24" :lg="24" v-for="item in monitorShowList" :key="item.index">
               <lineChart2 :chartData="item"></lineChart2>
             </el-col>
           </el-row>
+          <DefaultPage v-if="!monitorList.length"></DefaultPage>
           <div class="pagination-container">
             <el-pagination
               background
@@ -78,8 +80,9 @@
 <script>
 import '@/styles/roleuser.scss'
 import Cookies from 'js-cookie'
-import { parseTime, turnTime } from '@/utils'
-import { getUserAllResource, getDangerList, getTimingMonitor, getServerInfo, getDeviceInfo } from '@/api/bridgeInfo'
+import queryInfo from '@/utils/queryInfo'
+import { urlParse, parseTime, turnTime } from '@/utils'
+import { getDangerList, getTimingMonitor } from '@/api/bridgeInfo'
 import { mainCable, location, provinceCityDistrict } from '@/api/numberDictionary'
 
 import lineChart2 from '../lineChart/LineChart2'
@@ -91,6 +94,8 @@ import BInfoDialog04 from './components/BInfoDialog04'
 import updatePersonInfo from './components/updatePersonInfo'
 import updateLoginPwd from './components/updateLoginPwd'
 
+import DefaultPage from '@/components/DefaultPage'
+
 export default {
   name: 'dashboard-other',
   components: {
@@ -100,20 +105,19 @@ export default {
     BInfoDialog03,
     BInfoDialog04,
     updatePersonInfo,
-    updateLoginPwd
+    updateLoginPwd,
+    DefaultPage
   },
   data() {
     return {
-      dialogW: '880px',
+      bridgeId: '',
+      bridgeName: '',
+      dialogW: '860px',
       citys: [],
       cableMain: [],
       addr: [],
       dangerList: '',
-      bridgeList: [],
-      serverList: [],
       serverSeqArr: [],
-      deviceList: [],
-      transducerList: [],
       monitorList: [],
       currentNo: 1,
       currentSize: 4,
@@ -128,20 +132,30 @@ export default {
     }
   },
   created() {
-    this.bridgeId = Cookies.get('bridgeId')
-    this.bridgeName = Cookies.get('bridgeName')
+    if (urlParse('id')) {
+      this.bridgeId = urlParse('id')
+      this.bridgeName = urlParse('name')
+    } else {
+      this.bridgeId = Cookies.get('bridgeId')
+      this.bridgeName = Cookies.get('bridgeName')
+    }
     this.getDictoryData()
-    this.getUserAllResource()
-    this.getDangerList()
-
+    if (this.bridgeId) {
+      this.serverSeqArr = queryInfo.queryServers(this.bridgeId, true)
+      if (this.serverSeqArr.length) {
+        this.getTimingMonitor(this.serverSeqArr)
+        this.getDangerList(this.serverSeqArr)
+      }
+    }
     // setInterval(() => {
     //   this.addData(true)
     //   this.getTimingMonitor()
     // }, 60000)
   },
   methods: {
-    getDangerList() {
+    getDangerList(arr) {
       const param = {
+        seq: arr,
         pageSize: 5,
         pageNo: 1
       }
@@ -158,90 +172,42 @@ export default {
         }
       })
     },
-    getUserAllResource() {
-      var _this = this
+    getTimingMonitor(arr) {
+      var that = this
       const param = {
-        active: 1
+        seq: arr
       }
-      getUserAllResource(param).then(res => {
-        if (res.success) {
-          res.data.bridge.map((value, index, array) => {
-            if (value.id === _this.bridgeId) {
-              _this.bridgeName = value.shortName
+      getTimingMonitor(param).then(res => {
+        if (res.success && res.data) {
+          var monitorList = []
+          for (let i = 0; i < res.data.length; i++) {
+            var str = res.data[i].cid
+            var monitorData = null
+            for (let j = 0; j < monitorList.length; ++j) {
+              if (str === monitorList[j].tit) {
+                monitorData = monitorList[j]
+                break
+              }
             }
-          })
-          res.data.server.map((value, index, array) => {
-            if (value.bridgeId === _this.bridgeId) {
-              _this.serverList.push(value)
-              _this.serverSeqArr.push(value.seq)
-              _this.$forceUpdate()
-              res.data.device.map((value2, index2, array2) => {
-                if (value2.serverId === value.id) {
-                  getServerInfo({ id: value2.serverId }).then(res => {
-                    if (res.success && res.data) {
-                      value2.serverCode = res.data.code
-                      _this.$forceUpdate()
-                    }
-                  })
-                  _this.deviceList.push(value2)
-                  res.data.transducer.map((value3, index3, array3) => {
-                    if (value3.serverId === value.id) {
-                      getDeviceInfo({ id: value3.deviceId }).then(res => {
-                        if (res.success && res.data) {
-                          value3.deviceCode = res.data.code
-                          _this.$forceUpdate()
-                        }
-                      })
-                      _this.transducerList.push(value3)
-                    }
-                  })
+            if (!monitorData) {
+              monitorData = {
+                xData: [],
+                seData: {
+                  max: [],
+                  min: []
                 }
-              })
+              }
+              monitorList.push(monitorData)
+              monitorData.tit = str
+              that.addData()
             }
-          })
-          _this.getTimingMonitor()
+            monitorData.xData.push(that.dateArr)
+            monitorData.seData.max.push(res.data[i].hvalue)
+            monitorData.seData.min.push(res.data[i].lvalue)
+          }
+          that.monitorList = monitorList
         }
       })
-    },
-    getTimingMonitor() {
-      var that = this
-      const arr = this.serverSeqArr
-      if (arr) {
-        const param = {
-          seq: arr
-        }
-        getTimingMonitor(param).then(res => {
-          if (res.success && res.data) {
-            var monitorList = []
-            for (let i = 0; i < res.data.length; i++) {
-              var str = res.data[i].cid
-              var monitorData = null
-              for (let j = 0; j < monitorList.length; ++j) {
-                if (str === monitorList[j].tit) {
-                  monitorData = monitorList[j]
-                  break
-                }
-              }
-              if (!monitorData) {
-                monitorData = {
-                  xData: [],
-                  seData: {
-                    max: [],
-                    min: []
-                  }
-                }
-                monitorList.push(monitorData)
-                monitorData.tit = str
-                that.addData()
-              }
-              monitorData.xData.push(that.dateArr)
-              monitorData.seData.max.push(res.data[i].hvalue)
-              monitorData.seData.min.push(res.data[i].lvalue)
-            }
-            that.monitorList = monitorList
-          }
-        })
-      }
     },
     getDictoryData() {
       mainCable().then(response => {
@@ -287,10 +253,7 @@ export default {
       this.$router.push({ name: 'dangerList' })
     },
     queryMonitorInfo() {
-      this.$router.push({
-        name: 'bridgeMonitor',
-        query: { arr: this.serverSeqArr }
-      })
+      this.$router.push({ name: 'bridgeMonitor' })
     },
     queryBirdgeInfo() {
       this.$refs.BInfoDialog01.dialogTableVisible = true

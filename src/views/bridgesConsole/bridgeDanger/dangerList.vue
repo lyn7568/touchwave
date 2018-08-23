@@ -4,7 +4,7 @@
       <div slot="header" class="block-title">
         <span>报警信息</span>
       </div>
-      <ul class="item-ul">
+      <ul class="item-ul" v-if="dangerList.length">
         <li :class="!item.readed ? 'readed-li' : ''" v-for="item in dangerShowList" :key="item.index" @click="alarmShow(item.aid, item.device)">
           <span>{{item.alarmTime}}</span>
           <span>{{item.device}}，请点击查看。</span>
@@ -13,6 +13,7 @@
           </span>
         </li>
       </ul>
+      <DefaultPage v-if="!dangerList.length"></DefaultPage>
       <div class="pagination-container">
         <el-pagination
           background
@@ -20,7 +21,7 @@
           :current-page.sync="pageNo"
           :page-size="pageSize"
           layout="prev, pager, next, jumper"
-          :total="total">
+          :total="dangerList.length">
         </el-pagination>
       </div>
     </el-card>
@@ -29,19 +30,22 @@
 
 
 <script>
+import queryInfo from '@/utils/queryInfo'
+import Cookies from 'js-cookie'
 import { parseTime } from '@/utils'
 import { getDangerList } from '@/api/bridgeInfo'
 
+import DefaultPage from '@/components/DefaultPage'
+
 export default {
-  props: {
-    bridgeName: {
-      type: String
-    }
+  components: {
+    DefaultPage
   },
   data() {
     return {
+      bridgeId: '',
+      bridgeName: '',
       dangerList: [],
-      total: 0,
       pageSize: 4,
       pageNo: 1
     }
@@ -52,11 +56,17 @@ export default {
     }
   },
   created() {
-    this.getDangerList()
+    this.bridgeId = Cookies.get('bridgeId')
+    this.bridgeName = Cookies.get('bridgeName')
+    this.serverSeqArr = queryInfo.queryServers(this.bridgeId, true)
+    if (this.serverSeqArr) {
+      this.getDangerList(this.serverSeqArr)
+    }
   },
   methods: {
-    getDangerList() {
+    getDangerList(arr) {
       const param = {
+        seq: arr,
         pageSize: 18,
         pageNo: 1
       }

@@ -41,6 +41,7 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/dashboard',
     hidden: true,
+    meta: { noCache: true },
     children: [{
       path: 'dashboard',
       component: () => import('@/views/dashboard'),
@@ -87,7 +88,7 @@ export const constantRouterMap = [
                 path: 'dangerDetail',
                 name: 'dangerDetail',
                 component: () => import('@/views/bridgesConsole/bridgeDanger/dangerDetail'),
-                meta: { title: '报警信息浏览' }
+                meta: { title: '报警信息浏览', noCache: true }
               }
             ]
           },
@@ -98,7 +99,8 @@ export const constantRouterMap = [
             meta: {
               title: '历史监测信息查询',
               roles: ['0'],
-              noCache: true }
+              noCache: true
+            }
           }
         ]
       }

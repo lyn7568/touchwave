@@ -10,11 +10,12 @@
           </el-date-picker>
           <el-button type="primary" @click="getMonitorByDay">查询</el-button>
       </div>
-      <el-row class="line-chart-box">
+      <el-row class="line-chart-box" v-if="alarmList.length">
         <el-col :xs="24" :sm="24" :lg="24" v-for="item in alarmShowList" :key="item.index">
           <lineChart2 :chartData="item"></lineChart2>
         </el-col>
       </el-row>
+      <DefaultPage v-if="!alarmList.length"></DefaultPage>
       <div class="pagination-container">
         <el-pagination
           background
@@ -32,14 +33,18 @@
 
 <script>
 import '@/styles/roleuser.scss'
-import { urlParse, parseTime } from '@/utils'
-import { Message } from 'element-ui'
+import Cookies from 'js-cookie'
+import queryInfo from '@/utils/queryInfo'
+import { parseTime } from '@/utils'
 import { getMonitorByDay } from '@/api/bridgeInfo'
 import lineChart2 from '../lineChart/LineChart2'
+
+import DefaultPage from '@/components/DefaultPage'
 
 export default {
   data() {
     return {
+      bridgeId: '',
       valueDate: new Date().toISOString().substring(0, 10).replace(/-/g, ''),
       serverSeqArr: [],
       alarmList: [],
@@ -48,7 +53,8 @@ export default {
     }
   },
   components: {
-    lineChart2
+    lineChart2,
+    DefaultPage
   },
   computed: {
     alarmShowList() {
@@ -56,52 +62,50 @@ export default {
     }
   },
   created() {
-    this.serverSeqArr = urlParse('arr')
-    this.getMonitorByDay()
+    this.bridgeId = Cookies.get('bridgeId')
+    this.serverSeqArr = queryInfo.queryServers(this.bridgeId, true)
+    if (this.serverSeqArr.length) {
+      this.getMonitorByDay(this.serverSeqArr)
+    }
   },
   methods: {
-    getMonitorByDay() {
+    getMonitorByDay(arr) {
       var that = this
-      const arr = this.serverSeqArr
-      if (arr) {
-        var date = that.valueDate
-        var param = {
-          seq: arr,
-          day: date
-        }
-        getMonitorByDay(param).then(res => {
-          if (res.success && res.data) {
-            var monitorList = []
-            for (let i = 0; i < res.data.length; i++) {
-              var str = res.data[i].cid
-              var monitorData = null
-              for (let j = 0; j < monitorList.length; ++j) {
-                if (str === monitorList[j].tit) {
-                  monitorData = monitorList[j]
-                  break
-                }
-              }
-              if (!monitorData) {
-                monitorData = {
-                  xData: [],
-                  seData: {
-                    max: [],
-                    min: []
-                  }
-                }
-                monitorList.push(monitorData)
-                monitorData.tit = str
-              }
-              monitorData.xData.push(parseTime(res.data[i].ctime, true, true))
-              monitorData.seData.max.push(res.data[i].hvalue)
-              monitorData.seData.min.push(res.data[i].lvalue)
-            }
-            that.alarmList = monitorList
-          }
-        })
-      } else {
-        Message.error('当前没有任何采集服务器，请检查')
+      var date = that.valueDate
+      var param = {
+        seq: arr,
+        day: date
       }
+      getMonitorByDay(param).then(res => {
+        if (res.success && res.data) {
+          var monitorList = []
+          for (let i = 0; i < res.data.length; i++) {
+            var str = res.data[i].cid
+            var monitorData = null
+            for (let j = 0; j < monitorList.length; ++j) {
+              if (str === monitorList[j].tit) {
+                monitorData = monitorList[j]
+                break
+              }
+            }
+            if (!monitorData) {
+              monitorData = {
+                xData: [],
+                seData: {
+                  max: [],
+                  min: []
+                }
+              }
+              monitorList.push(monitorData)
+              monitorData.tit = str
+            }
+            monitorData.xData.push(parseTime(res.data[i].ctime, true, true))
+            monitorData.seData.max.push(res.data[i].hvalue)
+            monitorData.seData.min.push(res.data[i].lvalue)
+          }
+          that.alarmList = monitorList
+        }
+      })
     },
     changeDate(val) {
       this.valueDate = val

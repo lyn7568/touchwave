@@ -1,13 +1,5 @@
 import request from '@/utils/request'
 
-export function getUserAllResource(params) { // 用户所有信息
-  return request({
-    url: '/ajax/all/byUser',
-    method: 'get',
-    params
-  })
-}
-
 export function getBridgeList(params) { // 用户所有桥梁
   return request({
     url: '/ajax/bridge/byUser',
@@ -27,22 +19,6 @@ export function getBridgeInfo(params) { // 桥梁信息
 export function getBridgeServers(params) { // 桥梁服务器
   return request({
     url: '/ajax/server/byBridge',
-    method: 'get',
-    params
-  })
-}
-
-export function getServerInfo(params) { // 某个服务器
-  return request({
-    url: '/ajax/server/qo',
-    method: 'get',
-    params
-  })
-}
-
-export function getDeviceInfo(params) { // 某个采集盒
-  return request({
-    url: '/ajax/device/qo',
     method: 'get',
     params
   })

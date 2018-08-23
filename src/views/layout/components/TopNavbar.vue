@@ -7,7 +7,7 @@
           {{showName ? showName : '选择桥梁'}}<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu class="drop-menu-list" style="min-width:120px;" slot="dropdown">
-          <el-dropdown-item v-for="(item,index) in dataList" :key="item.index" :disabled="item.disab" @click.native="goToDashboardC(index, item.id, item.shortName)">{{item.shortName}}
+          <el-dropdown-item v-for="item in dataList" :key="item.index" :disabled="item.disab" @click.native="goToDashboardC(item.id, item.shortName)">{{item.shortName}}
             <i v-if="item.disab" class="el-icon-check"></i>
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -54,7 +54,7 @@ export default {
   },
   watch: {
     '$route'(to, from) {
-      if (this.$route.path === '/') {
+      if (to.path === '/dashboard') {
         this.showName = ''
       } else {
         this.bridgeId = Cookies.get('bridgeId')
@@ -103,12 +103,14 @@ export default {
         }
       })
     },
-    goToDashboardC(index, id, name) {
-      this.$router.push({ name: 'bridgeDetail' })
-      this.dataList[index].disab = true
+    goToDashboardC(id, name) {
       this.showName = name
       Cookies.set('bridgeId', id)
       Cookies.set('bridgeName', name)
+      this.$router.push({
+        name: 'bridgeDetail',
+        query: { id: id, name: name }
+      })
     }
   }
 }
