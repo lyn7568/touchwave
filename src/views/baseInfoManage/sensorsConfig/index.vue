@@ -125,7 +125,7 @@ export default {
     var device = (rule, value, callback) => {
       const that = this
       setTimeout(function() {
-        if (value === '' || that.ruleForm2.deviceId === '') {
+        if (that.ruleForm2.device === '' || that.ruleForm2.deviceId === '') {
           callback(new Error('请选择采集盒编号'))
         } else {
           callback()
@@ -392,10 +392,6 @@ export default {
       this.dialogTableVisible = true
     },
     querySearchAsync(queryString, cb) {
-      if (queryString === '') {
-        cb([])
-        return
-      }
       this.ruleForm2.deviceId = ''
       clearTimeout(this.timeout)
       this.timeout = setTimeout(() => {
@@ -419,6 +415,7 @@ export default {
     },
     handleSelect(item) {
       this.ruleForm2.deviceId = item.id
+      this.ruleForm2.device = item.value
     }
   }
 }

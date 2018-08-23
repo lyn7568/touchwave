@@ -100,7 +100,7 @@ export default {
     var bridge = (rule, value, callback) => {
       const that = this
       setTimeout(function() {
-        if (value === '' || that.ruleForm2.bridgeId === '') {
+        if (that.ruleForm2.bridge === '' || that.ruleForm2.bridgeId === '') {
           callback(new Error('请选择所属桥梁'))
         } else {
           callback()
@@ -112,7 +112,7 @@ export default {
         callback(new Error('请输入内部编号'))
       } else {
         if (!this.ruleForm2.bridgeId) {
-          callback('请先选择服务器编号')
+          callback('请先选择所属桥梁')
           return
         }
         if (this.edit) {
@@ -337,10 +337,6 @@ export default {
       this.dialogTableVisible = true
     },
     querySearchAsync(queryString, cb) {
-      if (queryString === '') {
-        cb([])
-        return
-      }
       this.ruleForm2.bridgeId = ''
       clearTimeout(this.timeout)
       this.timeout = setTimeout(() => {

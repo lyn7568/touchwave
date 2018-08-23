@@ -277,7 +277,7 @@ export default {
   .el-col{
     margin-bottom: 15px
   }
-  .el-form-item__label{
-    padding: 0px
+  .el-form--label-top .el-form-item__label {
+    padding: 0
   }
 </style>
