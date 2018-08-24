@@ -1,5 +1,5 @@
 <template>
-  <el-menu class="topnavbar" mode="horizontal">
+  <div class="topnavbar">
     <div class="logo-container">
       <div class="logo-wrapper" @click="toHome"><div class="logo-img"></div></div>
       <el-dropdown v-if="roles.indexOf('1')<0" trigger="click" class="drop-menu">
@@ -13,28 +13,16 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <el-dropdown class="avatar-container" trigger="click">
-      <div class="avatar-wrapper">
-      	<div>您好，{{ name }}</div>
-        <i class="el-icon-caret-bottom"></i>
-      </div>
-      <el-dropdown-menu class="user-dropdown" slot="dropdown">
-        <router-link v-if="roles.indexOf('1')>=0" class="inlineBlock" to="/">
-          <el-dropdown-item>主页</el-dropdown-item>
-        </router-link>
-        <router-link v-if="roles.indexOf('1')<0" class="inlineBlock" to="/bridgeHome">
-          <el-dropdown-item>主页</el-dropdown-item>
-        </router-link>
-        <el-dropdown-item divided>
-          <span @click="logout" style="display:block;">退出</span>
-        </el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
-  </el-menu>
+    <div class="name-box">
+      <span>您好，{{ name }}</span>
+      <span class="exit-btn" @click="logout">退出登录</span>
+    </div>
+  </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import { MessageBox } from 'element-ui'
 import { getBridgeList } from '@/api/bridgeInfo'
 import Cookies from 'js-cookie'
 
@@ -70,7 +58,7 @@ export default {
   },
   methods: {
     toHome() {
-      this.$router.push({ path: '/' })
+      this.$router.replace({ path: '/' })
       Cookies.remove('bridgeId')
       Cookies.remove('bridgeName')
     },
@@ -78,10 +66,19 @@ export default {
       this.$store.dispatch('ToggleSideBar')
     },
     logout() {
-      this.$store.dispatch('LogOut').then(() => {
-        Cookies.remove('bridgeId')
-        Cookies.remove('bridgeName')
-        location.reload() // 为了重新实例化vue-router对象 避免bug
+      MessageBox.confirm('您确认要退出登录吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        this.$store.dispatch('LogOut').then(() => {
+          Cookies.remove('bridgeId')
+          Cookies.remove('bridgeName')
+          location.reload() // 为了重新实例化vue-router对象 避免bug
+        })
+      }).catch(() => {
+        console.log('已取消退出')
       })
     },
     getBridgeLists() {
@@ -107,7 +104,7 @@ export default {
       this.showName = name
       Cookies.set('bridgeId', id)
       Cookies.set('bridgeName', name)
-      this.$router.push({
+      this.$router.replace({
         name: 'bridgeDetail',
         query: { id: id, name: name }
       })
@@ -146,6 +143,18 @@ export default {
       margin:0;
       margin-left:20px;
       color: #fff;
+    }
+  }
+  .name-box{
+    display: inline-block;
+    position: absolute;
+    right: 20px;
+    font-size:14px;
+    overflow: hidden;
+    color:#fff;
+    .exit-btn {
+      margin-left:30px;
+      cursor: pointer;
     }
   }
   .avatar-container {

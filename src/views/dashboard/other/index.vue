@@ -45,7 +45,6 @@ export default {
     }
   },
   created() {
-    queryInfo.queryAllInfo()
     this.getBridgeLists()
   },
   methods: {
@@ -87,9 +86,9 @@ export default {
       }
     },
     goToDashboardC(id, name) {
-      this.$router.push({ name: 'bridgeHome' })
       Cookies.set('bridgeId', id)
       Cookies.set('bridgeName', name)
+      this.$router.replace({ name: 'bridgeHome' })
     },
     handleCurrentChange(val) {
       this.pageNo = val

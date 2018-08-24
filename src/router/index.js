@@ -41,12 +41,11 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/dashboard',
     hidden: true,
-    meta: { noCache: true },
     children: [{
       path: 'dashboard',
       component: () => import('@/views/dashboard'),
       name: 'dashboard',
-      meta: { title: '主页', noCache: true }
+      meta: { title: '主页' }
     }]
   },
   {
@@ -55,7 +54,6 @@ export const constantRouterMap = [
     component: Layout,
     name: 'bridgesConsole',
     meta: {
-      noCache: true,
       roles: ['0']
     },
     children: [
@@ -64,7 +62,7 @@ export const constantRouterMap = [
         name: 'bridgeHome',
         component: () => import('@/views/bridgesConsole/index'),
         redirect: '/bridgeHome/bridgeDetail',
-        meta: { title: '主页', noCache: true },
+        meta: { title: '桥梁简称' },
         children: [
           {
             path: 'bridgeDetail',
@@ -75,20 +73,19 @@ export const constantRouterMap = [
             path: 'danger',
             name: 'danger',
             redirect: 'dangerList',
-            meta: { title: '历史报警信息查询', noCache: true },
+            meta: { title: '历史报警信息查询' },
             component: () => import('@/views/bridgesConsole/bridgeDanger/index'),
             children: [
               {
                 path: 'dangerList',
                 name: 'dangerList',
-                component: () => import('@/views/bridgesConsole/bridgeDanger/dangerList'),
-                meta: { noCache: true }
+                component: () => import('@/views/bridgesConsole/bridgeDanger/dangerList')
               },
               {
                 path: 'dangerDetail',
                 name: 'dangerDetail',
                 component: () => import('@/views/bridgesConsole/bridgeDanger/dangerDetail'),
-                meta: { title: '报警信息浏览', noCache: true }
+                meta: { title: '报警信息浏览' }
               }
             ]
           },
@@ -98,8 +95,7 @@ export const constantRouterMap = [
             component: () => import('@/views/bridgesConsole/bridgeMonitor/index'),
             meta: {
               title: '历史监测信息查询',
-              roles: ['0'],
-              noCache: true
+              roles: ['0']
             }
           }
         ]
@@ -114,8 +110,7 @@ export const constantRouterMap = [
     meta: {
       title: '用户系统管理',
       icon: 'peoples',
-      roles: ['1'],
-      noCache: true
+      roles: ['1']
     },
     alwaysShow: true,
     children: [
@@ -123,7 +118,7 @@ export const constantRouterMap = [
         path: 'infoManage',
         name: 'infoManage',
         component: () => import('@/views/peoplesManage/infoManage/index'),
-        meta: { title: '用户信息管理', noCache: true }
+        meta: { title: '用户信息管理' }
       }
     ]
   },
@@ -134,33 +129,32 @@ export const constantRouterMap = [
     meta: {
       title: '基础信息管理',
       icon: 'list',
-      roles: ['1'],
-      noCache: true
+      roles: ['1']
     },
     children: [
       {
         path: 'bridgesInfo',
         name: 'BridgesInfo',
         component: () => import('@/views/baseInfoManage/bridgesInfo/index'),
-        meta: { title: '桥梁信息管理', noCache: true }
+        meta: { title: '桥梁信息管理' }
       },
       {
         path: 'serversConfig',
         name: 'ServersConfig',
         component: () => import('@/views/baseInfoManage/serversConfig/index'),
-        meta: { title: '采集服务器配置', noCache: true }
+        meta: { title: '采集服务器配置' }
       },
       {
         path: 'boxesConfig',
         name: 'BoxesConfig',
         component: () => import('@/views/baseInfoManage/boxesConfig/index'),
-        meta: { title: '采集盒配置', noCache: true }
+        meta: { title: '采集盒配置' }
       },
       {
         path: 'sensorsConfig',
         name: 'SensorsConfig',
         component: () => import('@/views/baseInfoManage/sensorsConfig/index'),
-        meta: { title: '传感器配置', noCache: true }
+        meta: { title: '传感器配置' }
       }
     ]
   },

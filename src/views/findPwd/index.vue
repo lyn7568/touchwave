@@ -213,7 +213,7 @@
                   center: true,
                   callback: action => {
                     if (action === 'confirm') {
-                      this.$router.push({ path: '/login' })
+                      this.$router.replace({ path: '/login' })
                     }
                   }
                 })
@@ -239,7 +239,7 @@
         })
       },
       goLogin() {
-        this.$router.push({ path: '/login' })
+        this.$router.replace({ path: '/login' })
       }
     }
   }

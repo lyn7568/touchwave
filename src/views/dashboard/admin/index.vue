@@ -28,7 +28,7 @@ export default {
   text-align: center;
   margin: 20px;
   height: 100%;
-  padding: 15% 0;
+  padding: 12% 0;
   background: #fff;
   .plat-pic{
     margin: 40px auto 0;

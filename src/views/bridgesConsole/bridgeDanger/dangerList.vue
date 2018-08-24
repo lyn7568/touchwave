@@ -85,7 +85,7 @@ export default {
       })
     },
     alarmShow(id, msg) {
-      this.$router.push({
+      this.$router.replace({
         name: 'dangerDetail',
         query: { aid: id, msg: msg }
       })

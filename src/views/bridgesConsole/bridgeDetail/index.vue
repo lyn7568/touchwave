@@ -244,16 +244,16 @@ export default {
       this.currentNo = val
     },
     alarmShow(id, msg) {
-      this.$router.push({
+      this.$router.replace({
         name: 'dangerDetail',
         query: { aid: id, msg: msg }
       })
     },
     queryDangerInfo() {
-      this.$router.push({ name: 'dangerList' })
+      this.$router.replace({ name: 'dangerList' })
     },
     queryMonitorInfo() {
-      this.$router.push({ name: 'bridgeMonitor' })
+      this.$router.replace({ name: 'bridgeMonitor' })
     },
     queryBirdgeInfo() {
       this.$refs.BInfoDialog01.dialogTableVisible = true

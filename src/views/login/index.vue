@@ -94,7 +94,7 @@ export default {
               if (response.data) {
                 this.$store.dispatch('GetUserInfo').then(res => {
                 })
-                this.$router.push({ path: '/' })
+                this.$router.replace({ path: '/' })
               } else {
                 Message.error('登录账号与密码不匹配，请检查后重试')
                 this.changeImgVc()
@@ -132,7 +132,7 @@ export default {
       })
     },
     goBackPwd() {
-      this.$router.push({ path: '/findPwd' })
+      this.$router.replace({ path: '/findPwd' })
     },
     changeImgVc() {
       this.imgVcUrl = getPictureVC('PIC_LOGIN')

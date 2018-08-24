@@ -1,6 +1,6 @@
 <template>
   <el-dialog title="采集服务器信息" :visible.sync="dialogTableVisible" :width="dialogW">
-    <el-form class="form-main">
+    <el-form class="form-main" style="padding:0 15px">
       <el-row :gutter="16" v-if="serverList.length">
         <el-col :xs="12" :sm="12" :lg="12" v-for="item in serverShowList" :key="item.index">
           <div class="list-item">

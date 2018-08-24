@@ -3,14 +3,14 @@
     <transition-group name="breadcrumb">
       <el-breadcrumb-item v-for="(item,index)  in levelList" :key="item.path" v-if="item.meta.title">
         <span v-if="item.redirect==='noredirect'||index==levelList.length-1" class="no-redirect">{{item.meta.title}}</span>
-        <router-link v-else :to="item.redirect||item.path">{{item.meta.title}}</router-link>
+        <router-link v-else :to="item.redirect||item.path" replace>{{item.meta.title}}</router-link>
       </el-breadcrumb-item>
     </transition-group>
   </el-breadcrumb>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import Cookies from 'js-cookie'
 export default {
   created() {
     this.getBreadcrumb()
@@ -20,11 +20,6 @@ export default {
       levelList: null
     }
   },
-  computed: {
-    ...mapGetters([
-      'roles'
-    ])
-  },
   watch: {
     $route() {
       this.getBreadcrumb()
@@ -32,17 +27,16 @@ export default {
   },
   methods: {
     getBreadcrumb() {
-      let matched = this.$route.matched.filter(item => item.name)
-      if (this.roles.indexOf('1') >= 0) {
-        const first = matched[0]
-        if (first && first.name !== 'dashboard') {
-          matched = [{ path: '/dashboard', meta: { title: '主页' }}].concat(matched)
+      const bridgeName = Cookies.get('bridgeName')
+      let matched = this.$route.matched.filter(item => {
+        if (bridgeName && item.path === '/bridgeHome') {
+          item.meta.title = bridgeName
         }
-      } else {
-        const firstF = matched[1]
-        if (firstF && firstF.name !== 'bridgeHome') {
-          matched = [{ path: 'bridgeHome', meta: { title: '主页' }}].concat(matched)
-        }
+        return item.name
+      })
+      const first = matched[0]
+      if (first && first.name !== 'dashboard') {
+        matched = [{ path: '/dashboard', meta: { title: '主页' }}].concat(matched)
       }
       this.levelList = matched
     }

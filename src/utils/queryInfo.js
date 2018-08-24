@@ -1,27 +1,34 @@
+/**
+ * Created by luyanan on 18/8/23.
+ */
+/* eslint-disable one-var */
 import request from '@/utils/request'
+import store from '@/store'
 
-/*eslint one-var: ["error", { "initialized": "always", "uninitialized": "never" }]*/
-var serverList = [],
+var bridgeObj = {},
+  serverList = [],
   deviceList = [],
   transducerList = [],
   queryAllInfo = function() {
-    request({
-      url: '/ajax/all/byUser',
-      method: 'get',
-      params: {
-        active: 1
-      }
-    }).then(res => {
-      if (res.success) {
-        serverList = res.data.server
-        deviceList = res.data.device
-        transducerList = res.data.transducer
-      }
-    })
+    if (!bridgeObj.server && store.getters.roles.indexOf('1') === -1) {
+      request({
+        url: '/ajax/all/byUser',
+        method: 'get',
+        params: {
+          active: 1
+        }
+      }).then(res => {
+        if (res.success) {
+          bridgeObj = res.data
+          serverList = res.data.server
+          deviceList = res.data.device
+          transducerList = res.data.transducer
+        }
+      })
+    }
   },
   queryServers = function(bid, flag) {
     const obj = serverList
-    /*eslint one-var: ["error", { "initialized": "always", "uninitialized": "never" }]*/
     var servers = [], serverSeqArr = []
     for (let i = 0; i < obj.length; ++i) {
       if (bid === obj[i].bridgeId) {

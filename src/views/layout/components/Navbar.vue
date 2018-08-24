@@ -1,8 +1,8 @@
 <template>
   <div>
     <marqueebox :isShow="roles.indexOf('1')>=0"></marqueebox>
-    <el-menu v-if="roles.indexOf('1')>=0" class="navbar" mode="horizontal">
-      <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
+    <el-menu class="navbar" mode="horizontal">
+      <hamburger v-if="roles.indexOf('1')>=0" class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
       <breadcrumb></breadcrumb>
     </el-menu>
   </div>
