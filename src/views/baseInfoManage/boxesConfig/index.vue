@@ -100,7 +100,7 @@ export default {
     var server = (rule, value, callback) => {
       const that = this
       setTimeout(function() {
-        if (value === '' || that.ruleForm2.serverId === '') {
+        if (that.ruleForm2.server === '' || that.ruleForm2.serverId === '') {
           callback(new Error('请选择服务器编号'))
         } else {
           callback()
@@ -341,10 +341,6 @@ export default {
       this.dialogTableVisible = true
     },
     querySearchAsync(queryString, cb) {
-      if (queryString === '') {
-        cb([])
-        return
-      }
       this.ruleForm2.serverId = ''
       clearTimeout(this.timeout)
       this.timeout = setTimeout(() => {
