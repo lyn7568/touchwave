@@ -5,8 +5,8 @@
       </el-input>
        <el-input style="width: 200px;" class="filter-item" placeholder="服务器编号" v-model="listQuery.code">
       </el-input>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">查找</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加服务器</el-button>
+      <el-button v-waves class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">查找</el-button>
+      <el-button v-waves class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加服务器</el-button>
     </div>
 
     <el-table :key='tableKey' :data="list" v-loading="listLoading" border fit highlight-current-row
@@ -31,10 +31,10 @@
           <span>{{scope.row.remark}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Actions" width="230" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope"> 
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button> 
-          <el-button size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除
+          <el-button v-waves type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button> 
+          <el-button v-waves size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除
           </el-button>
         </template>
       </el-table-column>
@@ -74,8 +74,8 @@
           </el-col>
           <el-col :span="24" class="el-btn-col">
             <div class="el-btn-col-box">
-              <el-button type="primary" @click="submitForm('ruleForm2')">确认</el-button>
-              <el-button type="info" @click="resetForm('ruleForm2')">返回</el-button>
+              <el-button v-waves type="primary" @click="submitForm('ruleForm2')">确认</el-button>
+              <el-button v-waves type="info" @click="resetForm('ruleForm2')">返回</el-button>
             </div>
           </el-col>
         </el-row>

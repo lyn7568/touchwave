@@ -5,8 +5,8 @@
       </el-input>
        <el-input style="width: 200px;" class="filter-item" placeholder="桥梁编号" v-model="listQuery.code">
       </el-input>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">查找</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加桥梁</el-button>
+      <el-button v-waves class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">查找</el-button>
+      <el-button v-waves class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加桥梁</el-button>
     </div>
 
     <el-table :key='tableKey' :data="list" v-loading="listLoading" border fit highlight-current-row
@@ -36,10 +36,10 @@
           <span>{{scope.row.remark}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Actions" width="230" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope"> 
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button> 
-          <el-button size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除
+          <el-button v-waves type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button> 
+          <el-button v-waves size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除
           </el-button>
         </template>
       </el-table-column>
@@ -66,7 +66,8 @@
               </el-col>
               <el-col :span="24">
                 <el-form-item label="桥梁位置信息" prop="addrCode">
-                  <city @paren="toshow" :addrCode='ruleForm2.addrCode'></city>
+                  <!-- <city @paren="toshow" :addrCode='ruleForm2.addrCode'></city> -->
+                  <CityPicker @paren="toshow" :addrCode='ruleForm2.addrCode'></CityPicker>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -129,8 +130,8 @@
           </el-col>
           <el-col :span="24" class="el-btn-col">
             <div class="el-btn-col-box">
-              <el-button type="primary" @click="submitForm('ruleForm2')">确认</el-button>
-              <el-button type="primary" @click="resetForm('ruleForm2')">返回</el-button>
+              <el-button v-waves type="primary" @click="submitForm('ruleForm2')">确认</el-button>
+              <el-button v-waves type="primary" @click="resetForm('ruleForm2')">返回</el-button>
             </div>
           </el-col>
         </el-row>
@@ -144,9 +145,10 @@
 </template>
 
 <script>
-import { addDevice, updateDevice, deleteDevice, pageQueryDevice, checkDeviceCode, checkBridgeShortName, checkBridgeName, dictory } from '@/api/bridge'
+import { addDevice, updateDevice, deleteDevice, pageQueryDevice, checkDeviceCode, checkBridgeShortName, checkBridgeName } from '@/api/bridge'
 import waves from '@/directive/waves'
-import city from '../../city/linkage'
+import CityPicker from '@/components/CityPicker'
+import queryDict from '@/utils/queryDict'
 export default {
   name: 'complexTable',
   directives: {
@@ -223,8 +225,7 @@ export default {
       }
     }
     return {
-      provinceCityCounties: [],
-      citys: [],
+      citys: {},
       edit: '',
       imageUrl: '',
       ruleForm2: {
@@ -291,22 +292,21 @@ export default {
     }
   },
   created() {
-    dictory().then(response => {
-      if (response.success) {
-        this.provinceCityCounties = response.data.sort((obj1, obj2) => {
-          return obj1.code - obj2.code
-        })
-        response.data.map(item => {
-          this.citys[item.code] = item.fullCaption
-        })
-        this.getList()
-      }
-    })
+    this.getDictoryData()
   },
   components: {
-    city
+    CityPicker
   },
   methods: {
+    getDictoryData() {
+      const that = this
+      queryDict.applyDict('XZQH', function(dictData) {
+        dictData.map(item => {
+          that.citys[item.code] = item.fullCaption
+        })
+        that.getList()
+      }) // 城市级联
+    },
     submitForm(formName) {
       const that = this
       this.$refs[formName].validate((valid) => {

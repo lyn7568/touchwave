@@ -27,10 +27,10 @@
         <img slot="append" :src="imgVcUrl" @click="changeImgVc" /></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button class="log-btn" type="primary" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
+        <el-button v-waves class="log-btn" type="primary" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
       </el-form-item>
       <el-form-item class="el-form-find">
-        <el-button type="text" @click.native.prevent="goBackPwd">忘记密码？</el-button>
+        <el-button v-waves type="text" @click.native.prevent="goBackPwd">忘记密码？</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -39,10 +39,14 @@
 <script>
 import { Message } from 'element-ui'
 import { getPictureVC } from '@/api/pictureVc'
+import waves from '@/directive/waves'
 import '@/styles/loginform.scss'
 
 export default {
   name: 'login',
+  directives: {
+    waves
+  },
   data() {
     var validPhone = (rule, value, callback) => {
       const reg = /^1[3|4|5|7|8][0-9]\d{8}$/
@@ -94,7 +98,7 @@ export default {
               if (response.data) {
                 this.$store.dispatch('GetUserInfo').then(res => {
                 })
-                this.$router.replace({ path: '/' })
+                this.$router.push({ path: '/' })
               } else {
                 Message.error('登录账号与密码不匹配，请检查后重试')
                 this.changeImgVc()
@@ -132,7 +136,7 @@ export default {
       })
     },
     goBackPwd() {
-      this.$router.replace({ path: '/findPwd' })
+      this.$router.push({ path: '/findPwd' })
     },
     changeImgVc() {
       this.imgVcUrl = getPictureVC('PIC_LOGIN')

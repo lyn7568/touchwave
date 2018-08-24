@@ -81,9 +81,9 @@
 import '@/styles/roleuser.scss'
 import Cookies from 'js-cookie'
 import queryInfo from '@/utils/queryInfo'
+import queryDict from '@/utils/queryDict'
 import { urlParse, parseTime, turnTime } from '@/utils'
 import { getDangerList, getTimingMonitor } from '@/api/bridgeInfo'
-import { mainCable, location, provinceCityDistrict } from '@/api/numberDictionary'
 
 import lineChart2 from '../lineChart/LineChart2'
 import BInfoDialog01 from './components/BInfoDialog01'
@@ -113,9 +113,9 @@ export default {
       bridgeId: '',
       bridgeName: '',
       dialogW: '860px',
-      citys: [],
-      cableMain: [],
-      addr: [],
+      citys: {},
+      cableMain: {},
+      addr: {},
       dangerList: '',
       serverSeqArr: [],
       monitorList: [],
@@ -210,28 +210,22 @@ export default {
       })
     },
     getDictoryData() {
-      mainCable().then(response => {
-        if (response.success) {
-          response.data.map(item => {
-            this.cableMain[item.code] = item.caption
-          })
-        }
-      }).then(response => {
-        location().then(response => {
-          if (response.success) {
-            response.data.map(item => {
-              this.addr[item.code] = item.caption
-            })
-          }
+      const that = this
+      queryDict.applyDict('ZLLX', function(dictData) {
+        dictData.map(item => {
+          that.cableMain[item.code] = item.caption
         })
-      })
-      provinceCityDistrict().then(response => {
-        if (response.success) {
-          response.data.map(item => {
-            this.citys[item.code] = item.fullCaption
-          })
-        }
-      })
+      }) // 主缆
+      queryDict.applyDict('ZLWZ', function(dictData) {
+        dictData.map(item => {
+          that.addr[item.code] = item.caption
+        })
+      }) // 位置
+      queryDict.applyDict('XZQH', function(dictData) {
+        dictData.map(item => {
+          that.citys[item.code] = item.fullCaption
+        })
+      }) // 城市级联
     },
     addData(shift) {
       this.dateArr.push(this.currentTime)

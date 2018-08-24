@@ -20,17 +20,17 @@
             </el-form-item>
             <el-form-item prop="msgVC">
               <el-input v-model="ruleForm.msgVC" placeholder="请输入短信验证码" class="code-btn" style="width:100%">
-                <el-button slot="append" type="primary" :disabled="phoneCodeBol" @click="clickMsgVcLogin">
+                <el-button v-waves slot="append" type="primary" :disabled="phoneCodeBol" @click="clickMsgVcLogin">
                   <span v-if="sendMsgDisabled">{{seconds + '秒后获取'}}</span>
                   <span v-if="!sendMsgDisabled">获取验证码</span>
                 </el-button>
              </el-input>
             </el-form-item>
             <el-form-item>
-              <el-button class="log-btn" type="primary" :disabled="isDisabl" @click="nextStep('ruleForm')">下一步</el-button>
+              <el-button v-waves class="log-btn" type="primary" :disabled="isDisabl" @click="nextStep('ruleForm')">下一步</el-button>
             </el-form-item>
             <el-form-item class="el-form-find">
-              <el-button type="text" @click="goLogin">又想起来了</el-button>
+              <el-button v-waves type="text" @click="goLogin">又想起来了</el-button>
             </el-form-item>
           </el-form>
           <el-form v-show="stepSecond" :model="ruleForm2" :rules="rules2" ref="ruleForm2" class="demo-ruleForm">
@@ -41,7 +41,7 @@
               <el-input type="password" v-model="ruleForm2.checkPass" placeholder="请再次输入密码确认" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button class="log-btn" type="primary" :disabled="isDisabl" @click.native.prevent="resetPwd('ruleForm2')">重置密码</el-button>
+              <el-button v-waves class="log-btn" type="primary" :disabled="isDisabl" @click.native.prevent="resetPwd('ruleForm2')">重置密码</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -53,8 +53,12 @@
 <script>
   import { isReg, getResetMsgPhone, resetPwdByTel } from '@/api/login'
   import '@/styles/loginform.scss'
+  import waves from '@/directive/waves'
 
   export default {
+    directives: {
+      waves
+    },
     data() {
       var validPhone = (rule, value, callback) => {
         const reg = /^1[3|4|5|7|8][0-9]\d{8}$/
@@ -213,7 +217,7 @@
                   center: true,
                   callback: action => {
                     if (action === 'confirm') {
-                      this.$router.replace({ path: '/login' })
+                      this.$router.push({ path: '/login' })
                     }
                   }
                 })
@@ -239,7 +243,7 @@
         })
       },
       goLogin() {
-        this.$router.replace({ path: '/login' })
+        this.$router.push({ path: '/login' })
       }
     }
   }

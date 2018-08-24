@@ -62,8 +62,8 @@ export default {
       dialogW: '',
       bridgeId: '',
       transducerList: [],
-      childCableMain: [],
-      childAddr: [],
+      childCableMain: {},
+      childAddr: {},
       dialogTableVisible: false,
       pageSize: 4,
       pageNo: 1

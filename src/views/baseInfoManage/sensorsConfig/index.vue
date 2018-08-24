@@ -5,8 +5,8 @@
       </el-input>
        <el-input style="width: 200px;" class="filter-item" placeholder="传感器编号" v-model="listQuery.code">
       </el-input>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">查找</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加传感器</el-button>
+      <el-button v-waves class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">查找</el-button>
+      <el-button v-waves class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加传感器</el-button>
     </div>
 
     <el-table :key='tableKey' :data="list" v-loading="listLoading" border fit highlight-current-row
@@ -36,10 +36,10 @@
           <span>{{scope.row.remark}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Actions" width="230" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope"> 
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button> 
-          <el-button size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除
+          <el-button v-waves type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button> 
+          <el-button v-waves size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除
           </el-button>
         </template>
       </el-table-column>
@@ -98,8 +98,8 @@
           </el-col>
           <el-col :span="24" class="el-btn-col">
             <div class="el-btn-col-box">
-              <el-button type="primary" @click="submitForm('ruleForm2')">确认</el-button>
-              <el-button type="info" @click="resetForm('ruleForm2')">返回</el-button>
+              <el-button v-waves type="primary" @click="submitForm('ruleForm2')">确认</el-button>
+              <el-button v-waves type="info" @click="resetForm('ruleForm2')">返回</el-button>
             </div>
           </el-col>
         </el-row>
@@ -114,8 +114,8 @@
 
 <script>
 import { addDevice, updateDevice, deleteDevice, pageQueryDevice, DeviceOfservice, checkDeviceCode, checkDeviceInternalCode, queryServer } from '@/api/sensor'
-import { mainCable, location } from '@/api/numberDictionary'
 import waves from '@/directive/waves'
+import queryDict from '@/utils/queryDict'
 export default {
   name: 'complexTable',
   directives: {
@@ -235,29 +235,25 @@ export default {
     }
   },
   created() {
-    mainCable().then(response => {
-      if (response.success) {
-        response.data.map(item => {
-          this.options.push({ value: item.code, label: item.caption })
-          this.cableMain[item.code] = item.caption
-        })
-      }
-      return Promise.resolve()
-    }).then(response => {
-      location().then(response => {
-        if (response.success) {
-          response.data.map(item => {
-            this.options1.push({ value: item.code, label: item.caption })
-            this.addr[item.code] = item.caption
-          })
-        }
-        return Promise.resolve()
-      })
-    }).then(response => {
-      this.getList()
-    })
+    this.getDictoryData()
   },
   methods: {
+    getDictoryData() {
+      const that = this
+      queryDict.applyDict('ZLLX', function(dictData) {
+        dictData.map(item => {
+          that.options.push({ value: item.code, label: item.caption })
+          that.cableMain[item.code] = item.caption
+        })
+      }) // 主缆
+      queryDict.applyDict('ZLWZ', function(dictData) {
+        dictData.map(item => {
+          that.options1.push({ value: item.code, label: item.caption })
+          that.addr[item.code] = item.caption
+        })
+      }) // 位置
+      that.getList()
+    },
     submitForm(formName) {
       const that = this
       this.$refs[formName].validate((valid) => {

@@ -6,8 +6,8 @@
       </el-form>
       <div class="limit_num">还可以输入{{ableNum}}字</div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="setNotice('formNotice')">确 定</el-button>
+        <el-button v-waves @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" v-waves @click="setNotice('formNotice')">确 定</el-button>
       </div>
     </el-dialog>
     <el-menu class="message-box" mode="horizontal">
@@ -24,12 +24,16 @@
 </template>
  
 <script>
+import waves from '@/directive/waves'
 import { getNotice, updateNotice } from '@/api/login'
 export default {
   props: {
     isShow: {
       type: Boolean
     }
+  },
+  directives: {
+    waves
   },
   data() {
     return {
@@ -89,7 +93,6 @@ export default {
 .message-box{
   height: 50px;
   line-height: 50px;
-  padding: 0 10px;
   border-radius: 0px !important;
   color: #303133;
   background: #c7e3ff;
@@ -126,7 +129,7 @@ export default {
   text-align: right;
 }
 .popper-tips{
-  font-size:14px;
+  font-size: 13px;
   line-height: 20px;
   display:block;
   max-width: 500px;

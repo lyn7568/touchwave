@@ -88,7 +88,7 @@ export default {
     goToDashboardC(id, name) {
       Cookies.set('bridgeId', id)
       Cookies.set('bridgeName', name)
-      this.$router.replace({ name: 'bridgeHome' })
+      this.$router.push({ name: 'bridgeHome' })
     },
     handleCurrentChange(val) {
       this.pageNo = val

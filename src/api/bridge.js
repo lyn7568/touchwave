@@ -79,13 +79,3 @@ export function uploadBridgeImg() {
     method: 'post'
   })
 }
-
-export function dictory(params) {
-  return request({
-    url: '/ajax/dict/items',
-    method: 'get',
-    params: {
-      dict: 'XZQH'
-    }
-  })
-}

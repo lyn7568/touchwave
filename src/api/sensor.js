@@ -81,11 +81,3 @@ export function queryServer(params) {
   })
 }
 
-/*  数据字典 */
-export function dictory(params) {
-  return request({
-    url: '/ajax/dict/items',
-    method: 'get',
-    params
-  })
-}

@@ -7,8 +7,8 @@
       </el-input>
        <el-input style="width: 250px;" class="filter-item" placeholder="所在机构" v-model="listQuery.comp">
       </el-input>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">查找</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加用户</el-button>
+      <el-button v-waves class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">查找</el-button>
+      <el-button v-waves class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加用户</el-button>
     </div>
     <el-table :key='tableKey' :data="list" v-loading="listLoading" border fit highlight-current-row
       style="width: 100%;min-height:550px;">
@@ -52,12 +52,12 @@
           <span>{{scope.row.bridgeName}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Actions" width="260px" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" width="260px" class-name="small-padding fixed-width">
         <template slot-scope="scope"> 
-          <el-button :type="((!scope.row.active) ? 'info' : 'primary')" size="mini" @click="handleUpdate(scope.row)" :disabled='!scope.row.active'>编辑</el-button> 
-          <el-button size="mini" :type="((!scope.row.active) ? 'info' : 'danger')" @click="handleModifyStatus(scope.row,'deleted')" :disabled='!scope.row.active'>停用
+          <el-button v-waves :type="((!scope.row.active) ? 'info' : 'primary')" size="mini" @click="handleUpdate(scope.row)" :disabled='!scope.row.active'>编辑</el-button> 
+          <el-button v-waves size="mini" :type="((!scope.row.active) ? 'info' : 'danger')" @click="handleModifyStatus(scope.row,'deleted')" :disabled='!scope.row.active'>停用
           </el-button>
-           <el-button size="mini" :type="((!scope.row.active) ? 'info' : 'primary')" @click="distribution(scope.row)" :disabled='!scope.row.active'>分配权限
+           <el-button v-waves size="mini" :type="((!scope.row.active) ? 'info' : 'primary')" @click="distribution(scope.row)" :disabled='!scope.row.active'>分配权限
           </el-button>
         </template>
         

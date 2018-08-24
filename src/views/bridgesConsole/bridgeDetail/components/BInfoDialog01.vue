@@ -66,7 +66,7 @@ export default {
   data() {
     return {
       dialogW: '',
-      childCitys: [],
+      childCitys: {},
       dialogTableVisible: false,
       dataInfo: ''
     }

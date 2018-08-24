@@ -125,6 +125,7 @@ export default {
   z-index:1002;
   border-radius: 0px !important;
   background-color: #2d3a4b;
+  border-bottom: 1px solid #e6e6e6;
   .logo-container {
     display: inline-block;
     position: absolute;

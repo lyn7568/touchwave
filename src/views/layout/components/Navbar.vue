@@ -43,7 +43,7 @@ export default {
 .navbar {
   height: 50px;
   line-height: 50px;
-  padding: 0 10px;
+  padding: 0 12px;
   border-radius: 0px !important;
   .hamburger-container {
     line-height: 58px;
