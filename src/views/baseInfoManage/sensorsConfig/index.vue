@@ -312,8 +312,7 @@ export default {
         for (let i = 0; i < $data.length; i++) {
           $data[i].deviceName = ''
           queryServer({ id: $data[i].deviceId }).then(response => {
-            this.list[i].deviceName = response.data.code
-            this.$forceUpdate()
+            $data[i].deviceName = response.data.code
           })
         }
         this.list = $data

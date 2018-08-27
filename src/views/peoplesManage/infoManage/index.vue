@@ -135,8 +135,7 @@ export default {
               for (let j = 0; j < $info.length; j++) {
                 arr.push($info[j].shortName)
               }
-              this.list[i].bridgeName = arr.join(',')
-              this.$forceUpdate()
+              $data[i].bridgeName = arr.join(',')
             }
           })
         }

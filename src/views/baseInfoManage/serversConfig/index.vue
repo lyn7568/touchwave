@@ -262,8 +262,7 @@ export default {
         for (let i = 0; i < $data.length; i++) {
           $data[i].bridgeName = ''
           queryServer({ id: $data[i].bridgeId }).then(response => {
-            this.list[i].bridgeName = response.data.shortName
-            this.$forceUpdate()
+            $data[i].bridgeName = response.data.shortName
           })
         }
         this.list = $data

@@ -262,8 +262,7 @@ export default {
         for (let i = 0; i < $data.length; i++) {
           $data[i].serverName = ''
           queryServer({ id: $data[i].serverId }).then(response => {
-            this.list[i].serverName = response.data.code
-            this.$forceUpdate()
+            $data[i].serverName = response.data.code
           })
         }
         this.list = $data
