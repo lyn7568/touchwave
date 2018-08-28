@@ -5,7 +5,7 @@ import { comUrl } from '@/utils/index'
 // 创建axios实例
 const service = axios.create({
   baseURL: comUrl, // api的base_url
-  timeout: 5000, // 请求超时时间
+  // timeout: 5000, // 请求超时时间
   paramsSerializer: function(params) {
     return qs.stringify(params, { arrayFormat: 'repeat' })
   }

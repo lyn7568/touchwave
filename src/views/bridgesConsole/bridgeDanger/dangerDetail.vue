@@ -34,6 +34,7 @@ export default {
     return {
       alarmId: '',
       alarmTit: '',
+      alarmRead: false,
       alarmList: [],
       pageSize: 6,
       pageNo: 1,
@@ -46,8 +47,11 @@ export default {
   created() {
     this.alarmId = urlParse('aid')
     this.alarmTit = urlParse('msg')
+    this.alarmRead = urlParse('flag')
     this.getDangerDetail()
-    this.setUnreadToRead()
+    if (this.alarmRead === 'false') {
+      this.setUnreadToRead()
+    }
   },
   computed: {
     alarmTime() {

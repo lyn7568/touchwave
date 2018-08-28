@@ -65,13 +65,14 @@ export default {
     this.bridgeId = Cookies.get('bridgeId')
     this.serverSeqArr = queryInfo.queryServers(this.bridgeId, true)
     if (this.serverSeqArr.length) {
-      this.getMonitorByDay(this.serverSeqArr)
+      this.getMonitorByDay()
     }
   },
   methods: {
-    getMonitorByDay(arr) {
+    getMonitorByDay() {
       var that = this
       var date = that.valueDate
+      var arr = this.serverSeqArr
       var param = {
         seq: arr,
         day: date
