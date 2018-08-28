@@ -1,5 +1,6 @@
 /**
  * Created by luyanan on 18/8/23.
+ * All information about bridges
  */
 /* eslint-disable one-var */
 import request from '@/utils/request'

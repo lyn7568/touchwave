@@ -71,13 +71,3 @@ export function checkDeviceInternalCode(params) {
     params
   })
 }
-
-/*  查询采集盒名字 */
-export function queryServer(params) {
-  return request({
-    url: '/ajax/device/qo',
-    method: 'get',
-    params
-  })
-}
-

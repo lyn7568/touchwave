@@ -11,26 +11,10 @@
 
     <el-table :key='tableKey' :data="list" v-loading="listLoading" border fit highlight-current-row
       style="width: 100%;min-height:550px;">
-      <el-table-column width="150px" align="center" label="采集盒编号">
-        <template slot-scope="scope">
-          <span>{{scope.row.code}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="150px" align="center" label="采集盒信道数量">
-        <template slot-scope="scope">
-          <span>{{scope.row.channels}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="150px" align="center" label="所属服务器编号">
-        <template slot-scope="scope">
-          <span>{{scope.row.serverName}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="200px" align="center" label="备注信息">
-        <template slot-scope="scope">
-          <span>{{scope.row.remark}}</span>
-        </template>
-      </el-table-column>
+      <el-table-column width="150px" align="center" label="采集盒编号" prop="code"></el-table-column>
+      <el-table-column width="150px" align="center" label="采集盒信道数量" prop="channels"></el-table-column>
+      <el-table-column min-width="150px" align="center" label="所属服务器编号" prop="serverName"></el-table-column>
+      <el-table-column min-width="200px" align="center" label="备注信息" prop="remark"></el-table-column>
       <el-table-column align="center" label="操作" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope"> 
           <el-button v-waves v-waves type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button> 
@@ -89,8 +73,9 @@
 </template>
 
 <script>
-import { addDevice, updateDevice, deleteDevice, pageQueryDevice, DeviceOfservice, checkDeviceCode, checkDeviceInternalCode, queryServer } from '@/api/collectionbox'
+import { addDevice, updateDevice, deleteDevice, pageQueryDevice, DeviceOfservice, checkDeviceCode, checkDeviceInternalCode } from '@/api/collectionbox'
 import waves from '@/directive/waves'
+import queryBase from '@/utils/queryBase'
 export default {
   name: 'complexTable',
   directives: {
@@ -256,19 +241,31 @@ export default {
       this.edit = ''
     },
     getList() {
+      var that = this
       this.listLoading = true
       pageQueryDevice(this.listQuery).then(response => {
         const $data = response.data.data
+        var hdata = { num: 1, data: $data }
         for (let i = 0; i < $data.length; i++) {
-          $data[i].serverName = ''
-          queryServer({ id: $data[i].serverId }).then(response => {
-            $data[i].serverName = response.data.code
+          hdata.num++
+          const str = $data[i]
+          queryBase.getServer(str.serverId, function(sc, value) {
+            if (sc) {
+              str.serverName = value.code
+              hdata.num--
+              if (hdata.num === 0) {
+                that.list = hdata.data
+              }
+            }
           })
         }
-        this.list = $data
-        this.total = response.data.total
+        hdata.num--
+        if (hdata.num === 0) {
+          that.list = hdata.data
+        }
+        that.total = response.data.total
         setTimeout(() => {
-          this.listLoading = false
+          that.listLoading = false
         }, 1.5 * 1000)
       })
     },

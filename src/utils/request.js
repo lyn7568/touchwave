@@ -1,14 +1,11 @@
 import axios from 'axios'
 import qs from 'qs'
 import { comUrl } from '@/utils/index'
-// import { Message } from 'element-ui'
-// import store from '@/store'
-// import { getSession } from '@/utils/auth'
 
 // 创建axios实例
 const service = axios.create({
   baseURL: comUrl, // api的base_url
-  // timeout: 5000 // 请求超时时间
+  timeout: 5000, // 请求超时时间
   paramsSerializer: function(params) {
     return qs.stringify(params, { arrayFormat: 'repeat' })
   }
@@ -28,30 +25,11 @@ service.interceptors.request.use(config => {
   }
   return config
 }, error => {
-  // Do something with request error
-  console.log(error) // for debug
   Promise.reject(error)
 })
 
 // respone拦截器
 service.interceptors.response.use(response => {
-  // response => {
-  // /**
-  // * code为非20000是抛错 可结合自己业务进行修改
-  // */
-  //   const res = response.data
-  //   if (res.code !== 20000) {
-  //     Message({
-  //       message: res.message,
-  //       type: 'error',
-  //       duration: 5 * 1000
-  //     })
-
-  //     return Promise.reject('error')
-  //   } else {
-  //     return response.data
-  //   }
-  // },
   let data = response.data
   const status = response.status
   if (status === 200) {
@@ -67,13 +45,9 @@ service.interceptors.response.use(response => {
     }
     return response.data
   } else {
-    // 业务异常
-    console.log(response)
     return Promise.resolve(response)
   }
 }, error => {
-  // 系统异常(后期统一处理)
-  console.log(error)
   return Promise.reject(error)
 })
 

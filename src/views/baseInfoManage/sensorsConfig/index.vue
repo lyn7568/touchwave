@@ -9,33 +9,13 @@
       <el-button v-waves class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加传感器</el-button>
     </div>
 
-    <el-table :key='tableKey' :data="list" v-loading="listLoading" border fit highlight-current-row
+    <el-table :key='tableKey' :data="listG" v-loading="listLoading" border fit highlight-current-row
       style="width: 100%;min-height:550px;">
-      <el-table-column width="150px" align="center" label="传感器编号">
-        <template slot-scope="scope">
-          <span>{{scope.row.code}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="150px" align="center" label="传感器所在主缆">
-        <template slot-scope="scope">
-          <span>{{cableMain[scope.row.cableType]}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="150px" align="center" label="传感器位置">
-        <template slot-scope="scope">
-          <span>{{addr[scope.row.locType]}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="150px" align="center" label="所属采集盒编号">
-        <template slot-scope="scope">
-          <span>{{scope.row.deviceName}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="200px" align="center" label="备注信息">
-        <template slot-scope="scope">
-          <span>{{scope.row.remark}}</span>
-        </template>
-      </el-table-column>
+      <el-table-column width="150px" align="center" label="传感器编号" prop="code"></el-table-column>
+      <el-table-column width="150px" align="center" label="传感器所在主缆" prop="cableType"></el-table-column>
+      <el-table-column width="150px" align="center" label="传感器位置" prop="locType"></el-table-column>
+      <el-table-column min-width="150px" align="center" label="所属采集盒编号" prop="deviceName"></el-table-column>
+      <el-table-column min-width="200px" align="center" label="备注信息" prop="remark"></el-table-column>
       <el-table-column align="center" label="操作" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope"> 
           <el-button v-waves type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button> 
@@ -113,9 +93,10 @@
 </template>
 
 <script>
-import { addDevice, updateDevice, deleteDevice, pageQueryDevice, DeviceOfservice, checkDeviceCode, checkDeviceInternalCode, queryServer } from '@/api/sensor'
+import { addDevice, updateDevice, deleteDevice, pageQueryDevice, DeviceOfservice, checkDeviceCode, checkDeviceInternalCode } from '@/api/sensor'
 import waves from '@/directive/waves'
 import queryDict from '@/utils/queryDict'
+import queryBase from '@/utils/queryBase'
 export default {
   name: 'complexTable',
   directives: {
@@ -217,7 +198,7 @@ export default {
       timeout: null,
       dialogTableVisible: false,
       tableKey: 0,
-      list: null,
+      listG: null,
       total: null,
       listLoading: true,
       listQuery: {
@@ -240,19 +221,19 @@ export default {
   methods: {
     getDictoryData() {
       const that = this
-      queryDict.applyDict('ZLLX', function(dictData) {
+      queryDict.applyDict('ZLLX', function(dictData) { // 主缆
         dictData.map(item => {
           that.options.push({ value: item.code, label: item.caption })
           that.cableMain[item.code] = item.caption
         })
-      }) // 主缆
-      queryDict.applyDict('ZLWZ', function(dictData) {
-        dictData.map(item => {
-          that.options1.push({ value: item.code, label: item.caption })
-          that.addr[item.code] = item.caption
+        queryDict.applyDict('ZLWZ', function(dictData) { // 位置
+          dictData.map(item => {
+            that.options1.push({ value: item.code, label: item.caption })
+            that.addr[item.code] = item.caption
+          })
+          that.getList()
         })
-      }) // 位置
-      that.getList()
+      })
     },
     submitForm(formName) {
       const that = this
@@ -306,19 +287,33 @@ export default {
       this.edit = ''
     },
     getList() {
+      var that = this
       this.listLoading = true
-      pageQueryDevice(this.listQuery).then(response => {
-        const $data = response.data.data
+      pageQueryDevice(that.listQuery).then(response => {
+        var $data = response.data.data
+        var hdata = { num: 1, data: $data }
         for (let i = 0; i < $data.length; i++) {
-          $data[i].deviceName = ''
-          queryServer({ id: $data[i].deviceId }).then(response => {
-            $data[i].deviceName = response.data.code
+          hdata.num++
+          $data[i].cableType = that.cableMain[$data[i].cableType]
+          $data[i].locType = that.addr[$data[i].locType]
+          const str = $data[i]
+          queryBase.getDevice(str.deviceId, function(sc, value) {
+            if (sc) {
+              str.deviceName = value.code
+              hdata.num--
+              if (hdata.num === 0) {
+                that.listG = hdata.data
+              }
+            }
           })
         }
-        this.list = $data
-        this.total = response.data.total
+        hdata.num--
+        if (hdata.num === 0) {
+          that.listG = hdata.data
+        }
+        that.total = response.data.total
         setTimeout(() => {
-          this.listLoading = false
+          that.listLoading = false
         }, 1.5 * 1000)
       })
     },
