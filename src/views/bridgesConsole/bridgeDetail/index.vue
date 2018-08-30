@@ -32,7 +32,7 @@
           </div>
           <el-row class="line-chart-box" v-if="monitorList.length">
             <el-col :xs="24" :sm="24" :lg="24" v-for="item in monitorShowList" :key="item.index">
-              <lineChart2 :chartData="item"></lineChart2>
+              <lineChart2 :chartData="item" :maxXcount="maxShowLength"></lineChart2>
             </el-col>
           </el-row>
           <DefaultPage v-if="!monitorList.length"></DefaultPage>
@@ -83,7 +83,7 @@ import Cookies from 'js-cookie'
 import queryInfo from '@/utils/queryInfo'
 import queryDict from '@/utils/queryDict'
 import { urlParse, parseTime, turnTime } from '@/utils'
-import { getDangerList, getTimingMonitor } from '@/api/bridgeInfo'
+import { getDangerList, getTimingMonitor, getTimingMonitorByTime } from '@/api/bridgeInfo'
 
 import lineChart2 from '../lineChart/LineChart2'
 import BInfoDialog01 from './components/BInfoDialog01'
@@ -121,9 +121,10 @@ export default {
       monitorList: [],
       currentNo: 1,
       currentSize: 4,
-      currentTime: turnTime(new Date()),
-      dateArr: [],
-      intervalTime: 60 * 1000
+      currentTime: turnTime(new Date(), 'time', true),
+      setTime: null,
+      maxShowLength: 300,
+      monitorCache: []
     }
   },
   computed: {
@@ -145,12 +146,11 @@ export default {
       if (this.serverSeqArr.length) {
         this.getTimingMonitor(this.serverSeqArr)
         this.getDangerList(this.serverSeqArr)
+        this.setTime = setInterval(() => {
+          this.getTimingMonitor(this.serverSeqArr)
+        }, 1000)
       }
     }
-    // setInterval(() => {
-    //   this.addData(true)
-    //   this.getTimingMonitor()
-    // }, 60000)
   },
   methods: {
     getDangerList(arr) {
@@ -172,38 +172,65 @@ export default {
         }
       })
     },
+    addData() {
+      this.currentTime = turnTime(new Date(+new Date(this.currentTime) + 1000), 'time', true)
+    },
     getTimingMonitor(arr) {
       var that = this
       const param = {
         seq: arr
       }
-      getTimingMonitor(param).then(res => {
+      getTimingMonitor({seq: arr}).then(res => {
         if (res.success && res.data) {
+          that.addData()
           var monitorList = []
-          for (let i = 0; i < res.data.length; i++) {
-            var str = res.data[i].cid
-            var monitorData = null
-            for (let j = 0; j < monitorList.length; ++j) {
-              if (str === monitorList[j].tit) {
-                monitorData = monitorList[j]
-                break
-              }
-            }
-            if (!monitorData) {
-              monitorData = {
-                xData: [],
-                seData: {
-                  max: [],
-                  min: []
+          var monitorCache = that.monitorCache
+          if (monitorCache.length) {
+            for(let j = 0; j < monitorCache.length; ++j){
+              let channel_found = false
+              var xData = monitorCache[j].cd.xData
+              var max = monitorCache[j].cd.seData.max
+              var min = monitorCache[j].cd.seData.min
+              for (let i = 0; i < res.data.length; i++){
+                if(monitorCache[j].cid === res.data[i].cid){
+                  channel_found = true
+                  xData.push(that.currentTime)
+                  max.push(res.data[i].hvalue)
+                  min.push(res.data[i].lvalue)
+                  break
                 }
               }
-              monitorList.push(monitorData)
-              monitorData.tit = str
-              that.addData()
+              if (!channel_found) {
+                xData.push(that.currentTime)
+                max.push(max[max.length-1])
+                min.push(min[min.length-1])
+              }
+              if (xData.length > that.maxShowLength) {
+                xData.shift()
+                max.shift()
+                min.shift()
+              }
+              monitorList.push(monitorCache[j].cd)
             }
-            monitorData.xData.push(that.dateArr)
-            monitorData.seData.max.push(res.data[i].hvalue)
-            monitorData.seData.min.push(res.data[i].lvalue)
+          } else {
+            for (let i = 0; i < res.data.length; i++){
+              var mi = {
+                cid: res.data[i].cid,
+                cd: {
+                  xData: [],
+                  seData: {
+                    max: [],
+                    min: []
+                  }
+                }
+              }
+              mi.cd.xData.push(that.currentTime)
+              mi.cd.seData.max.push(res.data[i].hvalue)
+              mi.cd.seData.min.push(res.data[i].lvalue)
+              mi.cd.tit = res.data[i].cid
+              monitorCache.push(mi)
+              monitorList.push(mi.cd)
+            }
           }
           that.monitorList = monitorList
         }
@@ -226,13 +253,6 @@ export default {
           that.citys[item.code] = item.fullCaption
         })
       }) // 城市级联
-    },
-    addData(shift) {
-      this.dateArr.push(this.currentTime)
-      if (shift) {
-        this.dateArr.shift()
-      }
-      this.currentTime = turnTime(new Date(+new Date(this.currentTime) + this.intervalTime))
     },
     handleCurrentChange(val) {
       this.currentNo = val
@@ -268,6 +288,9 @@ export default {
     updateLoginPwd() {
       this.$refs.updateLoginPwd.dialogTableVisible = true
     }
+  },
+  beforeDestroy() {
+    clearInterval(this.setTime)
   }
 }
 </script>

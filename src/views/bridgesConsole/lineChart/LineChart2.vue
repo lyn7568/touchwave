@@ -27,6 +27,9 @@ export default {
     },
     chartData: {
       type: Object
+    },
+    maxXcount: {
+      type: Number
     }
   },
   data() {
@@ -94,7 +97,8 @@ export default {
           boundaryGap: false,
           axisTick: {
             show: false
-          }
+          },
+          max: this.maxXcount // x轴最多显示个数
         },
         yAxis: {
           type: 'value',

@@ -24,20 +24,24 @@ export function parseTime(startTime, flag, fa) {
   }
 }
 
-export function turnTime(time, hasT, hasF) { // hasT='date/time'是否有时分秒，hasF是否需要显示格式
-  if (hasT === 'time') {
-    if (hasF) {
-      return [time.getFullYear(), time.getMonth() + 1, time.getDate()].join('/') + ' ' + [time.getHours(), time.getMinutes(), time.getSeconds()].join(':')
-    } else {
-      return time.getFullYear() + (time.getMonth() + 1) + time.getDate() + time.getHours() + time.getMinutes() + time.getSeconds()
-    }
-  } else if (hasT === 'date') {
-    if (hasF) {
-      return [time.getFullYear(), time.getMonth() + 1, time.getDate()].join('/')
-    } else {
-      return time.getFullYear() + (time.getMonth() + 1) + time.getDate()
-    }
+export function turnTime(date, hasT, hasF) { // hasT='date/time'是否有时分秒，hasF是否需要显示格式
+  const format = (hasT === 'time') ? (hasF ? '{y}/{m}/{d} {h}:{i}:{s}' : '{y}{m}{d}{h}{i}{s}') : (hasF ? '{y}/{m}/{d}' : '{y}{m}{d}')
+  const formatObj = {
+    y: date.getFullYear(),
+    m: date.getMonth() + 1,
+    d: date.getDate(),
+    h: date.getHours(),
+    i: date.getMinutes(),
+    s: date.getSeconds()
   }
+  const time_str = format.replace(/{(y|m|d|h|i|s)+}/g, (result, key) => {
+    let value = formatObj[key]
+    if (result.length > 0 && value < 10) {
+      value = '0' + value
+    }
+    return value || 0
+  })
+  return time_str
 }
 
 export function param2Obj(url) {

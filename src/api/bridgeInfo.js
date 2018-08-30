@@ -73,4 +73,11 @@ export function getTimingMonitor(params) {
     params
   })
 }
+export function getTimingMonitorByTime(params) {
+  return request({
+    url: '/ajax/collect/wave/server/time',
+    method: 'get',
+    params
+  })
+}
 // 监测信息
