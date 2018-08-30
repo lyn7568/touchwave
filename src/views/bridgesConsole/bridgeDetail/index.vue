@@ -83,7 +83,7 @@ import Cookies from 'js-cookie'
 import queryInfo from '@/utils/queryInfo'
 import queryDict from '@/utils/queryDict'
 import { urlParse, parseTime, turnTime } from '@/utils'
-import { getDangerList, getTimingMonitor, getTimingMonitorByTime } from '@/api/bridgeInfo'
+import { getDangerList, getTimingMonitor } from '@/api/bridgeInfo'
 
 import lineChart2 from '../lineChart/LineChart2'
 import BInfoDialog01 from './components/BInfoDialog01'
@@ -177,22 +177,19 @@ export default {
     },
     getTimingMonitor(arr) {
       var that = this
-      const param = {
-        seq: arr
-      }
-      getTimingMonitor({seq: arr}).then(res => {
+      getTimingMonitor({ seq: arr }).then(res => {
         if (res.success && res.data) {
           that.addData()
           var monitorList = []
           var monitorCache = that.monitorCache
           if (monitorCache.length) {
-            for(let j = 0; j < monitorCache.length; ++j){
+            for (let j = 0; j < monitorCache.length; ++j) {
               let channel_found = false
               var xData = monitorCache[j].cd.xData
               var max = monitorCache[j].cd.seData.max
               var min = monitorCache[j].cd.seData.min
-              for (let i = 0; i < res.data.length; i++){
-                if(monitorCache[j].cid === res.data[i].cid){
+              for (let i = 0; i < res.data.length; i++) {
+                if (monitorCache[j].cid === res.data[i].cid) {
                   channel_found = true
                   xData.push(that.currentTime)
                   max.push(res.data[i].hvalue)
@@ -202,8 +199,8 @@ export default {
               }
               if (!channel_found) {
                 xData.push(that.currentTime)
-                max.push(max[max.length-1])
-                min.push(min[min.length-1])
+                max.push(max[max.length - 1])
+                min.push(min[min.length - 1])
               }
               if (xData.length > that.maxShowLength) {
                 xData.shift()
@@ -213,7 +210,7 @@ export default {
               monitorList.push(monitorCache[j].cd)
             }
           } else {
-            for (let i = 0; i < res.data.length; i++){
+            for (let i = 0; i < res.data.length; i++) {
               var mi = {
                 cid: res.data[i].cid,
                 cd: {
