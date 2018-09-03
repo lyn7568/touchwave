@@ -138,13 +138,15 @@ export default {
   methods: {
     getAllBridges() {
       DeviceOfservice({ key: this.state4, active: 1 }).then(response => {
-        const $info = response.data
-        if ($info.length) {
-          this.bridgeListsChecked.push($info[0].id)
-          const $data = $info.map(item => {
-            return { 'value': item.shortName, 'id': item.id }
-          })
-          this.bridgeLists = $data
+        if (response.success) {
+          const $info = response.data
+          if ($info.length) {
+            this.bridgeListsChecked.push($info[0].id)
+            const $data = $info.map(item => {
+              return { 'value': item.shortName, 'id': item.id }
+            })
+            this.bridgeLists = $data
+          }
         }
       })
     },

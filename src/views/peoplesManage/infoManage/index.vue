@@ -117,33 +117,35 @@ export default {
     getList() {
       this.listLoading = true
       pageQueryUser(this.listQuery).then(response => {
-        if (response.data === null) {
-          this.list = []
-          this.total = 0
+        if (response.success) {
+          if (response.data === null) {
+            this.list = []
+            this.total = 0
+            setTimeout(() => {
+              this.listLoading = false
+            }, 1.5 * 1000)
+            return
+          }
+          const $data = response.data.data
+          for (let i = 0; i < $data.length; i++) {
+            $data[i].bridgeName = ''
+            queryResponsibleBridge({ uid: $data[i].id, active: 1 }).then(response => {
+              if (response.success) {
+                const arr = []
+                const $info = response.data
+                for (let j = 0; j < $info.length; j++) {
+                  arr.push($info[j].shortName)
+                }
+                $data[i].bridgeName = arr.join(',')
+              }
+            })
+          }
+          this.list = $data
+          this.total = response.data.total
           setTimeout(() => {
             this.listLoading = false
           }, 1.5 * 1000)
-          return
         }
-        const $data = response.data.data
-        for (let i = 0; i < $data.length; i++) {
-          $data[i].bridgeName = ''
-          queryResponsibleBridge({ uid: $data[i].id, active: 1 }).then(response => {
-            if (response.success) {
-              const arr = []
-              const $info = response.data
-              for (let j = 0; j < $info.length; j++) {
-                arr.push($info[j].shortName)
-              }
-              $data[i].bridgeName = arr.join(',')
-            }
-          })
-        }
-        this.list = $data
-        this.total = response.data.total
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
       })
     },
     handleFilter() {

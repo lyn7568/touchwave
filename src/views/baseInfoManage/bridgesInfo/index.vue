@@ -313,12 +313,14 @@ export default {
         if (valid) {
           if (!this.edit) {
             addDevice(this.ruleForm2).then(response => {
-              this.getList()
-              setTimeout(function() {
-                that.pop('已成功添加桥梁')
-              }, 1000)
-              this.resetForm('ruleForm2')
-              this.dialogTableVisible = false
+              if (response.success) {
+                this.getList()
+                setTimeout(function() {
+                  that.pop('已成功添加桥梁')
+                }, 1000)
+                this.resetForm('ruleForm2')
+                this.dialogTableVisible = false
+              }
             }).catch(error => {
               console.log(error)
             })
@@ -368,11 +370,13 @@ export default {
     getList() {
       this.listLoading = true
       pageQueryDevice(this.listQuery).then(response => {
-        this.list = response.data.data
-        this.total = response.data.total
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+        if (response.success) {
+          this.list = response.data.data
+          this.total = response.data.total
+          setTimeout(() => {
+            this.listLoading = false
+          }, 1.5 * 1000)
+        }
       })
     },
     handleFilter() {

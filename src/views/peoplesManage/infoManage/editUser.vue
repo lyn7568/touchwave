@@ -189,12 +189,14 @@ export default {
         if (valid) {
           if (!this.edit) {
             addRegister(this.ruleForm2).then(response => {
-              this.$emit('chilF')
-              setTimeout(function() {
-                that.pop('已成功添加')
-              }, 1000)
-              this.resetForm(this.ruleForm2)
-              this.dialogTableVisible = false
+              if (response.success) {
+                this.$emit('chilF')
+                setTimeout(function() {
+                  that.pop('已成功添加')
+                }, 1000)
+                this.resetForm(this.ruleForm2)
+                this.dialogTableVisible = false
+              }
             }).catch(error => {
               console.log(error)
             })

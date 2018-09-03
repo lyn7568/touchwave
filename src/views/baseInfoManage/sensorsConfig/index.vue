@@ -241,12 +241,14 @@ export default {
         if (valid) {
           if (!this.edit) {
             addDevice(this.ruleForm2).then(response => {
-              this.getList()
-              setTimeout(function() {
-                that.pop('已成功添加传感器')
-              }, 1000)
-              this.resetForm('ruleForm2')
-              this.dialogTableVisible = false
+              if (response.success) {
+                this.getList()
+                setTimeout(function() {
+                  that.pop('已成功添加传感器')
+                }, 1000)
+                this.resetForm('ruleForm2')
+                this.dialogTableVisible = false
+              }
             }).catch(error => {
               console.log(error)
             })
@@ -290,31 +292,33 @@ export default {
       var that = this
       this.listLoading = true
       pageQueryDevice(that.listQuery).then(response => {
-        var $data = response.data.data
-        var hdata = { num: 1, data: $data }
-        for (let i = 0; i < $data.length; i++) {
-          hdata.num++
-          $data[i].cableType = that.cableMain[$data[i].cableType]
-          $data[i].locType = that.addr[$data[i].locType]
-          const str = $data[i]
-          queryBase.getDevice(str.deviceId, function(sc, value) {
-            if (sc) {
-              str.deviceName = value.code
-              hdata.num--
-              if (hdata.num === 0) {
-                that.listG = hdata.data
+        if (response.success) {
+          var $data = response.data.data
+          var hdata = { num: 1, data: $data }
+          for (let i = 0; i < $data.length; i++) {
+            hdata.num++
+            $data[i].cableType = that.cableMain[$data[i].cableType]
+            $data[i].locType = that.addr[$data[i].locType]
+            const str = $data[i]
+            queryBase.getDevice(str.deviceId, function(sc, value) {
+              if (sc) {
+                str.deviceName = value.code
+                hdata.num--
+                if (hdata.num === 0) {
+                  that.listG = hdata.data
+                }
               }
-            }
-          })
+            })
+          }
+          hdata.num--
+          if (hdata.num === 0) {
+            that.listG = hdata.data
+          }
+          that.total = response.data.total
+          setTimeout(() => {
+            that.listLoading = false
+          }, 1.5 * 1000)
         }
-        hdata.num--
-        if (hdata.num === 0) {
-          that.listG = hdata.data
-        }
-        that.total = response.data.total
-        setTimeout(() => {
-          that.listLoading = false
-        }, 1.5 * 1000)
       })
     },
     handleFilter() {
@@ -385,7 +389,7 @@ export default {
       this.ruleForm2.deviceId = ''
       clearTimeout(this.timeout)
       this.timeout = setTimeout(() => {
-        DeviceOfservice({ code: this.ruleForm2.device }).then(response => {
+        DeviceOfservice({ code: this.ruleForm2.device, active: 1 }).then(response => {
           const $info = response.data
           if ($info.length) {
             const $data = $info.map(item => {

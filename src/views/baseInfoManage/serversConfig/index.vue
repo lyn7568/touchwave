@@ -196,12 +196,14 @@ export default {
         if (valid) {
           if (!this.edit) {
             addDevice(this.ruleForm2).then(response => {
-              this.getList()
-              setTimeout(function() {
-                that.pop('已成功添加服务器')
-              }, 1000)
-              this.resetForm('ruleForm2')
-              this.dialogTableVisible = false
+              if (response.success) {
+                this.getList()
+                setTimeout(function() {
+                  that.pop('已成功添加服务器')
+                }, 1000)
+                this.resetForm('ruleForm2')
+                this.dialogTableVisible = false
+              }
             }).catch(error => {
               console.log(error)
             })
@@ -244,29 +246,31 @@ export default {
       var that = this
       this.listLoading = true
       pageQueryDevice(this.listQuery).then(response => {
-        const $data = response.data.data
-        var hdata = { num: 1, data: $data }
-        for (let i = 0; i < $data.length; i++) {
-          hdata.num++
-          const str = $data[i]
-          queryBase.getBridge(str.bridgeId, function(sc, value) {
-            if (sc) {
-              str.bridgeName = value.shortName
-              hdata.num--
-              if (hdata.num === 0) {
-                that.list = hdata.data
+        if (response.success) {
+          const $data = response.data.data
+          var hdata = { num: 1, data: $data }
+          for (let i = 0; i < $data.length; i++) {
+            hdata.num++
+            const str = $data[i]
+            queryBase.getBridge(str.bridgeId, function(sc, value) {
+              if (sc) {
+                str.bridgeName = value.shortName
+                hdata.num--
+                if (hdata.num === 0) {
+                  that.list = hdata.data
+                }
               }
-            }
-          })
+            })
+          }
+          hdata.num--
+          if (hdata.num === 0) {
+            that.list = hdata.data
+          }
+          that.total = response.data.total
+          setTimeout(() => {
+            that.listLoading = false
+          }, 1.5 * 1000)
         }
-        hdata.num--
-        if (hdata.num === 0) {
-          that.list = hdata.data
-        }
-        that.total = response.data.total
-        setTimeout(() => {
-          that.listLoading = false
-        }, 1.5 * 1000)
       })
     },
     handleFilter() {
@@ -291,7 +295,7 @@ export default {
         deleteDevice({ id: row.id }).then(response => {
           if (response.success) {
             this.getList()
-            this.pop('已成功删除该传感器')
+            this.pop('已成功删除该服务器')
           }
         })
       }).catch(() => {
