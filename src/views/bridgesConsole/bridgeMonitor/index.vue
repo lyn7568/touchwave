@@ -8,11 +8,19 @@
             value-format="yyyyMMdd"
             @change="changeDate">
           </el-date-picker>
+          <!-- <el-date-picker
+            v-model="dateRange"
+            type="datetimerange"
+            align="right"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :default-time="['12:00:00', '08:00:00']">
+          </el-date-picker> -->
           <el-button type="primary" @click="getMonitorByDay">查询</el-button>
       </div>
       <el-row class="line-chart-box" v-if="alarmList.length">
         <el-col :xs="24" :sm="24" :lg="24" v-for="item in alarmShowList" :key="item.index">
-          <lineChart2 :chartData="item"></lineChart2>
+          <lineChart2 :chartData="item" :historyM="historyM"></lineChart2>
         </el-col>
       </el-row>
       <DefaultPage v-if="!alarmList.length"></DefaultPage>
@@ -44,8 +52,10 @@ import DefaultPage from '@/components/DefaultPage'
 export default {
   data() {
     return {
+      historyM: true,
       bridgeId: '',
       valueDate: new Date().toISOString().substring(0, 10).replace(/-/g, ''),
+      dateRange: '',
       serverSeqArr: [],
       alarmList: [],
       pageSize: 2,
@@ -105,6 +115,7 @@ export default {
             monitorData.seData.min.push(res.data[i].lvalue)
           }
           that.alarmList = monitorList
+          console.log(that.alarmList)
         }
       })
     },

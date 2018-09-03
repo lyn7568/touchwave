@@ -30,6 +30,9 @@ export default {
     },
     maxXcount: {
       type: Number
+    },
+    historyM: { // 判断是否需要坐标轴上的滚动条
+      type: Boolean
     }
   },
   data() {
@@ -82,7 +85,7 @@ export default {
           left: 10,
           right: 10,
           bottom: 20,
-          top: 30,
+          top: 50,
           containLabel: true
         },
         tooltip: {
@@ -144,6 +147,35 @@ export default {
           animationEasing: 'cubicInOut'
         }]
       })
+      if (this.historyM) {
+        this.chart.setOption({
+          dataZoom: [
+            {
+              type: 'slider',
+              show: true,
+              start: 94,
+              end: 100,
+              handleSize: 8
+            },
+            {
+              type: 'inside',
+              start: 94,
+              end: 100
+            },
+            {
+              type: 'slider',
+              show: true,
+              yAxisIndex: 0,
+              filterMode: 'empty',
+              width: 12,
+              height: '70%',
+              handleSize: 8,
+              showDataShadow: false,
+              left: '98%'
+            }
+          ]
+        })
+      }
     },
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
