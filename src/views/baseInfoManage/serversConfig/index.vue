@@ -12,6 +12,7 @@
     <el-table :key='tableKey' :data="list" v-loading="listLoading" border fit highlight-current-row
       style="width: 100%;min-height:550px;">
       <el-table-column width="150px" align="center" label="服务器编号" prop="code"></el-table-column>
+      <el-table-column width="150px" align="center" label="内部编号" prop="seq"></el-table-column>
       <el-table-column width="150px" align="center" label="采集盒数量" prop="devices"></el-table-column>
       <el-table-column min-width="150px" align="center" label="所属桥梁" prop="bridgeName"></el-table-column>
       <el-table-column min-width="200px" align="center" label="备注信息" prop="remark"></el-table-column>

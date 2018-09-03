@@ -12,6 +12,7 @@
     <el-table :key='tableKey' :data="listG" v-loading="listLoading" border fit highlight-current-row
       style="width: 100%;min-height:550px;">
       <el-table-column width="150px" align="center" label="传感器编号" prop="code"></el-table-column>
+      <el-table-column width="150px" align="center" label="内部编号" prop="seq"></el-table-column>
       <el-table-column width="150px" align="center" label="传感器所在主缆" prop="cableType"></el-table-column>
       <el-table-column width="150px" align="center" label="传感器位置" prop="locType"></el-table-column>
       <el-table-column min-width="150px" align="center" label="所属采集盒编号" prop="deviceName"></el-table-column>

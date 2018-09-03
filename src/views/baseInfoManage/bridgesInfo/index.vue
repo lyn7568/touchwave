@@ -311,6 +311,9 @@ export default {
       const that = this
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if (this.ruleForm2.img === '') {
+            this.ruleForm2.img = '/default-bridge.jpg'
+          }
           if (!this.edit) {
             addDevice(this.ruleForm2).then(response => {
               if (response.success) {
