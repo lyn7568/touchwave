@@ -178,7 +178,7 @@ export default {
           this.$emit('chilF')
           const that = this
           setTimeout(function() {
-            that.pop('权限修改修改成功')
+            that.pop('权限修改成功')
           }, 1000)
           this.dialogTableVisible = false
         }

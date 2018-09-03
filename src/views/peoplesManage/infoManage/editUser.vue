@@ -9,12 +9,17 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="用户姓名" prop='name'>
-              <el-input placeholder="请输入用户姓名" v-model="ruleForm2.name"></el-input>
+              <el-input placeholder="请输入用户姓名" v-model="ruleForm2.name" maxlength=20></el-input>
             </el-form-item>
           </el-col>
-           <el-col :span="12">
+          <el-col :span="12">
             <el-form-item label="职位" prop='job'>
-              <el-input placeholder="请输入用户职位" v-model="ruleForm2.job"></el-input>
+              <el-input placeholder="请输入用户职位" v-model="ruleForm2.job" maxlength=100></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="用户所在机构" prop='comp'>
+              <el-input placeholder="请输入用户所在机构" v-model="ruleForm2.comp" maxlength=200></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -31,22 +36,17 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="联系电话" prop='phone'>
-              <el-input placeholder="请输入手机号码" v-model="ruleForm2.phone"></el-input>
+              <el-input placeholder="请输入手机号码" v-model="ruleForm2.phone" maxlength=11></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="联系邮箱" prop='email'>
-              <el-input placeholder="请输入邮箱地址" v-model="ruleForm2.email"></el-input>
+              <el-input placeholder="请输入邮箱地址" v-model="ruleForm2.email" maxlength=100></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="所在机构" prop='comp'>
-              <el-input placeholder="请输入所在用户机构" v-model="ruleForm2.comp"></el-input>
-            </el-form-item>
-          </el-col>
-           <el-col :span="24" >
+          <el-col :span="24" >
             <el-form-item label="备注" prop='remark'>
-              <el-input type="textarea" rows=4 v-model="ruleForm2.remark"></el-input>
+              <el-input type="textarea" rows=4 v-model="ruleForm2.remark" maxlength=500></el-input>
              </el-form-item>
           </el-col>
           <el-col :span="24" class="el-btn-col">
@@ -145,7 +145,7 @@ export default {
           { required: true, message: '请输入用户姓名', trigger: 'blur' }
         ],
         comp: [
-          { required: true, message: '请输入所在用户机构', trigger: 'blur' }
+          { required: true, message: '请输入用户所在机构', trigger: 'blur' }
         ],
         job: [
           { required: true, message: '请输入用户职位', trigger: 'blur' }

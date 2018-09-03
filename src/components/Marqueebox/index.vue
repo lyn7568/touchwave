@@ -6,7 +6,7 @@
       </el-form>
       <div class="limit_num">还可以输入{{ableNum}}字</div>
       <div slot="footer" class="dialog-footer">
-        <el-button v-waves @click="dialogFormVisible = false">取 消</el-button>
+        <el-button v-waves @click="cancelNotice('formNotice')">取 消</el-button>
         <el-button type="primary" v-waves @click="setNotice('formNotice')">确 定</el-button>
       </div>
     </el-dialog>
@@ -14,8 +14,8 @@
       <div class="marquee_box">
         <span class="tit">系统公告：</span>
         <el-tooltip placement="bottom-end" effect="dark">
-          <div slot="content" class="popper-tips">{{formNotice.desc}}</div>
-          <div class="marquee_text">{{formNotice.desc}}</div>
+          <div slot="content" class="popper-tips">{{formNotice.text}}</div>
+          <div class="marquee_text">{{formNotice.text}}</div>
         </el-tooltip>
         <span class="btn-span" v-if="isShow" @click="openNoticeDialog">设置</span>
       </div>
@@ -40,7 +40,8 @@ export default {
       dialogFormVisible: false,
       ableNum: 100,
       formNotice: {
-        desc: ''
+        desc: '',
+        text: ''
       },
       rules: {
         desc: [
@@ -61,12 +62,18 @@ export default {
       getNotice().then(res => {
         if (res.success) {
           this.formNotice.desc = res.data
+          this.formNotice.text = res.data
           this.limitFn()
         }
       })
     },
     openNoticeDialog() {
       this.dialogFormVisible = true
+    },
+    cancelNotice(formName) {
+      this.dialogFormVisible = false
+      this.$refs[formName].resetFields()
+      this.formNotice.desc = this.formNotice.text
     },
     setNotice(formName) {
       this.$refs[formName].validate((valid) => {
@@ -78,6 +85,7 @@ export default {
             if (res.success) {
               this.dialogFormVisible = false
               this.$refs[formName].resetFields()
+              this.formNotice.text = this.formNotice.desc
             }
           })
         } else {

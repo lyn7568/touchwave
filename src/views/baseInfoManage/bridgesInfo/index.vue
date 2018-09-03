@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
     <div class="filter-container" style="margin-bottom:20px">
-      <el-input style="width: 200px;" class="filter-item" placeholder="桥梁名称" v-model="listQuery.name">
+      <el-input style="width: 200px;" class="filter-item" placeholder="桥梁编号" v-model="listQuery.code">
       </el-input>
-       <el-input style="width: 200px;" class="filter-item" placeholder="桥梁编号" v-model="listQuery.code">
+      <el-input style="width: 200px;" class="filter-item" placeholder="桥梁简称" v-model="listQuery.name">
       </el-input>
       <el-button v-waves class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">查找</el-button>
       <el-button v-waves class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加桥梁</el-button>
@@ -51,17 +51,17 @@
             <el-row>
               <el-col :span="12">
                 <el-form-item label="桥梁编号" prop="code">
-                  <el-input placeholder="请输入桥梁编号" v-model="ruleForm2.code"></el-input>
+                  <el-input placeholder="请输入桥梁编号" v-model="ruleForm2.code" maxlength=20></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="桥梁简称" prop="shortName">
-                  <el-input placeholder="请输入桥梁简称" v-model="ruleForm2.shortName"></el-input>
+                  <el-input placeholder="请输入桥梁简称" v-model="ruleForm2.shortName" maxlength=20></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="桥梁全称" prop="name">
-                  <el-input placeholder="请输入桥梁全称" v-model="ruleForm2.name"></el-input>
+                  <el-input placeholder="请输入桥梁全称" v-model="ruleForm2.name" maxlength=200></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -72,7 +72,7 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="地理位置信息" prop="location">
-                  <el-input placeholder="请输入地理位置信息" v-model="ruleForm2.location"></el-input>
+                  <el-input placeholder="请输入地理位置信息" v-model="ruleForm2.location" maxlength=200></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -87,17 +87,17 @@
               </el-col>
               <el-col :span="24">
                 <el-form-item label="维护机构" prop="org">
-                  <el-input placeholder="请输入维护机构" v-model="ruleForm2.org"></el-input>
+                  <el-input placeholder="请输入维护机构" v-model="ruleForm2.org" maxlength=200></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="维护单位电话" prop="phone">
-                  <el-input placeholder="请输入维护单位电话" v-model="ruleForm2.phone"></el-input>
+                <el-form-item label="联系电话" prop="phone">
+                  <el-input placeholder="请输入联系电话" v-model="ruleForm2.phone" maxlength=20></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="维护单位电邮" prop="email">
-                  <el-input placeholder="请输入维护单位电邮" v-model="ruleForm2.email"></el-input>
+                <el-form-item label="联系电邮" prop="email">
+                  <el-input placeholder="请输入联系电邮" v-model="ruleForm2.email" maxlength=100></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -125,7 +125,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="备注" class="el-to-block" prop="remark">
-              <el-input type="textarea" maxlength=100 rows=3 v-model="ruleForm2.remark"></el-input>
+              <el-input type="textarea" maxlength=500 rows=3 v-model="ruleForm2.remark"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="24" class="el-btn-col">
@@ -262,13 +262,13 @@ export default {
           { required: true, message: '请输入维护机构名称', trigger: 'blur' }
         ],
         phone: [
-          { required: true, message: '请输入维护机构电话', trigger: 'blur' }
+          { required: true, message: '请输入联系电话', trigger: 'blur' }
         ],
         addrCode: [
           { required: true, message: '请选择桥梁位置信息', trigger: 'blur' }
         ],
         email: [
-          { required: true, message: '请输入维护机构电邮', trigger: 'blur' }
+          { required: true, message: '请输入联系电邮', trigger: 'blur' }
         ]
       },
       timeout: null,
@@ -428,7 +428,7 @@ export default {
       this.ruleForm2 = {
         code: row.code,
         shortName: row.shortName,
-        name: row.shortName,
+        name: row.name,
         addrCode: row.addrCode,
         serviceDay: row.serviceDay,
         location: row.location,

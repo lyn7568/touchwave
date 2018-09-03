@@ -29,7 +29,12 @@
       <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" class="form-main"  label-position='right' status-icon>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="采集盒编号" prop="device">
+            <el-form-item label="传感器编号" prop="code">
+              <el-input placeholder="请输入传感器编号" v-model="ruleForm2.code" maxlength=20></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="所属采集盒编号" prop="device">
               <el-autocomplete
                  v-model="ruleForm2.device"
                 :fetch-suggestions="querySearchAsync"
@@ -39,17 +44,19 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="传感器编号" prop="code">
-              <el-input placeholder="请输入传感器编号" v-model="ruleForm2.code"></el-input>
+            <el-form-item label="传感器所属位置" prop="locType">
+              <el-select v-model="ruleForm2.locType" placeholder="请选择主缆传感器位置">
+                <el-option
+                  v-for="item in options1"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="内部编号" prop="seq">
-              <el-input placeholder="请输入内部编号" v-model="ruleForm2.seq"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="传感器所在主缆" prop="cableType">
+            <el-form-item label="传感器所属主缆" prop="cableType">
               <el-select v-model="ruleForm2.cableType" placeholder="请选择主缆">
                 <el-option
                   v-for="item in options"
@@ -61,20 +68,13 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="传感器位置" prop="locType">
-              <el-select v-model="ruleForm2.locType" placeholder="请选择主缆传感器位置">
-                <el-option
-                  v-for="item in options1"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
+            <el-form-item label="内部编号" prop="seq">
+              <el-input placeholder="请输入内部编号" v-model="ruleForm2.seq" maxlength=10></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="24" >
             <el-form-item label="备注" prop="remark">
-              <el-input type="textarea" maxlength=100 v-model="ruleForm2.remark" rows=4></el-input>
+              <el-input type="textarea" maxlength=500 v-model="ruleForm2.remark" rows=4></el-input>
              </el-form-item>
           </el-col>
           <el-col :span="24" class="el-btn-col">
@@ -108,18 +108,23 @@ export default {
       const that = this
       setTimeout(function() {
         if (that.ruleForm2.device === '' || that.ruleForm2.deviceId === '') {
-          callback(new Error('请选择采集盒编号'))
+          callback(new Error('请选择所属采集盒编号'))
         } else {
           callback()
         }
       }, 300)
     }
     var seq = (rule, value, callback) => {
+      const num = /^[0-9]*$/
       if (value === '') {
         callback(new Error('请输入内部编号'))
       } else {
         if (!this.ruleForm2.deviceId) {
-          callback('请先选择采集盒编号')
+          callback('请先选择所属采集盒编号')
+          return
+        }
+        if (!num.test(value)) {
+          callback('请输入数字')
           return
         }
         if (this.edit) {

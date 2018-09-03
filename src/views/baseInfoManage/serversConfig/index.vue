@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
     <div class="filter-container" style="margin-bottom:20px">
-      <el-input style="width: 200px;" class="filter-item" placeholder="所属桥梁编号" v-model="listQuery.bcode">
+      <el-input style="width: 200px;" class="filter-item" placeholder="服务器编号" v-model="listQuery.code">
       </el-input>
-       <el-input style="width: 200px;" class="filter-item" placeholder="服务器编号" v-model="listQuery.code">
+      <el-input style="width: 200px;" class="filter-item" placeholder="所属桥梁名称" v-model="listQuery.key">
       </el-input>
       <el-button v-waves class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">查找</el-button>
       <el-button v-waves class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加服务器</el-button>
@@ -29,12 +29,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="服务器编号" prop="code">
-              <el-input placeholder="请输入服务器编号" v-model="ruleForm2.code"></el-input>
+              <el-input placeholder="请输入服务器编号" v-model="ruleForm2.code" maxlength=20></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="采集盒数量" prop="devices">
-              <el-input placeholder="请输入采集盒数量" v-model="ruleForm2.devices"></el-input>
+              <el-input placeholder="请输入采集盒数量" v-model="ruleForm2.devices" maxlength=10></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -49,12 +49,12 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="内部编号" prop="seq">
-              <el-input placeholder="请输入内部编号" v-model="ruleForm2.seq"></el-input>
+              <el-input placeholder="请输入内部编号" v-model="ruleForm2.seq" maxlength=10></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="24" >
             <el-form-item label="备注" prop="remark">
-              <el-input type="textarea" maxlength=100 v-model="ruleForm2.remark" rows=4></el-input>
+              <el-input type="textarea" maxlength=500 v-model="ruleForm2.remark" rows=4></el-input>
              </el-form-item>
           </el-col>
           <el-col :span="24" class="el-btn-col">
@@ -94,11 +94,16 @@ export default {
       }, 300)
     }
     var seq = (rule, value, callback) => {
+      const num = /^[0-9]*$/
       if (value === '') {
         callback(new Error('请输入内部编号'))
       } else {
         if (!this.ruleForm2.bridgeId) {
           callback('请先选择所属桥梁')
+          return
+        }
+        if (!num.test(value)) {
+          callback('请输入数字')
           return
         }
         if (this.edit) {
@@ -174,7 +179,7 @@ export default {
       total: null,
       listLoading: true,
       listQuery: {
-        bcode: '',
+        key: '',
         code: '',
         active: 1,
         pageSize: 10,

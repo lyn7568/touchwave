@@ -57,7 +57,7 @@ export function DeviceOfservice(params) {
 /*  校验采集盒编号 */
 export function checkDeviceCode(params) {
   return request({
-    url: '/ajax/server/checkCode',
+    url: '/ajax/device/checkCode',
     method: 'get',
     params
   })
@@ -66,7 +66,7 @@ export function checkDeviceCode(params) {
 /*  校验采集盒内部编号 */
 export function checkDeviceInternalCode(params) {
   return request({
-    url: '/ajax/server/checkSeq',
+    url: '/ajax/device/checkSeq',
     method: 'get',
     params
   })

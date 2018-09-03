@@ -29,12 +29,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="采集盒编号"  prop="code">
-              <el-input placeholder="请输入采集盒编号" v-model="ruleForm2.code"></el-input>
+              <el-input placeholder="请输入采集盒编号" v-model="ruleForm2.code" maxlength=20></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="采集盒信道数量" prop="channels">
-              <el-input placeholder="请输入采集盒信道数量" v-model="ruleForm2.channels"></el-input>
+              <el-input placeholder="请输入采集盒信道数量" v-model="ruleForm2.channels" maxlength=10></el-input>
             </el-form-item>
           </el-col>
            <el-col :span="12">
@@ -49,12 +49,12 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="内部编号" prop="seq">
-              <el-input placeholder="请输入内部编号" v-model="ruleForm2.seq"></el-input>
+              <el-input placeholder="请输入内部编号" v-model="ruleForm2.seq" maxlength=10></el-input>
             </el-form-item>
           </el-col>
            <el-col :span="24" >
             <el-form-item label="备注" prop="remark">
-              <el-input type="textarea" maxlength=100 v-model="ruleForm2.remark" rows=4></el-input>
+              <el-input type="textarea" maxlength=500 v-model="ruleForm2.remark" rows=4></el-input>
              </el-form-item>
           </el-col>
           <el-col :span="24" class="el-btn-col">
@@ -94,11 +94,16 @@ export default {
       }, 300)
     }
     var seq = (rule, value, callback) => {
+      const num = /^[0-9]*$/
       if (value === '') {
         callback(new Error('请输入内部编号'))
       } else {
         if (!this.ruleForm2.serverId) {
           callback('请先选择所属服务器编号')
+          return
+        }
+        if (!num.test(value)) {
+          callback('请输入数字')
           return
         }
         if (this.edit) {
