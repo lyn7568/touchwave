@@ -183,7 +183,7 @@ export default {
         callback(new Error('请输入桥梁简称'))
       } else {
         if (this.edit) {
-          checkBridgeShortName({ shortName: value, id: this.edit }).then(response => {
+          checkBridgeShortName({ shortName: value, id: this.edit, active: 1 }).then(response => {
             if (response.data) {
               callback(new Error('桥梁简称已存在，请重新输入'))
             } else {
@@ -191,7 +191,7 @@ export default {
             }
           })
         } else {
-          checkBridgeShortName({ shortName: value }).then(response => {
+          checkBridgeShortName({ shortName: value, active: 1 }).then(response => {
             if (response.data) {
               callback(new Error('桥梁简称已存在，请重新输入'))
             } else {
@@ -206,7 +206,7 @@ export default {
         callback(new Error('请输入桥梁全称'))
       } else {
         if (this.edit) {
-          checkBridgeName({ name: value, id: this.edit }).then(response => {
+          checkBridgeName({ name: value, id: this.edit, active: 1 }).then(response => {
             if (response.data) {
               callback(new Error('桥梁全称已存在，请重新输入'))
             } else {
@@ -214,7 +214,7 @@ export default {
             }
           })
         } else {
-          checkBridgeName({ name: value }).then(response => {
+          checkBridgeName({ name: value, active: 1 }).then(response => {
             if (response.data) {
               callback(new Error('桥梁全称已存在，请重新输入'))
             } else {
