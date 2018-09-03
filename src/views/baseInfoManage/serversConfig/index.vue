@@ -101,7 +101,7 @@ export default {
           return
         }
         if (this.edit) {
-          checkDeviceInternalCode({ seq: value, id: this.edit, bridgeId: this.ruleForm2.bridgeId }).then(response => {
+          checkDeviceInternalCode({ seq: value, id: this.edit, bridgeId: this.ruleForm2.bridgeId, active: 1 }).then(response => {
             if (response.data) {
               callback(new Error('内部编号已存在，请重新输入'))
             } else {
@@ -109,7 +109,7 @@ export default {
             }
           })
         } else {
-          checkDeviceInternalCode({ seq: value, bridgeId: this.ruleForm2.bridgeId }).then(response => {
+          checkDeviceInternalCode({ seq: value, bridgeId: this.ruleForm2.bridgeId, active: 1 }).then(response => {
             if (response.data) {
               callback(new Error('内部编号已存在，请重新输入'))
             } else {
@@ -124,7 +124,7 @@ export default {
         callback(new Error('请输入服务器编号'))
       } else {
         if (this.edit) {
-          checkDeviceCode({ code: value, id: this.edit }).then(response => {
+          checkDeviceCode({ code: value, id: this.edit, active: 1 }).then(response => {
             if (response.data) {
               callback(new Error('服务器编号已存在，请重新输入'))
             } else {
@@ -132,7 +132,7 @@ export default {
             }
           })
         } else {
-          checkDeviceCode({ code: value }).then(response => {
+          checkDeviceCode({ code: value, active: 1 }).then(response => {
             if (response.data) {
               callback(new Error('服务器编号已存在，请重新输入'))
             } else {

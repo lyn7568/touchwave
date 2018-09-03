@@ -122,7 +122,7 @@ export default {
           return
         }
         if (this.edit) {
-          checkDeviceInternalCode({ seq: value, id: this.edit, deviceId: this.ruleForm2.deviceId }).then(response => {
+          checkDeviceInternalCode({ seq: value, id: this.edit, deviceId: this.ruleForm2.deviceId, active: 1 }).then(response => {
             if (response.data) {
               callback(new Error('内部编号已存在，请重新输入'))
             } else {
@@ -130,7 +130,7 @@ export default {
             }
           })
         } else {
-          checkDeviceInternalCode({ seq: value, deviceId: this.ruleForm2.deviceId }).then(response => {
+          checkDeviceInternalCode({ seq: value, deviceId: this.ruleForm2.deviceId, active: 1 }).then(response => {
             if (response.data) {
               callback(new Error('内部编号已存在，请重新输入'))
             } else {
@@ -145,7 +145,7 @@ export default {
         callback(new Error('请输入传感器编号'))
       } else {
         if (this.edit) {
-          checkDeviceCode({ code: value, id: this.edit }).then(response => {
+          checkDeviceCode({ code: value, id: this.edit, active: 1 }).then(response => {
             if (response.data) {
               callback(new Error('传感器编号已存在，请重新输入'))
             } else {
@@ -153,7 +153,7 @@ export default {
             }
           })
         } else {
-          checkDeviceCode({ code: value }).then(response => {
+          checkDeviceCode({ code: value, active: 1 }).then(response => {
             if (response.data) {
               callback(new Error('传感器编号已存在，请重新输入'))
             } else {
