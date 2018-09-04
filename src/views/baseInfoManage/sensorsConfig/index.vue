@@ -38,14 +38,14 @@
               <el-autocomplete
                  v-model="ruleForm2.device"
                 :fetch-suggestions="querySearchAsync"
-                placeholder="请选择采集盒编号"
+                placeholder="请选择所属采集盒编号"
                 @select="handleSelect">
               </el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="传感器所属主缆" prop="cableType">
-              <el-select v-model="ruleForm2.cableType" placeholder="请选择主缆">
+              <el-select v-model="ruleForm2.cableType" placeholder="请选择传感器所属主缆">
                 <el-option
                   v-for="item in options"
                   :key="item.value"
