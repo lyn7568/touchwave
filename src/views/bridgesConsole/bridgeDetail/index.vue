@@ -16,7 +16,7 @@
             <el-button type="text" @click="queryDangerInfo">查看全部</el-button>
           </div>
           <ul class="item-ul" v-if="dangerList.length">
-            <li :class="!item.readed ? 'readed-li' : ''" v-for="item in dangerList" :key="item.index" @click="alarmShow(item.aid, item.readed, item.device)">
+            <li :class="!item.readed ? 'readed-li' : ''" v-for="item in dangerList" :key="item.index" @click="alarmShow(item.aid, item.readed, item.alarmTime, item.device)">
               <span>{{item.alarmTime}}</span>
               <span>{{item.device}}，请点击查看。</span>
               <span class="svg-container" v-if="!item.readed">
@@ -32,7 +32,7 @@
           </div>
           <el-row class="line-chart-box" v-if="monitorList.length">
             <el-col :xs="24" :sm="24" :lg="24" v-for="item in monitorShowList" :key="item.index">
-              <lineChart2 :chartData="item" :maxXcount="maxShowLength"></lineChart2>
+              <lineChart :chartData="item" :maxXcount="maxShowLength"></lineChart>
             </el-col>
           </el-row>
           <DefaultPage v-if="!monitorList.length"></DefaultPage>
@@ -82,10 +82,11 @@ import '@/styles/roleuser.scss'
 import Cookies from 'js-cookie'
 import queryInfo from '@/utils/queryInfo'
 import queryDict from '@/utils/queryDict'
-import { urlParse, parseTime, turnTime } from '@/utils'
-import { getDangerList, getTimingMonitor } from '@/api/bridgeInfo'
+import monModel from '@/utils/timingConstruct'
+import { urlParse, parseTime } from '@/utils'
+import { getDangerList, getSysTime, getMonitorByTime } from '@/api/bridgeInfo'
 
-import lineChart2 from '../lineChart/LineChart2'
+import lineChart from '../lineChart/LineChart'
 import BInfoDialog01 from './components/BInfoDialog01'
 import BInfoDialog02 from './components/BInfoDialog02'
 import BInfoDialog03 from './components/BInfoDialog03'
@@ -99,7 +100,7 @@ import DefaultPage from '@/components/DefaultPage'
 export default {
   name: 'dashboard-other',
   components: {
-    lineChart2,
+    lineChart,
     BInfoDialog01,
     BInfoDialog02,
     BInfoDialog03,
@@ -121,7 +122,8 @@ export default {
       monitorList: [],
       currentNo: 1,
       currentSize: 4,
-      currentTime: turnTime(new Date(), 'time', true),
+      currentTime: '',
+      sysTime: '',
       setTime: null,
       maxShowLength: 300,
       monitorCache: []
@@ -144,16 +146,14 @@ export default {
     if (this.bridgeId) {
       this.serverSeqArr = queryInfo.queryServers(this.bridgeId, true)
       if (this.serverSeqArr.length) {
-        this.getTimingMonitor(this.serverSeqArr)
-        this.getDangerList(this.serverSeqArr)
-        this.setTime = setInterval(() => {
-          this.getTimingMonitor(this.serverSeqArr)
-        }, 1000)
+        this.getSysTime()
+        this.getDangerList()
       }
     }
   },
   methods: {
-    getDangerList(arr) {
+    getDangerList() {
+      var arr = this.serverSeqArr
       const param = {
         seq: arr,
         pageSize: 5,
@@ -172,64 +172,70 @@ export default {
         }
       })
     },
-    addData() {
-      this.currentTime = turnTime(new Date(+new Date(this.currentTime) + 1000), 'time', true)
+    getSysTime() {
+      getSysTime().then(res => {
+        if (res.success) {
+          this.sysTime = 1536028430317 + (8 * 60 * 60 * 1000) + 160000
+          this.first_Q = true
+          this.getTimingMonitor()
+        }
+      })
     },
-    getTimingMonitor(arr) {
+    formatTime(time) {
+      var d = new Date()
+      d.setTime(time)
+      d = JSON.stringify(d).replace(/[^\d]/g, '').substring(0, 14)
+      return d
+    },
+    getTimingMonitor() {
       var that = this
-      getTimingMonitor({ seq: arr }).then(res => {
+      var preTime = 10 * 1000
+      var arr = this.serverSeqArr
+      var startTime = this.formatTime(this.first_Q ? (this.sysTime - preTime) : this.sysTime)
+      var endTime = this.formatTime(this.sysTime)
+      getMonitorByTime({ seq: arr, begin: startTime, end: endTime }).then(res => {
+        var mCache = that.monitorCache
+        var mList = []
         if (res.success && res.data) {
-          that.addData()
-          var monitorList = []
-          var monitorCache = that.monitorCache
-          if (monitorCache.length) {
-            for (let j = 0; j < monitorCache.length; ++j) {
-              let channel_found = false
-              var xData = monitorCache[j].cd.xData
-              var max = monitorCache[j].cd.seData.max
-              var min = monitorCache[j].cd.seData.min
-              for (let i = 0; i < res.data.length; i++) {
-                if (monitorCache[j].cid === res.data[i].cid) {
-                  channel_found = true
-                  xData.push(that.currentTime)
-                  max.push(res.data[i].hvalue)
-                  min.push(res.data[i].lvalue)
+          if (that.first_Q) {
+            if (res.data.length) {
+              that.first_Q = false
+              var ftime = res.data[0].ctime
+              monModel.construct(mCache, res.data)
+
+              var f_q_t = that.sysTime - preTime
+
+              for (;;) {
+                var fts = that.formatTime(f_q_t)
+                var ftsE = that.formatTime(f_q_t + 500)
+                if (fts >= ftime) {
+                  if (fts > that.sysTime) {
+                    monModel.setData(mCache, res.data, fts, ftsE, null)
+                  }
+                }
+                f_q_t += 1000
+                if (f_q_t > that.sysTime) {
                   break
                 }
               }
-              if (!channel_found) {
-                xData.push(that.currentTime)
-                max.push(max[max.length - 1])
-                min.push(min[min.length - 1])
+              for (let l = 0; l < mCache.length; ++l) {
+                mList.push(mCache[l].cd)
               }
-              if (xData.length > that.maxShowLength) {
-                xData.shift()
-                max.shift()
-                min.shift()
-              }
-              monitorList.push(monitorCache[j].cd)
             }
           } else {
-            for (let i = 0; i < res.data.length; i++) {
-              var mi = {
-                cid: res.data[i].cid,
-                cd: {
-                  xData: [],
-                  seData: {
-                    max: [],
-                    min: []
-                  }
-                }
-              }
-              mi.cd.xData.push(that.currentTime)
-              mi.cd.seData.max.push(res.data[i].hvalue)
-              mi.cd.seData.min.push(res.data[i].lvalue)
-              mi.cd.tit = res.data[i].cid
-              monitorCache.push(mi)
-              monitorList.push(mi.cd)
+            var xtime = that.formatTime(that.sysTime)
+            var xtimeE = that.formatTime(that.sysTime + 500)
+
+            monModel.setData(mCache, res.data, xtime, xtimeE, that.maxShowLength)
+            for (let l = 0; l < mCache.length; ++l) {
+              mList.push(mCache[l].cd)
             }
           }
-          that.monitorList = monitorList
+          that.monitorList = mList
+          that.sysTime += 1000
+          that.setTime = setTimeout(function() {
+            that.getTimingMonitor()
+          }, 1000)
         }
       })
     },
@@ -254,10 +260,10 @@ export default {
     handleCurrentChange(val) {
       this.currentNo = val
     },
-    alarmShow(id, flag, msg) {
+    alarmShow(id, flag, time, msg) {
       this.$router.replace({
         name: 'dangerDetail',
-        query: { aid: id, msg: msg, flag: flag }
+        query: { aid: id, msg: msg, _t: time, flag: flag }
       })
     },
     queryDangerInfo() {
@@ -287,7 +293,8 @@ export default {
     }
   },
   beforeDestroy() {
-    clearInterval(this.setTime)
+    clearTimeout(this.setTime)
+    // clearInterval(this.setTime)
   }
 }
 </script>

@@ -5,7 +5,7 @@
         <span>报警信息</span>
       </div>
       <ul class="item-ul" v-if="dangerList.length">
-        <li :class="!item.readed ? 'readed-li' : ''" v-for="item in dangerShowList" :key="item.index" @click="alarmShow(item.aid, item.readed, item.device)">
+        <li :class="!item.readed ? 'readed-li' : ''" v-for="item in dangerShowList" :key="item.index" @click="alarmShow(item.aid, item.readed, item.alarmTime, item.device)">
           <span>{{item.alarmTime}}</span>
           <span>{{item.device}}，请点击查看。</span>
           <span class="svg-container" v-if="!item.readed">
@@ -84,10 +84,10 @@ export default {
         }
       })
     },
-    alarmShow(id, flag, msg) {
+    alarmShow(id, flag, time, msg) {
       this.$router.replace({
         name: 'dangerDetail',
-        query: { aid: id, msg: msg, flag: flag }
+        query: { aid: id, msg: msg, _t: time, flag: flag }
       })
     },
     handleCurrentChange(val) {

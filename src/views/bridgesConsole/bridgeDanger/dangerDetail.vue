@@ -7,7 +7,7 @@
       </div>
       <el-row class="line-chart-box">
         <el-col :xs="24" :sm="24" :lg="24" v-for="(item, index) in alarmShowList" :key="item.index">
-          <lineChart :chartData="item.data" :startTime="item.stime" :legendName="'传感器' + item.seq" :lineColor="index" :intervalTime="intervalTime"></lineChart>
+          <lineChart :chartData="item" :lineColor="index"></lineChart>
         </el-col>
       </el-row>
       <div class="pagination-container">
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { urlParse, parseTime } from '@/utils'
+import { urlParse, parseTime, turnTime } from '@/utils'
 import { getDangerDetail, setUnreadToRead } from '@/api/bridgeInfo'
 import lineChart from '../lineChart/LineChart'
 
@@ -38,7 +38,7 @@ export default {
       alarmList: [],
       pageSize: 6,
       pageNo: 1,
-      intervalTime: 3 * 1000
+      intervalTime: (3 * 1000) / 300
     }
   },
   components: {
@@ -48,32 +48,47 @@ export default {
     this.alarmId = urlParse('aid')
     this.alarmTit = urlParse('msg')
     this.alarmRead = urlParse('flag')
+    this.alarmTime = urlParse('_t')
     this.getDangerDetail()
     if (this.alarmRead === 'false') {
       this.setUnreadToRead()
     }
   },
   computed: {
-    alarmTime() {
-      const alramM = this.alarmId.split('_')
-      return parseTime(alramM[ alramM.length - 1], true)
-    },
     alarmShowList() {
       return this.alarmList.slice((this.pageNo - 1) * this.pageSize, this.pageNo * this.pageSize)
     }
   },
   methods: {
     getDangerDetail() {
+      var that = this
       const param = {
         aid: this.alarmId
       }
       getDangerDetail(param).then(res => {
         if (res.success && res.data) {
+          var rList = []
+          var startTime = ''
           for (let i = 0; i < res.data.length; i++) {
-            const arr = JSON.parse('[' + String(res.data[i].data.split(',')) + ']')
-            res.data[i].data = arr
+            startTime = parseTime(res.data[0].stime, true, true)
+            var str = res.data[i].seq
+            var rData = {
+              tit: '',
+              xData: [],
+              seData: []
+            }
+            rList.push(rData)
+            rData.tit = str
+            var dataArr = JSON.parse('[' + String(res.data[i].data.split(',')) + ']')
+            var timeArr = []
+            for (var j = 0; j < dataArr.length; j++) {
+              startTime = turnTime(new Date(+new Date(startTime) + that.intervalTime), 'time', true)
+              timeArr.push(startTime)
+            }
+            rData.xData = timeArr
+            rData.seData = dataArr
           }
-          this.alarmList = res.data
+          that.alarmList = rList
         }
       })
     },

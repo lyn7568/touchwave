@@ -15,7 +15,7 @@ export function urlParse(name) {
 export function parseTime(startTime, flag, fa) {
   if (flag) {
     if (!fa) {
-      return startTime.substring(0, 4) + '年' + startTime.substring(4, 6) + '月' + startTime.substring(6, 8) + '日 ' + startTime.substring(8, 10) + ':' + startTime.substring(10, 12)
+      return startTime.substring(0, 4) + '年' + startTime.substring(4, 6) + '月' + startTime.substring(6, 8) + '日 ' + startTime.substring(8, 10) + ':' + startTime.substring(10, 12) + ':' + startTime.substring(12, 14)
     } else {
       return startTime.substring(0, 4) + '/' + startTime.substring(4, 6) + '/' + startTime.substring(6, 8) + ' ' + startTime.substring(8, 10) + ':' + startTime.substring(10, 12) + ':' + startTime.substring(12, 14)
     }

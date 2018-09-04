@@ -6,6 +6,7 @@
             v-model="valueDate"
             type="date"
             value-format="yyyyMMdd"
+            :picker-options="pickerOptions0"
             @change="changeDate">
           </el-date-picker>
           <!-- <el-date-picker
@@ -20,7 +21,7 @@
       </div>
       <el-row class="line-chart-box" v-if="alarmList.length">
         <el-col :xs="24" :sm="24" :lg="24" v-for="item in alarmShowList" :key="item.index">
-          <lineChart2 :chartData="item" :historyM="historyM"></lineChart2>
+          <lineChart :chartData="item" :historyM="historyM"></lineChart>
         </el-col>
       </el-row>
       <DefaultPage v-if="!alarmList.length"></DefaultPage>
@@ -43,9 +44,9 @@
 import '@/styles/roleuser.scss'
 import Cookies from 'js-cookie'
 import queryInfo from '@/utils/queryInfo'
-import { parseTime } from '@/utils'
 import { getMonitorByDay } from '@/api/bridgeInfo'
-import lineChart2 from '../lineChart/LineChart2'
+import { parseTime } from '@/utils'
+import lineChart from '../lineChart/LineChart'
 
 import DefaultPage from '@/components/DefaultPage'
 
@@ -54,16 +55,22 @@ export default {
     return {
       historyM: true,
       bridgeId: '',
-      valueDate: new Date().toISOString().substring(0, 10).replace(/-/g, ''),
+      pickerOptions0: {
+        disabledDate(time) {
+          return time.getTime() > Date.now() - 8.64e7
+        }
+      },
+      valueDate: this.formatTime((new Date()).getTime() + ((8 - 24) * 60 * 60 * 1000)),
       dateRange: '',
       serverSeqArr: [],
       alarmList: [],
+      monitorCache: [],
       pageSize: 2,
       pageNo: 1
     }
   },
   components: {
-    lineChart2,
+    lineChart,
     DefaultPage
   },
   computed: {
@@ -79,15 +86,17 @@ export default {
     }
   },
   methods: {
+    formatTime(time) {
+      var d = new Date()
+      d.setTime(time)
+      d = JSON.stringify(d).replace(/[^\d]/g, '').substring(0, 8)
+      return d
+    },
     getMonitorByDay() {
       var that = this
       var date = that.valueDate
       var arr = this.serverSeqArr
-      var param = {
-        seq: arr,
-        day: date
-      }
-      getMonitorByDay(param).then(res => {
+      getMonitorByDay({ seq: arr, day: date }).then(res => {
         if (res.success && res.data) {
           var monitorList = []
           for (let i = 0; i < res.data.length; i++) {
@@ -101,27 +110,27 @@ export default {
             }
             if (!monitorData) {
               monitorData = {
+                tit: '',
                 xData: [],
-                seData: {
-                  max: [],
-                  min: []
-                }
+                seData: []
               }
               monitorList.push(monitorData)
               monitorData.tit = str
             }
-            monitorData.xData.push(parseTime(res.data[i].ctime, true, true))
-            monitorData.seData.max.push(res.data[i].hvalue)
-            monitorData.seData.min.push(res.data[i].lvalue)
+            monitorData.xData.push(parseTime(res.data[i].ctime, true, true).substring(11, 19))
+            monitorData.xData.push(parseTime(res.data[i].ctime, true, true).substring(11, 19))
+            monitorData.seData.push(res.data[i].hvalue)
+            monitorData.seData.push(res.data[i].lvalue)
           }
           that.alarmList = monitorList
-          console.log(that.alarmList)
         }
       })
     },
     changeDate(val) {
       this.valueDate = val
-      this.getMonitorByDay()
+      if (this.serverSeqArr.length) {
+        this.getMonitorByDay()
+      }
     },
     handleCurrentChange(val) {
       this.pageNo = val

@@ -4,7 +4,6 @@
 
 <script>
 import echarts from 'echarts'
-import { parseTime, turnTime } from '@/utils'
 require('echarts/theme/macarons') // echarts theme
 import { debounce } from '@/utils'
 
@@ -24,30 +23,25 @@ export default {
     },
     height: {
       type: String,
-      default: '260px'
+      default: '350px'
     },
     autoResize: {
       type: Boolean,
       default: true
     },
     chartData: {
-      type: Array
+      type: Object
     },
-    legendName: {
-      type: String
-    },
-    startTime: {
-      type: String
-    },
-    intervalTime: {
+    maxXcount: {
       type: Number
+    },
+    historyM: { // 判断是否需要坐标轴上的滚动条
+      type: Boolean
     }
   },
   data() {
     return {
       lineColorNow: this.lineColor % 2 === 0 ? '#FF005A' : '#3888fa',
-      Ydate: [],
-      nowTime: parseTime(this.startTime, true, true),
       chart: null
     }
   },
@@ -61,10 +55,6 @@ export default {
       }, 100)
       window.addEventListener('resize', this.__resizeHanlder)
     }
-
-    // 监听侧边栏的变化
-    // const sidebarElm = document.getElementsByClassName('sidebar-container')[0]
-    // sidebarElm.addEventListener('transitionend', this.__resizeHanlder)
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -73,9 +63,6 @@ export default {
     if (this.autoResize) {
       window.removeEventListener('resize', this.__resizeHanlder)
     }
-
-    // const sidebarElm = document.getElementsByClassName('sidebar-container')[0]
-    // sidebarElm.removeEventListener('transitionend', this.__resizeHanlder)
 
     this.chart.dispose()
     this.chart = null
@@ -89,24 +76,21 @@ export default {
     }
   },
   methods: {
-    addData() {
-      this.Ydate.push(this.nowTime)
-      this.nowTime = turnTime(new Date(+new Date(this.nowTime) + this.intervalTime), 'time', true)
-    },
     setOptions(datastr) {
       this.chart.setOption({
-        xAxis: {
-          data: this.Ydate,
-          boundaryGap: false,
-          axisTick: {
-            show: false
-          }
+        title: {
+          text: '传感器' + datastr.tit,
+          textStyle: {
+            color: '#333',
+            fontSize: 14
+          },
+          top: '0'
         },
         grid: {
           left: 10,
           right: 10,
           bottom: 20,
-          top: 30,
+          top: 60,
           containLabel: true
         },
         tooltip: {
@@ -116,17 +100,19 @@ export default {
           },
           padding: [5, 10]
         },
+        xAxis: {
+          data: datastr.xData,
+          max: this.maxXcount // x轴最多显示个数
+        },
         yAxis: {
-          // name: '豪伏(-8192-8192)',
-          axisTick: {
-            show: false
-          }
+          name: '毫伏(mv)',
+          type: 'value'
         },
         legend: {
-          data: [this.legendName]
+          data: ['波动值']
         },
         series: [{
-          name: this.legendName, itemStyle: {
+          name: '波动值', itemStyle: {
             normal: {
               color: this.lineColorNow,
               lineStyle: {
@@ -137,18 +123,47 @@ export default {
           },
           smooth: true,
           type: 'line',
-          data: datastr,
+          data: datastr.seData,
           animationDuration: 2800,
           animationEasing: 'cubicInOut'
         }]
       })
+      if (this.historyM) {
+        this.chart.setOption({
+          dataZoom: [
+            {
+              type: 'slider',
+              show: true,
+              start: 94,
+              end: 100,
+              handleSize: 8
+            },
+            {
+              type: 'inside',
+              start: 94,
+              end: 100
+            },
+            {
+              type: 'slider',
+              show: true,
+              yAxisIndex: 0,
+              filterMode: 'empty',
+              width: 12,
+              height: '70%',
+              handleSize: 8,
+              showDataShadow: false,
+              left: '98%'
+            }
+          ]
+        })
+      }
     },
     initChart() {
-      for (var i = 1; i < this.chartData.length; i++) {
-        this.addData()
-      }
       this.chart = echarts.init(this.$el, 'macarons')
-      this.setOptions(this.chartData)
+      var that = this
+      setTimeout(function() {
+        that.setOptions(that.chartData)
+      }, 1)
     }
   }
 }
