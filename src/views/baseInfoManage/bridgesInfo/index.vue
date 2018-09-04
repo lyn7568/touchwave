@@ -160,7 +160,7 @@ export default {
         callback(new Error('请输入桥梁编号'))
       } else {
         if (this.edit) {
-          checkDeviceCode({ code: value, id: this.edit }).then(response => {
+          checkDeviceCode({ code: value, id: this.edit, active: 1 }).then(response => {
             if (response.data) {
               callback(new Error('桥梁编号已存在，请重新输入'))
             } else {
@@ -168,7 +168,7 @@ export default {
             }
           })
         } else {
-          checkDeviceCode({ code: value }).then(response => {
+          checkDeviceCode({ code: value, active: 1 }).then(response => {
             if (response.data) {
               callback(new Error('桥梁编号已存在，请重新输入'))
             } else {
@@ -255,9 +255,6 @@ export default {
         location: [
           { required: true, message: '请输入地理位置信息', trigger: 'blur' }
         ],
-        serviceDay: [
-          { required: true, message: '请输入桥梁开通日期', trigger: 'blur' }
-        ],
         org: [
           { required: true, message: '请输入维护机构名称', trigger: 'blur' }
         ],
@@ -322,6 +319,7 @@ export default {
                   that.pop('已成功添加桥梁')
                 }, 1000)
                 this.resetForm('ruleForm2')
+                this.ruleForm2.img = ''
                 this.dialogTableVisible = false
               }
             }).catch(error => {
@@ -395,7 +393,7 @@ export default {
       this.getList()
     },
     handleModifyStatus(row, status) {
-      this.$confirm('确实要删除:桥梁' + row.code + '吗？', '提示', {
+      this.$confirm('确定要删除:桥梁' + row.code + '吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
@@ -443,6 +441,7 @@ export default {
     },
     handleCreate() {
       this.dialogTableVisible = true
+      this.ruleForm2.img = ''
     },
     handleUpdate(row) {
       const that = this

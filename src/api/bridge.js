@@ -5,7 +5,7 @@ export function addDevice(params) {
   return request({
     url: '/ajax/bridge',
     method: 'post',
-    params
+    data: params
   })
 }
 
@@ -14,7 +14,7 @@ export function updateDevice(params) {
   return request({
     url: '/ajax/bridge/update',
     method: 'post',
-    params
+    data: params
   })
 }
 

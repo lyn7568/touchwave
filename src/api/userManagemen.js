@@ -41,7 +41,7 @@ export function addRegister(params) {
   return request({
     url: '/ajax/sys/insert',
     method: 'post',
-    params
+    data: params
   })
 }
 
@@ -50,7 +50,7 @@ export function updateRegister(params) {
   return request({
     url: '/ajax/sys/update',
     method: 'post',
-    params
+    data: params
   })
 }
 
@@ -77,6 +77,6 @@ export function updatePermission(params) {
   return request({
     url: '/ajax/sys/userBridge/refresh',
     method: 'post',
-    params
+    data: params
   })
 }

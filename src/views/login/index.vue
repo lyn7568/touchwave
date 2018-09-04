@@ -9,15 +9,15 @@
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user" />
         </span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="请输入您的手机号" />
+        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="请输入您的手机号码" />
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
-          <svg-icon icon-class="password"></svg-icon>
+          <svg-icon icon-class="password"/>
         </span>
         <el-input name="password" :type="pwdType" v-model="loginForm.password" autoComplete="on"
           placeholder="请输入您的登录密码"></el-input>
-          <span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye" /></span>
+          <span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye" v-show="!falg"/><svg-icon icon-class="password-view" v-show="falg"/></span>
       </el-form-item>
       <el-form-item prop="imgVerifyCode">
         <span class="svg-container">
@@ -59,6 +59,7 @@ export default {
       }
     }
     return {
+      falg: false,
       imgVcUrl: '',
       loginForm: {
         username: '',
@@ -82,6 +83,7 @@ export default {
   },
   methods: {
     showPwd() {
+      this.falg = !this.falg
       if (this.pwdType === 'password') {
         this.pwdType = ''
       } else {

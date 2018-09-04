@@ -42,7 +42,7 @@
               <el-autocomplete
                 v-model="ruleForm2.server"
                 :fetch-suggestions="querySearchAsync"
-                placeholder="请选择服务器编号"
+                placeholder="请选择所属服务器编号"
                 @select="handleSelect">
               </el-autocomplete>
             </el-form-item>
@@ -292,7 +292,7 @@ export default {
       this.getList()
     },
     handleModifyStatus(row, status) {
-      this.$confirm('确实要删除:采集盒' + row.code + '吗？', '提示', {
+      this.$confirm('确定要删除:采集盒' + row.code + '吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',

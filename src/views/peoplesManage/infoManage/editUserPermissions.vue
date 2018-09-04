@@ -204,6 +204,11 @@ export default {
   .check-transfer.el-transfer{
     padding-left: 15px;
     margin-bottom: 15px;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: center
   }
   .check-transfer .el-transfer-panel{
     width: 240px;

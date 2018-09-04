@@ -63,7 +63,7 @@
       var validPhone = (rule, value, callback) => {
         const reg = /^1[3|4|5|7|8][0-9]\d{8}$/
         if (!value) {
-          callback(new Error('请输入你的手机号码'))
+          callback(new Error('请输入您的手机号码'))
         } else if (!reg.test(value)) {
           callback(new Error('请输入正确的手机号码'))
         } else {

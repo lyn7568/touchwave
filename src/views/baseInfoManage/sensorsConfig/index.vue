@@ -3,7 +3,7 @@
     <div class="filter-container" style="margin-bottom:20px">
       <el-input style="width: 200px;" class="filter-item" placeholder="传感器编号" v-model="listQuery.code">
       </el-input>
-      <el-input style="width: 200px;" class="filter-item" placeholder="采集盒编号" v-model="listQuery.cdCode">
+      <el-input style="width: 200px;" class="filter-item" placeholder="所属采集盒编号" v-model="listQuery.cdCode">
       </el-input>
       <el-button v-waves class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">查找</el-button>
       <el-button v-waves class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加传感器</el-button>
@@ -44,10 +44,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="传感器所属位置" prop="locType">
-              <el-select v-model="ruleForm2.locType" placeholder="请选择主缆传感器位置">
+            <el-form-item label="传感器所属主缆" prop="cableType">
+              <el-select v-model="ruleForm2.cableType" placeholder="请选择主缆">
                 <el-option
-                  v-for="item in options1"
+                  v-for="item in options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -56,10 +56,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="传感器所属主缆" prop="cableType">
-              <el-select v-model="ruleForm2.cableType" placeholder="请选择主缆">
+            <el-form-item label="传感器所属位置" prop="locType">
+              <el-select v-model="ruleForm2.locType" placeholder="请选择传感器所属位置">
                 <el-option
-                  v-for="item in options"
+                  v-for="item in options1"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -340,7 +340,7 @@ export default {
       this.getList()
     },
     handleModifyStatus(row, status) {
-      this.$confirm('确实要删除:传感器' + row.code + '吗？', '提示', {
+      this.$confirm('确定要删除:传感器' + row.code + '吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
