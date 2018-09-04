@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
     <div class="filter-container" style="margin-bottom:20px">
-      <el-input style="width: 200px;" class="filter-item" placeholder="采集盒编号" v-model="listQuery.cdCode">
+      <el-input style="width: 200px;" class="filter-item" placeholder="传感器编号" v-model="listQuery.code">
       </el-input>
-       <el-input style="width: 200px;" class="filter-item" placeholder="传感器编号" v-model="listQuery.code">
+      <el-input style="width: 200px;" class="filter-item" placeholder="采集盒编号" v-model="listQuery.cdCode">
       </el-input>
       <el-button v-waves class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">查找</el-button>
       <el-button v-waves class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加传感器</el-button>

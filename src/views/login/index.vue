@@ -9,14 +9,14 @@
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user" />
         </span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="请输入手机号" />
+        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="请输入您的手机号" />
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password"></svg-icon>
         </span>
         <el-input name="password" :type="pwdType" v-model="loginForm.password" autoComplete="on"
-          placeholder="请输入登录密码"></el-input>
+          placeholder="请输入您的登录密码"></el-input>
           <span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye" /></span>
       </el-form-item>
       <el-form-item prop="imgVerifyCode">
@@ -51,7 +51,7 @@ export default {
     var validPhone = (rule, value, callback) => {
       const reg = /^1[3|4|5|7|8][0-9]\d{8}$/
       if (!value) {
-        callback(new Error('请输入你的手机号码'))
+        callback(new Error('请输入您的手机号码'))
       } else if (!reg.test(value)) {
         callback(new Error('请输入正确的手机号码'))
       } else {
@@ -68,7 +68,7 @@ export default {
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validPhone }],
         password: [
-          { required: true, message: '请输入登录密码', trigger: 'blur' },
+          { required: true, message: '请输入您的登录密码', trigger: 'blur' },
           { min: 6, max: 24, message: '密码由6-24个字符组成，区分大小写', trigger: 'blur' }
         ],
         imgVerifyCode: [{ required: true, message: '请输入图形验证码', trigger: 'blur' }]

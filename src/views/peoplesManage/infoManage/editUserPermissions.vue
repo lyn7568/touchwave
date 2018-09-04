@@ -71,7 +71,6 @@
               key: 'id',
               label: 'value'
             }"
-            :left-default-checked="bridgeListsChecked"
             :data="bridgeLists">
           </el-transfer>
         </el-col>
