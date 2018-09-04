@@ -49,7 +49,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="内部编号" prop="seq">
-              <el-input placeholder="请输入内部编号" v-model="ruleForm2.seq" maxlength=10></el-input>
+              <el-input placeholder="请输入内部编号" v-model="ruleForm2.seq" maxlength=20></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="24" >
@@ -94,7 +94,7 @@ export default {
       }, 300)
     }
     var seq = (rule, value, callback) => {
-      const num = /^[0-9]*$/
+      const num = /^[0-9a-zA-Z]*$/
       if (value === '') {
         callback(new Error('请输入内部编号'))
       } else {
@@ -103,7 +103,7 @@ export default {
           return
         }
         if (!num.test(value)) {
-          callback('请输入数字')
+          callback('请输入数字或字母')
           return
         }
         if (this.edit) {

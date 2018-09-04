@@ -206,7 +206,7 @@ export default {
             updateRegister(par).then(response => {
               if (response.success) {
                 setTimeout(function() {
-                  that.pop('已成功更新')
+                  that.pop('已成功更新用户信息')
                 }, 1000)
                 this.resetForm('ruleForm2')
                 this.$emit('chilF')
