@@ -58,10 +58,12 @@ var bridgeObj = {},
     for (let i = 0; i < serverList.length; ++i) {
       if (bid === serverList[i].bridgeId) {
         for (let j = 0; j < deviceList.length; ++j) {
-          for (let m = 0; m < transducerList.length; ++m) {
-            if (serverList[i].id === transducerList[m].serverId) {
-              transducerList[m].deviceCode = deviceList[j].code
-              trans.push(transducerList[m])
+          if (serverList[i].id === deviceList[j].serverId) {
+            for (let m = 0; m < transducerList.length; ++m) {
+              if (deviceList[j].id === transducerList[m].deviceId) {
+                transducerList[m].deviceCode = deviceList[j].code
+                trans.push(transducerList[m])
+              }
             }
           }
         }

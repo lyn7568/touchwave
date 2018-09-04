@@ -211,7 +211,7 @@
           if (valid) {
             resetPwdByTel(this.ruleForm2.pass, this.ruleForm.msgVC).then((res) => {
               if (res.success) {
-                this.$alert('提示', '密码已重置，快去登录吧！', {
+                this.$alert('密码已重置，快去登录吧！', '提示', {
                   confirmButtonText: '确定',
                   type: 'success',
                   center: true,
@@ -222,7 +222,7 @@
                   }
                 })
               } else {
-                this.$alert('提示', '密码重置失败！', {
+                this.$alert('密码重置失败！', '提示', {
                   confirmButtonText: '重新找回密码',
                   type: 'warning',
                   center: true,
