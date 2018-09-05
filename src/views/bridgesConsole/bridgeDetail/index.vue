@@ -124,7 +124,7 @@ export default {
       currentSize: 4,
       currentTime: '',
       sysTime: '',
-      setTime: null,
+      jishiTime: null,
       maxShowLength: 300,
       monitorCache: []
     }
@@ -175,7 +175,7 @@ export default {
     getSysTime() {
       getSysTime().then(res => {
         if (res.success) {
-          this.sysTime = 1536028430317 + (8 * 60 * 60 * 1000) + 160000
+          this.sysTime = res.data + (8 * 60 * 60 * 1000)
           this.first_Q = true
           this.getTimingMonitor()
         }
@@ -233,7 +233,7 @@ export default {
           }
           that.monitorList = mList
           that.sysTime += 1000
-          that.setTime = setTimeout(function() {
+          that.jishiTime = setTimeout(function() {
             that.getTimingMonitor()
           }, 1000)
         }
@@ -293,8 +293,7 @@ export default {
     }
   },
   beforeDestroy() {
-    clearTimeout(this.setTime)
-    // clearInterval(this.setTime)
+    clearTimeout(this.jishiTime)
   }
 }
 </script>

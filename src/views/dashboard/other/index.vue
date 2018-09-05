@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-editor-container">
-    <div v-show="dataList.length">
+    <div v-if="!showComp">
       <el-row class="panel-group" :gutter="40">
         <el-col :xs="24" :sm="12" :lg="6" class="card-panel-col" v-for="item in dataList" :key="item.index" @click.native="goToDashboardC(item.id, item.shortName)">
           <div class='card-panel'>
@@ -24,7 +24,7 @@
         </el-pagination>
       </div>
     </div>
-    <div class="defaut-container" v-show="!dataList.length">
+    <div class="defaut-container" v-if="showComp">
       <div>
         <img class="plat-pic" src="/static/touchwave.png" width="460">
         <p class="plat-tit">欢迎 <span>{{name}}</span> 使用声脉桥梁云监控平台</p>
@@ -51,7 +51,8 @@ export default {
       total: 0,
       pageSize: 10,
       pageNo: 1,
-      dataList: []
+      dataList: [],
+      showComp: false
     }
   },
   computed: {
@@ -79,6 +80,8 @@ export default {
               this.getBridgeUnread($data[i], svrs)
             }
             this.dataList = $data
+          } else {
+            this.showComp = true
           }
         }
       })

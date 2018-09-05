@@ -9,21 +9,21 @@
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user" />
         </span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="请输入您的手机号码" />
+        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="请输入您的手机号码" maxlength="11" />
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password"/>
         </span>
         <el-input name="password" :type="pwdType" v-model="loginForm.password" autoComplete="on"
-          placeholder="请输入您的登录密码"></el-input>
+          placeholder="请输入您的登录密码" maxlength="24"></el-input>
           <span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye" v-show="!falg"/><svg-icon icon-class="password-view" v-show="falg"/></span>
       </el-form-item>
       <el-form-item prop="imgVerifyCode">
         <span class="svg-container">
           <svg-icon icon-class="msgvc"></svg-icon>
         </span>
-        <el-input v-model="loginForm.imgVerifyCode" placeholder="请输入图形验证码" @keyup.enter.native="handleLogin" class="code-btn">
+        <el-input v-model="loginForm.imgVerifyCode" placeholder="请输入图形验证码" @keyup.enter.native="handleLogin" class="code-btn" maxlength="4">
         <img slot="append" :src="imgVcUrl" @click="changeImgVc" /></el-input>
       </el-form-item>
       <el-form-item>

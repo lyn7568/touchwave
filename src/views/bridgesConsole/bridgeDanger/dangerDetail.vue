@@ -85,14 +85,10 @@ export default {
             var dataArr = JSON.parse('[' + String(res.data[i].data.split(',')) + ']')
             var timeArr = []
             for (var j = 0; j < dataArr.length; ++j) {
-              if (j === 99) {
-                startTime = that.addDate(startTime)
-              } else if (j === 199) {
-                startTime = that.addDate(startTime)
-              } else if (j === 299) {
+              if (j === 99 || j === 199 || j === 299) {
                 startTime = that.addDate(startTime)
               }
-              timeArr.push(startTime.substring(11, 19))
+              timeArr.push(startTime)
             }
             rData.xData = timeArr
             rData.seData = dataArr

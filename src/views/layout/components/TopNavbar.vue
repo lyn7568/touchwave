@@ -43,6 +43,12 @@ export default {
   watch: {
     '$route'(to, from) {
       if (to.path === '/dashboard') {
+        var dataList = this.dataList
+        for (let i = 0; i < dataList.length; i++) {
+          dataList[i].disab = false
+        }
+        Cookies.remove('bridgeId')
+        Cookies.remove('bridgeName')
         this.showName = ''
       } else {
         this.bridgeId = Cookies.get('bridgeId')
@@ -59,13 +65,6 @@ export default {
   methods: {
     toHome() {
       this.$router.replace({ path: '/' })
-      Cookies.remove('bridgeId')
-      Cookies.remove('bridgeName')
-      var dataList = this.dataList
-      for (let i = 0; i < dataList.length; i++) {
-        console.log(dataList[i].disab)
-        dataList[i].disab = false
-      }
     },
     toggleSideBar() {
       this.$store.dispatch('ToggleSideBar')
