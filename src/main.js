@@ -1,5 +1,3 @@
-require('es6-promise').polyfill() // ES6的polyfill
-
 import Vue from 'vue'
 
 import 'normalize.css/normalize.css'// A modern alternative to CSS resets
