@@ -9,10 +9,13 @@
                 <el-form-item label="服务器编号">{{item.code}}</el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="采集器数量">{{item.devices}}</el-form-item>
+                <el-form-item label="采集盒数量">{{item.devices}}</el-form-item>
               </el-col>
-              <el-col :span="24">
+              <el-col :span="12">
                 <el-form-item label="所属桥梁">{{bridgeName}}</el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="内部编号">{{item.seq}}</el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="备注" class="el-to-block"><br />

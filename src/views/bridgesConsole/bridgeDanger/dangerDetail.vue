@@ -37,8 +37,7 @@ export default {
       alarmRead: false,
       alarmList: [],
       pageSize: 6,
-      pageNo: 1,
-      intervalTime: (3 * 1000) / 300
+      pageNo: 1
     }
   },
   components: {
@@ -60,6 +59,9 @@ export default {
     }
   },
   methods: {
+    addDate(time) {
+      return turnTime(new Date(+new Date(time) + 1000), 'time', true)
+    },
     getDangerDetail() {
       var that = this
       const param = {
@@ -75,15 +77,22 @@ export default {
             var rData = {
               tit: '',
               xData: [],
-              seData: []
+              seData: [],
+              xInterval: 99
             }
             rList.push(rData)
             rData.tit = str
             var dataArr = JSON.parse('[' + String(res.data[i].data.split(',')) + ']')
             var timeArr = []
-            for (var j = 0; j < dataArr.length; j++) {
-              startTime = turnTime(new Date(+new Date(startTime) + that.intervalTime), 'time', true)
-              timeArr.push(startTime)
+            for (var j = 0; j < dataArr.length; ++j) {
+              if (j === 99) {
+                startTime = that.addDate(startTime)
+              } else if (j === 199) {
+                startTime = that.addDate(startTime)
+              } else if (j === 299) {
+                startTime = that.addDate(startTime)
+              }
+              timeArr.push(startTime.substring(11, 19))
             }
             rData.xData = timeArr
             rData.seData = dataArr

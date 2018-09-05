@@ -102,17 +102,17 @@ export default {
         },
         xAxis: {
           data: datastr.xData,
-          max: this.maxXcount // x轴最多显示个数
+          max: this.maxXcount
         },
         yAxis: {
           name: '毫伏(mv)',
           type: 'value'
         },
         legend: {
-          data: ['波动值']
+          data: ['信号值']
         },
         series: [{
-          name: '波动值', itemStyle: {
+          name: '信号值', itemStyle: {
             normal: {
               color: this.lineColorNow,
               lineStyle: {
@@ -128,6 +128,15 @@ export default {
           animationEasing: 'cubicInOut'
         }]
       })
+      if (datastr.xInterval) {
+        this.chart.setOption({
+          xAxis: {
+            axisLabel: {
+              interval: datastr.xInterval
+            }
+          }
+        })
+      }
       if (this.historyM) {
         this.chart.setOption({
           dataZoom: [

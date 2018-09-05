@@ -9,10 +9,13 @@
                 <el-form-item label="采集盒编号">{{item.code}}</el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="采集盒信道数量">{{item.channels}}</el-form-item>
+                <el-form-item label="所属服务器编号">{{item.serverCode}}</el-form-item>
               </el-col>
-              <el-col :span="24">
-                <el-form-item label="采集盒所属服务器编号">{{item.serverCode}}</el-form-item>
+              <el-col :span="12">
+                <el-form-item label="信道数量">{{item.channels}}</el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="内部编号">{{item.seq}}</el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="备注" class="el-to-block"><br />

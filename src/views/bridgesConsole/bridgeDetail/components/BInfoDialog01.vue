@@ -23,13 +23,13 @@
               <el-form-item label="桥梁开通日期">{{dataInfo.serviceDay}}</el-form-item>
             </el-col>
             <el-col :span="24">
-              <el-form-item label="维护单位">{{dataInfo.org}}</el-form-item>
+              <el-form-item label="维护机构">{{dataInfo.org}}</el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="维护单位电话">{{dataInfo.phone}}</el-form-item>
+              <el-form-item label="联系电话">{{dataInfo.phone}}</el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="维护单位电邮">{{dataInfo.email}}</el-form-item>
+              <el-form-item label="联系电邮">{{dataInfo.email}}</el-form-item>
             </el-col>
           </el-row>
         </el-col>
@@ -39,7 +39,7 @@
           </div>
         </el-col>
         <el-col :span="24" v-if="dataInfo.descp">
-          <el-form-item label="大桥描述" class="el-to-block"><br />
+          <el-form-item label="详细描述" class="el-to-block"><br />
             <div class="textarea-div">{{dataInfo.descp}}</div>
           </el-form-item>
         </el-col>
@@ -97,7 +97,7 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
   .el-form-item{
-    margin: 0;
+    margin: 8px;
   }
   .textarea-div{
     line-height: 26px;

@@ -6,16 +6,19 @@
           <div class="list-item">
             <el-row>
               <el-col :span="12">
-                <el-form-item label="采集盒编号">{{item.deviceCode}}</el-form-item>
+                <el-form-item label="传感器编号">{{item.code}}</el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="传感器编号">{{item.code}}</el-form-item>
+                <el-form-item label="所属采集盒编号">{{item.deviceCode}}</el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="所属主缆">{{childCableMain[item.cableType]}}</el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="传感器位置">{{childAddr[item.locType]}}</el-form-item>
+                <el-form-item label="所属位置">{{childAddr[item.locType]}}</el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="内部编号">{{item.seq}}</el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="备注" class="el-to-block"><br />

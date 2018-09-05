@@ -61,6 +61,11 @@ export default {
       this.$router.replace({ path: '/' })
       Cookies.remove('bridgeId')
       Cookies.remove('bridgeName')
+      var dataList = this.dataList
+      for (let i = 0; i < dataList.length; i++) {
+        console.log(dataList[i].disab)
+        dataList[i].disab = false
+      }
     },
     toggleSideBar() {
       this.$store.dispatch('ToggleSideBar')
