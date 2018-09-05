@@ -189,7 +189,7 @@ export default {
     },
     getTimingMonitor() {
       var that = this
-      var preTime = 10 * 1000
+      var preTime = 2 * 1000
       var arr = this.serverSeqArr
       var startTime = this.formatTime(this.first_Q ? (this.sysTime - preTime) : this.sysTime)
       var endTime = this.formatTime(this.sysTime)
