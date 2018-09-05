@@ -66,7 +66,7 @@ export default {
           const newPw = this.ruleForm2.checkPass
           changePw({ newPw }).then((res) => {
             if (res.success) {
-              MessageBox.alert('提示', '密码修改成功！', {
+              MessageBox.alert('密码修改成功！', '提示', {
                 confirmButtonText: '确定',
                 type: 'success',
                 center: true,

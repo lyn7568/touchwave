@@ -106,7 +106,7 @@ export default {
           }
           updateMyself(paramsData).then((res) => {
             if (res.success) {
-              MessageBox.alert('提示', '您的信息修改成功！', {
+              MessageBox.alert('您的信息修改成功！', '提示', {
                 confirmButtonText: '确定',
                 type: 'success',
                 center: true,
