@@ -192,10 +192,10 @@ export default {
           { required: true, validator: device, trigger: 'blur' }
         ],
         cableType: [
-          { required: true, message: '请选择主缆', trigger: 'blur' }
+          { required: true, message: '请选择传感器所属主缆', trigger: 'blur' }
         ],
         locType: [
-          { required: true, message: '请选择传感器位置', trigger: 'blur' }
+          { required: true, message: '请选择传感器所属位置', trigger: 'blur' }
         ],
         seq: [
           { required: true, validator: seq, trigger: 'blur' }
@@ -260,6 +260,16 @@ export default {
             })
           } else {
             const par = this.ruleForm2
+            this.options.forEach(function(item) {
+              if (item.label === par.cableType) {
+                par.cableType = item.value
+              }
+            })
+            this.options1.forEach(function(item) {
+              if (item.label === par.locType) {
+                par.locType = item.value
+              }
+            })
             par.id = this.edit
             updateDevice(par).then(response => {
               if (response.success) {
