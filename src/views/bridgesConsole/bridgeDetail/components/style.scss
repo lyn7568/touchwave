@@ -1,16 +1,24 @@
 .form-main{
   .el-form-item{
-    margin: 8px;
+    margin-bottom: 6px;
+    .el-form-item__content{
+      line-height: 22px;
+      padding: 8px 0;
+      word-break: break-all;
+    }
   }
 }
 .textarea-div{
-  line-height: 26px;
+  line-height: 22px;
   margin-bottom: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .list-item{
   border: 1px solid #ccc;
   margin-bottom: 20px;
   padding: 10px 15px;
-  height: 256px;
+  min-height: 180px;
   overflow: hidden;
 }

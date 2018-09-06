@@ -1,14 +1,14 @@
 <template>
   <el-dialog title="采集盒信息" :visible.sync="dialogTableVisible" :width="dialogW">
-    <el-form class="form-main">
+    <el-form class="form-main" label-width="114px" label-position="left">
       <el-row :gutter="16" v-if="deviceList.length">
         <el-col :xs="12" :sm="12" :lg="12" v-for="item in deviceShowList" :key="item.index">
           <div class="list-item">
-            <el-row>
-              <el-col :span="12">
+            <el-row :gutter="10">
+              <el-col :span="24">
                 <el-form-item label="采集盒编号">{{item.code}}</el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :span="24">
                 <el-form-item label="所属服务器编号">{{item.serverCode}}</el-form-item>
               </el-col>
               <el-col :span="12">
@@ -18,8 +18,11 @@
                 <el-form-item label="内部编号">{{item.seq}}</el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="备注" class="el-to-block"><br />
-                  <div class="textarea-div">{{item.remark}}</div>
+                <el-form-item label="备注" class="el-to-block">
+                  <el-tooltip placement="bottom-end" effect="dark">
+                    <div slot="content" class="popper-tips">{{item.remark}}</div>
+                    <div class="textarea-div">{{item.remark}}</div>
+                  </el-tooltip>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -81,3 +84,8 @@ export default {
   }
 }
 </script>
+<style rel="stylesheet/scss" lang="scss" scoped>
+.form-main .list-item{
+  height: 226px;
+}
+</style>

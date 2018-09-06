@@ -1,9 +1,9 @@
 <template>
   <el-dialog title="桥梁信息" :visible.sync="dialogTableVisible" :width="dialogW">
-    <el-form class="form-main">
+    <el-form class="form-main" label-width="100px" label-position="left">
       <el-row :gutter="10">
         <el-col :xs="14" :sm="14" :lg="14">
-          <el-row>
+          <el-row :gutter="10">
             <el-col :span="12">
               <el-form-item label="桥梁编号">{{dataInfo.code}}</el-form-item>
             </el-col>
@@ -39,12 +39,12 @@
           </div>
         </el-col>
         <el-col :span="24" v-if="dataInfo.descp">
-          <el-form-item label="详细描述" class="el-to-block"><br />
+          <el-form-item label="详细描述" class="el-to-block">
             <div class="textarea-div">{{dataInfo.descp}}</div>
           </el-form-item>
         </el-col>
         <el-col :span="24" v-if="dataInfo.remark">
-          <el-form-item label="备注" class="el-to-block"><br />
+          <el-form-item label="备注" class="el-to-block">
             <div class="textarea-div">{{dataInfo.remark}}</div>
           </el-form-item>
         </el-col>
@@ -59,6 +59,7 @@
 </template>
 
 <script>
+import './style.scss'
 import { getBridgeInfo } from '@/api/bridgeInfo'
 import { parseTime } from '@/utils'
 
@@ -94,13 +95,3 @@ export default {
   }
 }
 </script>
-
-<style rel="stylesheet/scss" lang="scss" scoped>
-  .el-form-item{
-    margin: 8px;
-  }
-  .textarea-div{
-    line-height: 26px;
-    margin-bottom: 10px;
-  }
-</style>
