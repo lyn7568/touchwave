@@ -188,7 +188,7 @@ export default {
     getSysTime() {
       getSysTime().then(res => {
         if (res.success) {
-          this.sysTime = res.data + this.eastEightDistrict -(5 * 60 * 1000)
+          this.sysTime = res.data + this.eastEightDistrict - (5 * 60 * 1000)
           const localTime = new Date().getTime() + this.eastEightDistrict
           this.localTimeiv = localTime - this.sysTime
           this.first_Q = true
