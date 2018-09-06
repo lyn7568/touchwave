@@ -119,14 +119,27 @@ export default {
       addr: {},
       dangerList: '',
       serverSeqArr: [],
+      serverList: [],
+      deviceList: [],
+      transducerList: [],
       monitorList: [],
       currentNo: 1,
       currentSize: 4,
       currentTime: '',
       sysTime: '',
+      localTimeiv: '',
+      eastEightDistrict: 8 * 60 * 60 * 1000,
       jishiTime: null,
       maxShowLength: 300,
       monitorCache: []
+    }
+  },
+  watch: {
+    '$route'(to, from) {
+      if (!(to.path === '/bridgeHome/bridgeDetail')) {
+        clearTimeout(this.jishiTime)
+        this.jishiTime = null
+      }
     }
   },
   computed: {
@@ -175,7 +188,9 @@ export default {
     getSysTime() {
       getSysTime().then(res => {
         if (res.success) {
-          this.sysTime = res.data + (8 * 60 * 60 * 1000)
+          this.sysTime = res.data + this.eastEightDistrict -(5 * 60 * 1000)
+          const localTime = new Date().getTime() + this.eastEightDistrict
+          this.localTimeiv = localTime - this.sysTime
           this.first_Q = true
           this.getTimingMonitor()
         }
@@ -189,10 +204,11 @@ export default {
     },
     getTimingMonitor() {
       var that = this
-      var preTime = 2 * 1000
+      var preTime = 2 * 60 * 1000
       var arr = this.serverSeqArr
       var startTime = this.formatTime(this.first_Q ? (this.sysTime - preTime) : this.sysTime)
       var endTime = this.formatTime(this.sysTime)
+      that.sysTime += 1000
       getMonitorByTime({ seq: arr, begin: startTime, end: endTime }).then(res => {
         var mCache = that.monitorCache
         var mList = []
@@ -232,10 +248,18 @@ export default {
             }
           }
           that.monitorList = mList
-          that.sysTime += 1000
-          that.jishiTime = setTimeout(function() {
+          var st = new Date().getTime() + that.eastEightDistrict - that.localTimeiv
+          var iv = that.sysTime - st
+          if (iv < 0) {
+            iv = 1
+          }
+          // console.log('upNow:' + that.sysTime)
+          // console.log('now:' + st)
+          // console.log('interval:' + iv)
+          // console.log(typeof(iv))
+          that.jishiTime = setTimeout(() => {
             that.getTimingMonitor()
-          }, 1000)
+          }, iv)
         }
       })
     },
@@ -276,17 +300,20 @@ export default {
       this.$refs.BInfoDialog01.dialogTableVisible = true
     },
     queryServerInfo() {
+      this.$refs.BInfoDialog02.queryServerList()
       this.$refs.BInfoDialog02.dialogTableVisible = true
     },
     queryBoxInfo() {
+      this.$refs.BInfoDialog03.queryDeviceList()
       this.$refs.BInfoDialog03.dialogTableVisible = true
     },
     querySensorInfo() {
+      this.$refs.BInfoDialog04.queryTransList()
       this.$refs.BInfoDialog04.dialogTableVisible = true
     },
     updatePersonInfo() {
-      this.$refs.updatePersonInfo.dialogTableVisible = true
       this.$refs.updatePersonInfo.getUserSelf()
+      this.$refs.updatePersonInfo.dialogTableVisible = true
     },
     updateLoginPwd() {
       this.$refs.updateLoginPwd.dialogTableVisible = true

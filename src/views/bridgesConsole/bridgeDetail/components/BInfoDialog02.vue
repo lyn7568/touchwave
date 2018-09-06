@@ -60,19 +60,12 @@ export default {
   data() {
     return {
       serverList: [],
-      dialogW: '',
-      bridgeId: '',
-      bridgeName: '',
+      dialogW: this.$parent.dialogW,
+      bridgeName: this.$parent.bridgeName,
       dialogTableVisible: false,
       pageSize: 4,
       pageNo: 1
     }
-  },
-  created() {
-    this.bridgeId = this.$parent.bridgeId
-    this.bridgeName = this.$parent.bridgeName
-    this.dialogW = this.$parent.dialogW
-    this.serverList = queryInfo.queryServers(this.bridgeId)
   },
   computed: {
     serverShowList() {
@@ -82,6 +75,9 @@ export default {
   methods: {
     handleCurrentChange(val) {
       this.pageNo = val
+    },
+    queryServerList() {
+      this.serverList = queryInfo.queryServers(this.$parent.bridgeId)
     }
   }
 }

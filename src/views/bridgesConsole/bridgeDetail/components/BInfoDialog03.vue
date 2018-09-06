@@ -59,18 +59,12 @@ export default {
   },
   data() {
     return {
-      dialogW: '',
-      deviceList: [],
-      bridgeId: '',
+      dialogW: this.$parent.dialogW,
+      deviceList: this.$parent.deviceList,
       dialogTableVisible: false,
       pageSize: 4,
       pageNo: 1
     }
-  },
-  created() {
-    this.bridgeId = this.$parent.bridgeId
-    this.dialogW = this.$parent.dialogW
-    this.deviceList = queryInfo.queryDevices(this.bridgeId)
   },
   computed: {
     deviceShowList() {
@@ -80,6 +74,9 @@ export default {
   methods: {
     handleCurrentChange(val) {
       this.pageNo = val
+    },
+    queryDeviceList() {
+      this.deviceList = queryInfo.queryDevices(this.$parent.bridgeId)
     }
   }
 }

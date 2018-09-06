@@ -20,7 +20,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="联系电话" prop="phone">
-            <el-input v-model="ruleForm.phone" placeholder="请填写联系电话"></el-input>
+            <el-input v-model="ruleForm.phone" placeholder="请填写联系电话" maxlength="11"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -47,8 +47,12 @@ export default {
   data() {
     var validPhone = (rule, value, callback) => {
       const reg = /^1[3|4|5|7|8][0-9]\d{8}$/
-      if (!reg.test(value)) {
-        callback(new Error('请输入正确的手机号码'))
+      if (value.length > 0) {
+        if (!reg.test(value)) {
+          callback(new Error('请输入正确的手机号码'))
+        } else {
+          callback()
+        }
       } else {
         callback()
       }

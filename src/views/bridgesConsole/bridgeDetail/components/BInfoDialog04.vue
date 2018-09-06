@@ -62,22 +62,14 @@ export default {
   },
   data() {
     return {
-      dialogW: '',
-      bridgeId: '',
+      dialogW: this.$parent.dialogW,
       transducerList: [],
-      childCableMain: {},
-      childAddr: {},
+      childCableMain: this.$parent.cableMain,
+      childAddr: this.$parent.addr,
       dialogTableVisible: false,
       pageSize: 4,
       pageNo: 1
     }
-  },
-  created() {
-    this.childCableMain = this.$parent.cableMain
-    this.childAddr = this.$parent.addr
-    this.dialogW = this.$parent.dialogW
-    this.bridgeId = this.$parent.bridgeId
-    this.transducerList = queryInfo.queryTrans(this.bridgeId)
   },
   computed: {
     transducerShowList() {
@@ -87,6 +79,9 @@ export default {
   methods: {
     handleCurrentChange(val) {
       this.pageNo = val
+    },
+    queryTransList() {
+      this.transducerList = queryInfo.queryTrans(this.$parent.bridgeId)
     }
   }
 }
