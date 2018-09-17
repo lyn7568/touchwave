@@ -1,7 +1,7 @@
 /**
  * Created by luyanan on 18/8/13.
  */
-export const comUrl = 'http://localhost:90'
+export const comUrl = process.env.BASE_API
 
 /**
  * 解析url参数
