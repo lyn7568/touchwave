@@ -105,8 +105,9 @@ export default {
           max: this.maxXcount
         },
         yAxis: {
-          name: '毫伏(mv)',
-          type: 'value'
+          type: 'value',
+          max: 8191,
+          min: -8192
         },
         legend: {
           data: ['信号值']
@@ -142,26 +143,27 @@ export default {
           dataZoom: [
             {
               type: 'slider',
-              show: true,
-              start: 94,
-              end: 100,
-              handleSize: 8
+              xAxisIndex: 0,
+              start: 0,
+              end: 100
             },
             {
               type: 'inside',
-              start: 94,
+              xAxisIndex: 0,
+              start: 0,
               end: 100
             },
             {
               type: 'slider',
-              show: true,
               yAxisIndex: 0,
-              filterMode: 'empty',
-              width: 12,
-              height: '70%',
-              handleSize: 8,
-              showDataShadow: false,
-              left: '98%'
+              start: 0,
+              end: 100
+            },
+            {
+              type: 'inside',
+              yAxisIndex: 0,
+              start: 0,
+              end: 100
             }
           ]
         })

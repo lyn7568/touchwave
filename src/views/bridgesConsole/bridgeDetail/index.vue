@@ -186,13 +186,17 @@ export default {
       })
     },
     getSysTime() {
-      getSysTime().then(res => {
-        if (res.success) {
-          this.sysTime = res.data + this.eastEightDistrict - (5 * 60 * 1000)
-          const localTime = new Date().getTime() + this.eastEightDistrict
-          this.localTimeiv = localTime - this.sysTime
-          this.first_Q = true
-          this.getTimingMonitor()
+      var that = this
+      var arr = this.serverSeqArr
+      getSysTime({ seq: arr }).then(res => {
+        if (res.success && res.data && res.data.length > 0) {
+          // that.sysTime = res.data + that.eastEightDistrict - (5 * 60 * 1000)
+          const nowt = parseTime(res.data[0].ctime, true, true)
+          that.sysTime = (new Date(nowt)).getTime() + that.eastEightDistrict - 2 * 60 * 1000
+          const localTime = new Date().getTime() + that.eastEightDistrict
+          that.localTimeiv = localTime - that.sysTime
+          that.first_Q = true
+          that.getTimingMonitor()
         }
       })
     },
@@ -204,11 +208,12 @@ export default {
     },
     getTimingMonitor() {
       var that = this
-      var preTime = 2 * 60 * 1000
       var arr = this.serverSeqArr
-      var startTime = this.formatTime(this.first_Q ? (this.sysTime - preTime) : this.sysTime)
+      var startTime = this.formatTime(this.sysTime)
       var endTime = this.formatTime(this.sysTime)
       that.sysTime += 1000
+      // var startTime = this.formatTime(this.first_Q ? (this.sysTime - preTime) : this.sysTime)
+      // var endTime = this.formatTime(this.sysTime)
       getMonitorByTime({ seq: arr, begin: startTime, end: endTime }).then(res => {
         var mCache = that.monitorCache
         var mList = []
@@ -219,7 +224,7 @@ export default {
               var ftime = res.data[0].ctime
               monModel.construct(mCache, res.data)
 
-              var f_q_t = that.sysTime - preTime
+              var f_q_t = that.sysTime
 
               for (;;) {
                 var fts = that.formatTime(f_q_t)
@@ -253,10 +258,6 @@ export default {
           if (iv < 0) {
             iv = 1
           }
-          // console.log('upNow:' + that.sysTime)
-          // console.log('now:' + st)
-          // console.log('interval:' + iv)
-          // console.log(typeof(iv))
           that.jishiTime = setTimeout(() => {
             that.getTimingMonitor()
           }, iv)

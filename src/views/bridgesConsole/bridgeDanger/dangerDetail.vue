@@ -7,7 +7,7 @@
       </div>
       <el-row class="line-chart-box">
         <el-col :xs="24" :sm="24" :lg="24" v-for="(item, index) in alarmShowList" :key="item.index">
-          <lineChart :chartData="item" :lineColor="index"></lineChart>
+          <lineChart :chartData="item" :lineColor="index" :historyM="historyM"></lineChart>
         </el-col>
       </el-row>
       <div class="pagination-container">
@@ -32,6 +32,7 @@ import lineChart from '../lineChart/LineChart'
 export default {
   data() {
     return {
+      historyM: true,
       alarmId: '',
       alarmTit: '',
       alarmRead: false,

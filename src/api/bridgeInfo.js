@@ -66,13 +66,13 @@ export function getMonitorByDay(params) {
     params
   })
 }
-export function getSysTime(params) {
-  return request({
-    url: '/ajax/sys/serviceTime',
-    method: 'get',
-    params
-  })
-}
+// export function getSysTime(params) {
+//   return request({
+//     url: '/ajax/sys/serviceTime',
+//     method: 'get',
+//     params
+//   })
+// }
 export function getMonitorByTime(params) {
   return request({
     url: '/ajax/collect/wave/server/time',
@@ -80,7 +80,7 @@ export function getMonitorByTime(params) {
     params
   })
 }
-export function getTimingMonitor(params) {
+export function getSysTime(params) {
   return request({
     url: '/ajax/collect/wave/curr',
     method: 'get',

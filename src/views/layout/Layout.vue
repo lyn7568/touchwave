@@ -7,6 +7,14 @@
       <navbar></navbar>
       <app-main></app-main>
     </div>
+    <div class="main-footer">
+      <div style="margin:0 auto; padding:8px 0;">
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802027571" style="display:inline-block;text-decoration:none;margin-top:10px">
+          <img src="./img/beian.png" width="18" style="float:left;"/>
+          <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">京公网安备 11010802027571号</p>
+        </a>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -71,5 +79,17 @@ export default {
     height: 100%;
     position: absolute;
     z-index: 999;
+  }
+  .main-footer{
+    z-index: 2002;
+    position:fixed;
+    background: rgba(48, 65, 86, 1);
+    border-top:1px solid #e6e6e6;
+    bottom:0;
+    left:0;
+    right:0;
+    font-size:14px;
+    text-align: center;
+    color: #333;
   }
 </style>
