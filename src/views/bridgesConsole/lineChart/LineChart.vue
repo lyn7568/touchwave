@@ -106,8 +106,8 @@ export default {
         },
         yAxis: {
           type: 'value',
-          max: 8191,
-          min: -8192
+          max: 9000,
+          min: -9000
         },
         legend: {
           data: ['信号值']
@@ -143,25 +143,27 @@ export default {
           dataZoom: [
             {
               type: 'slider',
-              xAxisIndex: 0,
+              show: true,
+              xAxisIndex: [0],
               start: 0,
               end: 100
             },
             {
               type: 'inside',
-              xAxisIndex: 0,
+              xAxisIndex: [0],
               start: 0,
               end: 100
             },
             {
               type: 'slider',
-              yAxisIndex: 0,
+              show: true,
+              yAxisIndex: [0],
               start: 0,
               end: 100
             },
             {
               type: 'inside',
-              yAxisIndex: 0,
+              yAxisIndex: [0],
               start: 0,
               end: 100
             }

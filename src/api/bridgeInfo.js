@@ -61,7 +61,7 @@ export function setUnreadToRead(params) {
 // 监测信息
 export function getMonitorByDay(params) {
   return request({
-    url: '/ajax/collect/wave/server/day',
+    url: '/ajax/collect/wave/server/dayTime',
     method: 'get',
     params
   })

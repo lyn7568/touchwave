@@ -3,28 +3,35 @@
     <el-card class="box-card block-group">
       <div slot="header" class="block-title">
           <el-date-picker
+            style="width: 200px;margin-right:15px"
             v-model="valueDate"
+            :editable="false"
             type="date"
             value-format="yyyyMMdd"
             :picker-options="pickerOptions0"
             @change="changeDate">
           </el-date-picker>
-          <!-- <el-date-picker
-            v-model="dateRange"
-            type="datetimerange"
-            align="right"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            :default-time="['12:00:00', '08:00:00']">
-          </el-date-picker> -->
+          <el-select v-model="TimeVal">
+            <el-option
+              v-for="item in optionsTime"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+              @change="changeTimeRange">
+            </el-option>
+          </el-select>
           <el-button type="primary" @click="getMonitorByDay">查询</el-button>
       </div>
-      <el-row class="line-chart-box" v-if="alarmList.length">
-        <el-col :xs="24" :sm="24" :lg="24" v-for="item in alarmShowList" :key="item.index">
+      <el-row class="line-chart-box">
+        <el-col :xs="24" :sm="24" :lg="24" v-for="item in alarmShowList" :key="item.index" v-if="alarmList.length">
           <lineChart :chartData="item" :historyM="historyM"></lineChart>
         </el-col>
+        <div class="progress-box" v-if="progressShow">
+          <span>正在加载 {{proBar}}%</span>
+          <el-progress :text-inside="true" :stroke-width="18" :percentage="proBar"></el-progress>
+        </div>
       </el-row>
-      <DefaultPage v-if="!alarmList.length"></DefaultPage>
+      <DefaultPage v-if="!alarmList.length && !progressShow"></DefaultPage>
       <div class="pagination-container">
         <el-pagination
           background
@@ -49,6 +56,7 @@ import { parseTime } from '@/utils'
 import lineChart from '../lineChart/LineChart'
 
 import DefaultPage from '@/components/DefaultPage'
+import NProgress from 'nprogress'
 
 export default {
   data() {
@@ -60,13 +68,16 @@ export default {
           return time.getTime() > Date.now() - 8.64e7
         }
       },
-      valueDate: this.formatTime((new Date()).getTime() + ((8 - 24) * 60 * 60 * 1000)),
-      dateRange: '',
+      valueDate: this.formatTime(Date.now() - 8.64e7).substring(0, 8),
+      TimeVal: '000000',
+      optionsTime: [],
       serverSeqArr: [],
       alarmList: [],
       monitorCache: [],
       pageSize: 2,
-      pageNo: 1
+      pageNo: 1,
+      progressShow: false,
+      proBar: 0
     }
   },
   components: {
@@ -80,24 +91,54 @@ export default {
   },
   created() {
     this.bridgeId = Cookies.get('bridgeId')
+    this.optionsCreat()
     this.serverSeqArr = queryInfo.queryServers(this.bridgeId, true)
     if (this.serverSeqArr.length) {
       this.getMonitorByDay()
     }
   },
   methods: {
+    optionsCreat() {
+      for (let i = 0; i < 24; i++) {
+        var num = (i < 10 ? ('0' + i) : i)
+        var oPt = {
+          value: `${num}0000`,
+          label: `${num}:00:00 - ${num}:59:59`
+        }
+        this.optionsTime.push(oPt)
+      }
+    },
     formatTime(time) {
       var d = new Date()
       d.setTime(time)
-      d = JSON.stringify(d).replace(/[^\d]/g, '').substring(0, 8)
+      d = JSON.stringify(d).replace(/[^\d]/g, '')
       return d
     },
-    getMonitorByDay() {
+    changeProgress() {
       var that = this
-      var date = that.valueDate
+      var clearInt = setInterval(function() {
+        that.proBar = that.proBar + parseInt((Math.random() * 10), 10)
+        if (that.proBar >= 84) {
+          that.proBar = 84
+          clearInterval(clearInt)
+        }
+      }, 1000 * Math.random())
+    },
+    getMonitorByDay() {
+      this.progressShow = true
+      NProgress.start()
+      var that = this
+      that.proBar = 0
+      that.alarmList = []
+      that.changeProgress()
+      var sDate = that.valueDate + that.TimeVal
+      var sDateForm = (new Date(parseTime(sDate, true, true))).getTime()
+      var eDate = that.formatTime(sDateForm + 8 * 60 * 60 * 1000 + 59 * 60 * 1000 + 59 * 1000).substring(0, 14)
       var arr = this.serverSeqArr
-      getMonitorByDay({ seq: arr, day: date }).then(res => {
+      getMonitorByDay({ seq: arr, begin: sDate, end: eDate }).then(res => {
+        NProgress.inc()
         if (res.success && res.data) {
+          this.progressShow = false
           var monitorList = []
           for (let i = 0; i < res.data.length; i++) {
             var str = res.data[i].cid
@@ -128,9 +169,9 @@ export default {
     },
     changeDate(val) {
       this.valueDate = val
-      if (this.serverSeqArr.length) {
-        this.getMonitorByDay()
-      }
+    },
+    changeTimeRange(val) {
+      this.TimeVal = val
     },
     handleCurrentChange(val) {
       this.pageNo = val
@@ -146,5 +187,14 @@ export default {
     padding: 12px 20px;
     margin-left: 15px;
   }
+}
+.progress-box{
+  width: 400px;
+  padding: 80px;
+  margin: auto;
+  text-align: center;
+  line-height: 40px;
+  color:#999;
+  font-size:13px;
 }
 </style>

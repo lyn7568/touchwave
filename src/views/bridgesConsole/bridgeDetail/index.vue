@@ -29,6 +29,7 @@
         <el-card class="box-card block-group">
           <div slot="header" class="block-title">
             <span>实时监测</span>
+            <el-button v-if="serverSeqArr.length" type="text" @click="updateDataList">刷新</el-button>
           </div>
           <el-row class="line-chart-box" v-if="monitorList.length">
             <el-col :xs="24" :sm="24" :lg="24" v-for="item in monitorShowList" :key="item.index">
@@ -159,12 +160,17 @@ export default {
     if (this.bridgeId) {
       this.serverSeqArr = queryInfo.queryServers(this.bridgeId, true)
       if (this.serverSeqArr.length) {
-        this.getSysTime()
-        this.getDangerList()
+        this.updateDataList()
       }
     }
   },
   methods: {
+    updateDataList() {
+      this.monitorList = []
+      this.monitorCache = []
+      this.getSysTime()
+      this.getDangerList()
+    },
     getDangerList() {
       var arr = this.serverSeqArr
       const param = {
@@ -192,7 +198,7 @@ export default {
         if (res.success && res.data && res.data.length > 0) {
           // that.sysTime = res.data + that.eastEightDistrict - (5 * 60 * 1000)
           const nowt = parseTime(res.data[0].ctime, true, true)
-          that.sysTime = (new Date(nowt)).getTime() + that.eastEightDistrict - 2 * 60 * 1000
+          that.sysTime = (new Date(nowt)).getTime() + that.eastEightDistrict - 10 * 1000
           const localTime = new Date().getTime() + that.eastEightDistrict
           that.localTimeiv = localTime - that.sysTime
           that.first_Q = true
