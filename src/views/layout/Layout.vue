@@ -8,10 +8,11 @@
       <app-main></app-main>
     </div>
     <div class="main-footer">
-      <div style="margin:0 auto; padding:8px 0;">
-        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802027571" style="display:inline-block;text-decoration:none;margin-top:10px">
+      <div style="margin:0 auto;line-height:20px;color:#939393; padding:12px 0;overflow: hidden;width:380px">
+        <a style="margin: 0 5px 0 0;float:left">京ICP备16026450号-2 |</a>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802027571" style="display:inline-block;text-decoration:none;float:left">
           <img src="./img/beian.png" width="18" style="float:left;"/>
-          <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">京公网安备 11010802027571号</p>
+          <p style="float:left;margin: 0 0 0 5px;">京公网安备 11010802027571号</p>
         </a>
       </div>
     </div>

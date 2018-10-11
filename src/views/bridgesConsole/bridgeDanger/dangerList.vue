@@ -5,7 +5,7 @@
         <span>报警信息</span>
       </div>
       <ul class="item-ul" v-if="dangerList.length">
-        <li :class="!item.readed ? 'readed-li' : ''" v-for="item in dangerShowList" :key="item.index" @click="alarmShow(item.aid, item.readed, item.alarmTime, item.device)">
+        <li :class="!item.readed ? 'readed-li' : ''" v-for="item in dangerList" :key="item.index" @click="alarmShow(item.aid, item.readed, item.alarmTime, item.device)">
           <span>{{item.alarmTime}}</span>
           <span>{{item.device}}，请点击查看。</span>
           <span class="svg-container" v-if="!item.readed">
@@ -21,7 +21,7 @@
           :current-page.sync="pageNo"
           :page-size="pageSize"
           layout="prev, pager, next, jumper"
-          :total="dangerList.length">
+          :total="total">
         </el-pagination>
       </div>
     </el-card>
@@ -46,13 +46,9 @@ export default {
       bridgeId: '',
       bridgeName: '',
       dangerList: [],
-      pageSize: 4,
-      pageNo: 1
-    }
-  },
-  computed: {
-    dangerShowList() {
-      return this.dangerList.slice((this.pageNo - 1) * this.pageSize, this.pageNo * this.pageSize)
+      pageSize: 20,
+      pageNo: 1,
+      total: 0
     }
   },
   created() {
@@ -60,15 +56,16 @@ export default {
     this.bridgeName = Cookies.get('bridgeName')
     this.serverSeqArr = queryInfo.queryServers(this.bridgeId, true)
     if (this.serverSeqArr) {
-      this.getDangerList(this.serverSeqArr)
+      this.getDangerList()
     }
   },
   methods: {
-    getDangerList(arr) {
+    getDangerList() {
+      var arr = this.serverSeqArr
       const param = {
         seq: arr,
-        pageSize: 18,
-        pageNo: 1
+        pageSize: this.pageSize,
+        pageNo: this.pageNo
       }
       getDangerList(param).then(res => {
         if (res.success && res.data.data) {
@@ -92,6 +89,7 @@ export default {
     },
     handleCurrentChange(val) {
       this.pageNo = val
+      this.getDangerList()
     }
   }
 }

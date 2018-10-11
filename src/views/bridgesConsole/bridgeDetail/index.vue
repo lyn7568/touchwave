@@ -196,9 +196,8 @@ export default {
       var arr = this.serverSeqArr
       getSysTime({ seq: arr }).then(res => {
         if (res.success && res.data && res.data.length > 0) {
-          // that.sysTime = res.data + that.eastEightDistrict - (5 * 60 * 1000)
           const nowt = parseTime(res.data[0].ctime, true, true)
-          that.sysTime = (new Date(nowt)).getTime() + that.eastEightDistrict - 10 * 1000
+          that.sysTime = (new Date(nowt)).getTime() + that.eastEightDistrict - 2 * 1000
           const localTime = new Date().getTime() + that.eastEightDistrict
           that.localTimeiv = localTime - that.sysTime
           that.first_Q = true
