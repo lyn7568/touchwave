@@ -138,7 +138,7 @@ export default {
       maxShowLength: 300,
       monitorList: [],
       monitorCache: [],
-      jishiTime: null
+      jishiTime: ''
     }
   },
   computed: {
@@ -146,12 +146,11 @@ export default {
       return this.monitorList.slice((this.currentNo - 1) * this.currentSize, this.currentNo * this.currentSize)
     }
   },
-  beforeCreate() {
-    clearTimeout(this.jishiTime)
-    this.jishiTime = null
-  },
   created() {
     var that = this
+    if (this.jishiTime) {
+      clearTimeout(this.jishiTime)
+    }
     if (urlParse('id')) {
       that.bridgeId = urlParse('id')
       that.bridgeName = urlParse('name')
@@ -173,7 +172,8 @@ export default {
   methods: {
     updateDataList() {
       clearTimeout(this.jishiTime)
-      this.jishiTime = null
+      this.jishiTime = ''
+      this.sysTime = ''
       this.monitorList = []
       this.monitorCache = []
       this.getSysTime()
@@ -268,14 +268,20 @@ export default {
             }
           }
           that.monitorList = mList
-          var st = new Date().getTime() + that.eastEightDistrict - that.localTimeiv
-          var iv = that.sysTime - st
-          if (iv < 0) {
-            iv = 1
+          if (that && !that._isDestroyed) {
+            var st = new Date().getTime() + that.eastEightDistrict - that.localTimeiv
+            var iv = that.sysTime - st
+            if (iv < 0) {
+              iv = 1
+            }
+            that.jishiTime = setTimeout(function() {
+              if (that && !that._isDestroyed) {
+                that.getTimingMonitor()
+              }
+            }, iv)
+          } else {
+            that.jishiTime = ''
           }
-          that.jishiTime = setTimeout(() => {
-            that.getTimingMonitor()
-          }, iv)
         }
       })
     },
@@ -336,12 +342,9 @@ export default {
     }
   },
   beforeDestroy() {
-    clearTimeout(this.jishiTime)
-    this.jishiTime = null
-  },
-  destroyed() {
-    clearTimeout(this.jishiTime)
-    this.jishiTime = null
+    this.$once('hook:beforeDestroy', () => {
+      clearInterval(this.jishiTime)
+    })
   }
 }
 </script>

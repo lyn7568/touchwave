@@ -7,8 +7,8 @@
       </div>
       <div class="load-box" v-loading="loadprogress">
         <el-row class="line-chart-box">
-          <el-col :xs="24" :sm="24" :lg="24" v-for="(item, index) in alarmShowList" :key="item.index">
-            <lineChart :chartData="item" :lineColor="index" :historyM="historyM"></lineChart>
+          <el-col :xs="24" :sm="24" :lg="24" v-for="item in alarmShowList" :key="item.index">
+            <lineChart :chartData="item" :historyM="historyM"></lineChart>
           </el-col>
         </el-row>
       </div>
