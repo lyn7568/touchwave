@@ -141,18 +141,14 @@ export default {
       jishiTime: null
     }
   },
-  watch: {
-    $route(to, from) {
-      if (to.path !== '/bridgeHome/bridgeDetail') {
-        clearTimeout(this.jishiTime)
-        this.jishiTime = null
-      }
-    }
-  },
   computed: {
     monitorShowList() {
       return this.monitorList.slice((this.currentNo - 1) * this.currentSize, this.currentNo * this.currentSize)
     }
+  },
+  beforeCreate() {
+    clearTimeout(this.jishiTime)
+    this.jishiTime = null
   },
   created() {
     var that = this
@@ -341,6 +337,11 @@ export default {
   },
   beforeDestroy() {
     clearTimeout(this.jishiTime)
+    this.jishiTime = null
+  },
+  destroyed() {
+    clearTimeout(this.jishiTime)
+    this.jishiTime = null
   }
 }
 </script>

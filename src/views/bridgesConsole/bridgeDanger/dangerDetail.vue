@@ -76,9 +76,8 @@ export default {
         if (res.success && res.data) {
           that.loadprogress = false
           var rList = []
-          var startTime = ''
           for (let i = 0; i < res.data.length; i++) {
-            startTime = parseTime(res.data[0].stime, true, true)
+            var startTime = parseTime(res.data[i].stime, true, true)
             var str = res.data[i].seq
             var rData = {
               tit: '',
