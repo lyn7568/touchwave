@@ -126,7 +126,7 @@ export default {
   right: 0;
   height: 50px;
   line-height: 50px;
-  z-index:1002;
+  z-index:2002;
   border-radius: 0px !important;
   background-color: #2d3a4b;
   border-bottom: 1px solid #e6e6e6;

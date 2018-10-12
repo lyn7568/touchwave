@@ -17,6 +17,7 @@
               :key="item.value"
               :label="item.label"
               :value="item.value"
+              :disabled="item.disb"
               @change="changeTimeRange">
             </el-option>
           </el-select>
@@ -65,10 +66,10 @@ export default {
       bridgeId: '',
       pickerOptions0: {
         disabledDate(time) {
-          return time.getTime() > Date.now() - 8.64e7
+          return time.getTime() > Date.now()
         }
       },
-      valueDate: this.formatTime(Date.now() - 8.64e7).substring(0, 8),
+      valueDate: this.formatTime(Date.now()).substring(0, 8),
       TimeVal: '000000',
       optionsTime: [],
       serverSeqArr: [],
@@ -90,22 +91,38 @@ export default {
     }
   },
   created() {
-    this.bridgeId = Cookies.get('bridgeId')
-    this.optionsCreat()
-    this.serverSeqArr = queryInfo.queryServers(this.bridgeId, true)
-    if (this.serverSeqArr.length) {
-      this.getMonitorByDay()
-    }
+    var that = this
+    that.bridgeId = Cookies.get('bridgeId')
+    that.optionsCreat()
+    queryInfo.qaiCb(function() {
+      if (that.bridgeId) {
+        that.serverSeqArr = queryInfo.queryServers(that.bridgeId, true)
+        if (that.serverSeqArr.length) {
+          that.getMonitorByDay()
+        }
+      }
+    })
   },
   methods: {
     optionsCreat() {
+      var that = this
+      that.optionsTime = []
+      const nowHour = new Date().getHours()
       for (let i = 0; i < 24; i++) {
         var num = (i < 10 ? ('0' + i) : i)
+        var numpre = ((i - 1) < 10 ? ('0' + (i - 1)) : (i - 1))
         var oPt = {
           value: `${num}0000`,
-          label: `${num}:00:00 - ${num}:59:59`
+          label: `${num}:00:00 - ${num}:59:59`,
+          disb: false
         }
-        this.optionsTime.push(oPt)
+        if (nowHour === i) {
+          that.TimeVal = `${numpre}0000`
+        }
+        if (nowHour <= i && that.valueDate === that.formatTime(Date.now()).substring(0, 8)) {
+          oPt.disb = true
+        }
+        that.optionsTime.push(oPt)
       }
     },
     formatTime(time) {
@@ -118,11 +135,11 @@ export default {
       var that = this
       var clearInt = setInterval(function() {
         that.proBar = that.proBar + parseInt((Math.random() * 10), 10)
-        if (that.proBar >= 84) {
-          that.proBar = 84
+        if (that.proBar >= 96) {
+          that.proBar = 96
           clearInterval(clearInt)
         }
-      }, 1000 * Math.random())
+      }, 1500 * Math.random())
     },
     getMonitorByDay() {
       this.progressShow = true
@@ -134,8 +151,12 @@ export default {
       var sDate = that.valueDate + that.TimeVal
       var sDateForm = (new Date(parseTime(sDate, true, true))).getTime()
       var eDate = that.formatTime(sDateForm + 8 * 60 * 60 * 1000 + 59 * 60 * 1000 + 59 * 1000).substring(0, 14)
-      var arr = this.serverSeqArr
-      getMonitorByDay({ seq: arr, begin: sDate, end: eDate }).then(res => {
+      var arr = that.serverSeqArr
+      var flag = false
+      if (that.valueDate === that.formatTime(Date.now()).substring(0, 8)) {
+        flag = true
+      }
+      getMonitorByDay({ seq: arr, begin: sDate, end: eDate }, flag).then(res => {
         NProgress.inc()
         if (res.success && res.data) {
           this.progressShow = false
@@ -169,6 +190,7 @@ export default {
     },
     changeDate(val) {
       this.valueDate = val
+      this.optionsCreat()
     },
     changeTimeRange(val) {
       this.TimeVal = val

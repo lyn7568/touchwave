@@ -1,34 +1,36 @@
 <template>
   <div class="dashboard-editor-container">
-    <div v-if="!showComp">
-      <el-row class="panel-group" :gutter="40">
-        <el-col :xs="24" :sm="12" :lg="6" class="card-panel-col" v-for="item in dataList" :key="item.index" @click.native="goToDashboardC(item.id, item.shortName)">
-          <div class='card-panel'>
-            <div class="card-panel-icon-wrapper">
-              <div class="card-image" :style="{ backgroundImage: 'url(/data/bridge'+ item.img +')'}"></div>
+    <div class="load-box" v-loading="loadprogress">
+      <div v-if="!showComp">
+        <el-row class="panel-group" :gutter="40">
+          <el-col :xs="24" :sm="12" :lg="6" class="card-panel-col" v-for="item in dataList" :key="item.index" @click.native="goToDashboardC(item.id, item.shortName)">
+            <div class='card-panel'>
+              <div class="card-panel-icon-wrapper">
+                <div class="card-image" :style="{ backgroundImage: 'url(/data/bridge'+ item.img +')'}"></div>
+              </div>
+              <div class="card-panel-description">
+                <div class="card-panel-text">桥梁名称 <span>{{item.shortName}}</span></div>
+                <div class="card-panel-text" :class="item.alarmNum>0?'card-panel-text-red':''">未读报警 {{item.alarmNum ? item.alarmNum : alarmNum}}条</div>
+              </div>
             </div>
-            <div class="card-panel-description">
-              <div class="card-panel-text">桥梁名称 <span>{{item.shortName}}</span></div>
-              <div class="card-panel-text" :class="item.alarmNum>0?'card-panel-text-red':''">未读报警 {{item.alarmNum ? item.alarmNum : alarmNum}}条</div>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-      <div class="pagination-container">
-        <el-pagination
-          background
-          @current-change="handleCurrentChange"
-          :page-size="9"
-          layout="prev, pager, next, jumper"
-          :total="total">
-        </el-pagination>
+          </el-col>
+        </el-row>
+        <div class="pagination-container" v-if="!loadprogress">
+          <el-pagination
+            background
+            @current-change="handleCurrentChange"
+            :page-size="9"
+            layout="prev, pager, next, jumper"
+            :total="total">
+          </el-pagination>
+        </div>
       </div>
-    </div>
-    <div class="defaut-container" v-if="showComp">
-      <div>
-        <img class="plat-pic" src="/static/touchwave.png" width="460">
-        <p class="plat-tit">欢迎 <span>{{name}}</span> 使用声脉桥梁云监控平台</p>
-        <p class="plat-tip">您目前没有任何桥梁数据，请联系管理员</p>
+      <div class="defaut-container" v-if="showComp">
+        <div>
+          <img class="plat-pic" src="/static/touchwave.png" width="460">
+          <p class="plat-tit">欢迎 <span>{{name}}</span> 使用声脉桥梁云监控平台</p>
+          <p class="plat-tip">您目前没有任何桥梁数据，请联系管理员</p>
+        </div>
       </div>
     </div>
   </div>
@@ -52,7 +54,8 @@ export default {
       pageSize: 10,
       pageNo: 1,
       dataList: [],
-      showComp: false
+      showComp: false,
+      loadprogress: false
     }
   },
   computed: {
@@ -70,9 +73,11 @@ export default {
         pageSize: this.pageSize,
         pageNo: this.pageNo
       }
+      this.loadprogress = true
       getBridgeList(param).then(res => {
         if (res.success) {
           var $data = res.data.data
+          this.loadprogress = false
           if ($data.length > 0) {
             this.total = res.data.total
             for (let i = 0; i < $data.length; i++) {

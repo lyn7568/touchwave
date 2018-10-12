@@ -79,7 +79,10 @@ export default {
       this.pageNo = val
     },
     queryDeviceList() {
-      this.deviceList = queryInfo.queryDevices(this.$parent.bridgeId)
+      var that = this
+      queryInfo.qaiCb(function() {
+        that.deviceList = queryInfo.queryDevices(that.$parent.bridgeId)
+      })
     }
   }
 }

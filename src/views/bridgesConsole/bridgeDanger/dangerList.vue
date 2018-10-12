@@ -4,16 +4,18 @@
       <div slot="header" class="block-title">
         <span>报警信息</span>
       </div>
-      <ul class="item-ul" v-if="dangerList.length">
-        <li :class="!item.readed ? 'readed-li' : ''" v-for="item in dangerList" :key="item.index" @click="alarmShow(item.aid, item.readed, item.alarmTime, item.device)">
-          <span>{{item.alarmTime}}</span>
-          <span>{{item.device}}，请点击查看。</span>
-          <span class="svg-container" v-if="!item.readed">
-            <svg-icon icon-class="unread"></svg-icon>
-          </span>
-        </li>
-      </ul>
-      <DefaultPage v-if="!dangerList.length"></DefaultPage>
+      <div class="load-box" v-loading="loadprogress">
+        <ul class="item-ul" v-if="dangerList.length">
+          <li :class="!item.readed ? 'readed-li' : ''" v-for="item in dangerList" :key="item.index" @click="alarmShow(item.aid, item.readed, item.alarmTime, item.device)">
+            <span>{{item.alarmTime}}</span>
+            <span>{{item.device}}，请点击查看。</span>
+            <span class="svg-container" v-if="!item.readed">
+              <svg-icon icon-class="unread"></svg-icon>
+            </span>
+          </li>
+        </ul>
+        <DefaultPage v-if="!dangerList.length && !loadprogress"></DefaultPage>
+      </div>
       <div class="pagination-container">
         <el-pagination
           background
@@ -45,6 +47,7 @@ export default {
     return {
       bridgeId: '',
       bridgeName: '',
+      loadprogress: true,
       dangerList: [],
       pageSize: 20,
       pageNo: 1,
@@ -52,32 +55,40 @@ export default {
     }
   },
   created() {
-    this.bridgeId = Cookies.get('bridgeId')
-    this.bridgeName = Cookies.get('bridgeName')
-    this.serverSeqArr = queryInfo.queryServers(this.bridgeId, true)
-    if (this.serverSeqArr) {
-      this.getDangerList()
-    }
+    var that = this
+    that.bridgeId = Cookies.get('bridgeId')
+    that.bridgeName = Cookies.get('bridgeName')
+    queryInfo.qaiCb(function() {
+      if (that.bridgeId) {
+        that.serverSeqArr = queryInfo.queryServers(that.bridgeId, true)
+        if (that.serverSeqArr.length) {
+          that.getDangerList()
+        }
+      }
+    })
   },
   methods: {
     getDangerList() {
+      var that = this
       var arr = this.serverSeqArr
       const param = {
         seq: arr,
         pageSize: this.pageSize,
         pageNo: this.pageNo
       }
+      that.loadprogress = true
       getDangerList(param).then(res => {
         if (res.success && res.data.data) {
+          that.loadprogress = false
           const dataS = res.data.data
-          this.total = res.data.total
+          that.total = res.data.total
           for (let i = 0; i < dataS.length; i++) {
             if (dataS[i].alarmTime) {
               dataS[i].alarmTime = parseTime(dataS[i].alarmTime, true)
             }
-            dataS[i].device = `${this.bridgeName}大桥${dataS[i].device}采集盒检测到异常情况`
+            dataS[i].device = `${that.bridgeName}大桥${dataS[i].device}采集盒检测到异常情况`
           }
-          this.dangerList = dataS
+          that.dangerList = dataS
         }
       })
     },

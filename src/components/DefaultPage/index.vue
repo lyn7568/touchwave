@@ -33,7 +33,7 @@ export default {
     width: 100%;
     height: 42%;
     z-index: 11;
-    padding:40px;
+    padding: 50px;
     box-sizing: border-box;
     display: flex;
     justify-content:center;

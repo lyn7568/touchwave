@@ -59,20 +59,13 @@ export function setUnreadToRead(params) {
 // 未读报警
 
 // 监测信息
-export function getMonitorByDay(params) {
+export function getMonitorByDay(params, flag) {
   return request({
-    url: '/ajax/collect/wave/server/dayTime',
+    url: flag ? '/ajax/collect/wave/server/time' : '/ajax/collect/wave/server/dayTime',
     method: 'get',
     params
   })
 }
-// export function getSysTime(params) {
-//   return request({
-//     url: '/ajax/sys/serviceTime',
-//     method: 'get',
-//     params
-//   })
-// }
 export function getMonitorByTime(params) {
   return request({
     url: '/ajax/collect/wave/server/time',

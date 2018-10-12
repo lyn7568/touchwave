@@ -153,19 +153,6 @@ export default {
               xAxisIndex: [0],
               start: 0,
               end: 100
-            },
-            {
-              type: 'slider',
-              show: true,
-              yAxisIndex: [0],
-              start: 0,
-              end: 100
-            },
-            {
-              type: 'inside',
-              yAxisIndex: [0],
-              start: 0,
-              end: 100
             }
           ]
         })

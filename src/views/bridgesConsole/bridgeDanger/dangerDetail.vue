@@ -5,11 +5,13 @@
         <span>{{alarmTime}}</span>
         <span>{{alarmTit}}</span>
       </div>
-      <el-row class="line-chart-box">
-        <el-col :xs="24" :sm="24" :lg="24" v-for="(item, index) in alarmShowList" :key="item.index">
-          <lineChart :chartData="item" :lineColor="index" :historyM="historyM"></lineChart>
-        </el-col>
-      </el-row>
+      <div class="load-box" v-loading="loadprogress">
+        <el-row class="line-chart-box">
+          <el-col :xs="24" :sm="24" :lg="24" v-for="(item, index) in alarmShowList" :key="item.index">
+            <lineChart :chartData="item" :lineColor="index" :historyM="historyM"></lineChart>
+          </el-col>
+        </el-row>
+      </div>
       <div class="pagination-container">
         <el-pagination
           background
@@ -38,7 +40,8 @@ export default {
       alarmRead: false,
       alarmList: [],
       pageSize: 6,
-      pageNo: 1
+      pageNo: 1,
+      loadprogress: false
     }
   },
   components: {
@@ -68,8 +71,10 @@ export default {
       const param = {
         aid: this.alarmId
       }
+      this.loadprogress = true
       getDangerDetail(param).then(res => {
         if (res.success && res.data) {
+          that.loadprogress = false
           var rList = []
           var startTime = ''
           for (let i = 0; i < res.data.length; i++) {

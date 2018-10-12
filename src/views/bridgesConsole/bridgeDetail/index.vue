@@ -15,28 +15,32 @@
             <span>报警信息</span>
             <el-button type="text" @click="queryDangerInfo">查看全部</el-button>
           </div>
-          <ul class="item-ul" v-if="dangerList.length">
-            <li :class="!item.readed ? 'readed-li' : ''" v-for="item in dangerList" :key="item.index" @click="alarmShow(item.aid, item.readed, item.alarmTime, item.device)">
-              <span>{{item.alarmTime}}</span>
-              <span>{{item.device}}，请点击查看。</span>
-              <span class="svg-container" v-if="!item.readed">
-                <svg-icon icon-class="unread"></svg-icon>
-              </span>
-            </li>
-          </ul>
-          <DefaultPage v-if="!dangerList.length"></DefaultPage>
+          <div class="load-box" v-loading="loadprogress1">
+            <ul class="item-ul" v-if="dangerList.length">
+              <li :class="!item.readed ? 'readed-li' : ''" v-for="item in dangerList" :key="item.index" @click="alarmShow(item.aid, item.readed, item.alarmTime, item.device)">
+                <span>{{item.alarmTime}}</span>
+                <span>{{item.device}}，请点击查看。</span>
+                <span class="svg-container" v-if="!item.readed">
+                  <svg-icon icon-class="unread"></svg-icon>
+                </span>
+              </li>
+            </ul>
+            <DefaultPage v-if="!dangerList.length && !loadprogress1"></DefaultPage>
+          </div>
         </el-card>
         <el-card class="box-card block-group">
           <div slot="header" class="block-title">
             <span>实时监测</span>
             <el-button v-if="serverSeqArr.length" type="text" @click="updateDataList">刷新</el-button>
           </div>
-          <el-row class="line-chart-box" v-if="monitorList.length">
-            <el-col :xs="24" :sm="24" :lg="24" v-for="item in monitorShowList" :key="item.index">
-              <lineChart :chartData="item" :maxXcount="maxShowLength"></lineChart>
-            </el-col>
-          </el-row>
-          <DefaultPage v-if="!monitorList.length"></DefaultPage>
+          <div class="load-box" v-loading="loadprogress2">
+            <el-row class="line-chart-box" v-if="monitorList.length">
+              <el-col :xs="24" :sm="24" :lg="24" v-for="item in monitorShowList" :key="item.index">
+                <lineChart :chartData="item" :maxXcount="maxShowLength"></lineChart>
+              </el-col>
+            </el-row>
+            <DefaultPage v-if="!monitorList.length && !loadprogress2"></DefaultPage>
+          </div>
           <div class="pagination-container">
             <el-pagination
               background
@@ -112,6 +116,8 @@ export default {
   },
   data() {
     return {
+      loadprogress1: true,
+      loadprogress2: true,
       bridgeId: '',
       bridgeName: '',
       dialogW: '860px',
@@ -123,21 +129,21 @@ export default {
       serverList: [],
       deviceList: [],
       transducerList: [],
-      monitorList: [],
       currentNo: 1,
       currentSize: 4,
       currentTime: '',
       sysTime: '',
       localTimeiv: '',
       eastEightDistrict: 8 * 60 * 60 * 1000,
-      jishiTime: null,
       maxShowLength: 300,
-      monitorCache: []
+      monitorList: [],
+      monitorCache: [],
+      jishiTime: null
     }
   },
   watch: {
-    '$route'(to, from) {
-      if (!(to.path === '/bridgeHome/bridgeDetail')) {
+    $route(to, from) {
+      if (to.path !== '/bridgeHome/bridgeDetail') {
         clearTimeout(this.jishiTime)
         this.jishiTime = null
       }
@@ -149,27 +155,32 @@ export default {
     }
   },
   created() {
+    var that = this
     if (urlParse('id')) {
-      this.bridgeId = urlParse('id')
-      this.bridgeName = urlParse('name')
+      that.bridgeId = urlParse('id')
+      that.bridgeName = urlParse('name')
     } else {
-      this.bridgeId = Cookies.get('bridgeId')
-      this.bridgeName = Cookies.get('bridgeName')
+      that.bridgeId = Cookies.get('bridgeId')
+      that.bridgeName = Cookies.get('bridgeName')
     }
-    this.getDictoryData()
-    if (this.bridgeId) {
-      this.serverSeqArr = queryInfo.queryServers(this.bridgeId, true)
-      if (this.serverSeqArr.length) {
-        this.updateDataList()
+    that.getDictoryData()
+    queryInfo.qaiCb(function() {
+      if (that.bridgeId) {
+        that.serverSeqArr = queryInfo.queryServers(that.bridgeId, true)
+        if (that.serverSeqArr.length) {
+          that.updateDataList()
+          that.getDangerList()
+        }
       }
-    }
+    })
   },
   methods: {
     updateDataList() {
+      clearTimeout(this.jishiTime)
+      this.jishiTime = null
       this.monitorList = []
       this.monitorCache = []
       this.getSysTime()
-      this.getDangerList()
     },
     getDangerList() {
       var arr = this.serverSeqArr
@@ -178,8 +189,10 @@ export default {
         pageSize: 5,
         pageNo: 1
       }
+      this.loadprogress1 = true
       getDangerList(param).then(res => {
         if (res.success && res.data.data) {
+          this.loadprogress1 = false
           const dataS = res.data.data
           for (let i = 0; i < dataS.length; i++) {
             if (dataS[i].alarmTime) {
@@ -202,6 +215,8 @@ export default {
           that.localTimeiv = localTime - that.sysTime
           that.first_Q = true
           that.getTimingMonitor()
+        } else {
+          that.loadprogress2 = false
         }
       })
     },
@@ -217,13 +232,12 @@ export default {
       var startTime = this.formatTime(this.sysTime)
       var endTime = this.formatTime(this.sysTime)
       that.sysTime += 1000
-      // var startTime = this.formatTime(this.first_Q ? (this.sysTime - preTime) : this.sysTime)
-      // var endTime = this.formatTime(this.sysTime)
       getMonitorByTime({ seq: arr, begin: startTime, end: endTime }).then(res => {
         var mCache = that.monitorCache
         var mList = []
         if (res.success && res.data) {
           if (that.first_Q) {
+            that.loadprogress2 = false
             if (res.data.length) {
               that.first_Q = false
               var ftime = res.data[0].ctime

@@ -81,7 +81,10 @@ export default {
       this.pageNo = val
     },
     queryServerList() {
-      this.serverList = queryInfo.queryServers(this.$parent.bridgeId)
+      var that = this
+      queryInfo.qaiCb(function() {
+        that.serverList = queryInfo.queryServers(that.$parent.bridgeId)
+      })
     }
   }
 }

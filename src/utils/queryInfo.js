@@ -10,7 +10,17 @@ var bridgeObj = {},
   serverList = [],
   deviceList = [],
   transducerList = [],
+  listOk = false,
+  cbArr = [],
+  qaiCb = function(func) {
+    if (listOk) {
+      func()
+    } else {
+      cbArr.push(func)
+    }
+  },
   queryAllInfo = function() {
+    // setTimeout(function() {
     if (!bridgeObj.server && store.getters.roles.indexOf('1') === -1) {
       request({
         url: '/ajax/all/byUser',
@@ -24,9 +34,14 @@ var bridgeObj = {},
           serverList = res.data.server
           deviceList = res.data.device
           transducerList = res.data.transducer
+          listOk = true
+          cbArr.forEach(function(item) {
+            item()
+          })
         }
       })
     }
+    // }, 1)
   },
   queryServers = function(bid, flag) {
     const obj = serverList
@@ -75,7 +90,8 @@ var bridgeObj = {},
     queryAllInfo: queryAllInfo,
     queryServers: queryServers,
     queryDevices: queryDevices,
-    queryTrans: queryTrans
+    queryTrans: queryTrans,
+    qaiCb: qaiCb
   }
 
 export default ret

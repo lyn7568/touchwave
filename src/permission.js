@@ -23,6 +23,7 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
+      queryInfo.queryAllInfo()
       if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
         // console.log(5555)
         store.dispatch('GetUserInfo').then(res => { // 拉取user_info
@@ -42,10 +43,9 @@ router.beforeEach((to, from, next) => {
         if (hasPermission(store.getters.roles, to.meta.roles)) {
           next()
         } else {
-          console.log(777)
+          // console.log(777)
         }
       }
-      queryInfo.queryAllInfo()
     }
   } else {
     if (whiteList.indexOf(to.path) !== -1) {

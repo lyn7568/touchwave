@@ -84,7 +84,10 @@ export default {
       this.pageNo = val
     },
     queryTransList() {
-      this.transducerList = queryInfo.queryTrans(this.$parent.bridgeId)
+      var that = this
+      queryInfo.qaiCb(function() {
+        that.transducerList = queryInfo.queryTrans(that.$parent.bridgeId)
+      })
     }
   }
 }
