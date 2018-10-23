@@ -1,6 +1,9 @@
 import axios from 'axios'
 import qs from 'qs'
 import { comUrl } from '@/utils/index'
+import { Message } from 'element-ui'
+import router from '@/router'
+import store from '@/store'
 
 // 创建axios实例
 const service = axios.create({
@@ -41,7 +44,13 @@ service.interceptors.response.use(response => {
     }
     if (!(data instanceof Object)) {
       // 判断data不是Object时，解析成Object
-      // data = JSON.parse(data)
+      data = JSON.parse(data)
+    }
+    if (!response.data.success && response.data.code === 1) {
+      store.dispatch('FedLogOut').then(() => {
+        Message.error('登录状态失效，请重新登录')
+        router.push({ path: '/' })
+      })
     }
     return response.data
   } else {

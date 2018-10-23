@@ -10,9 +10,9 @@ var monitorModel = {
     for (let i = 0; i < $data.length; ++i) {
       if ($data[i].ctime === $data[0].ctime) {
         mCache.push({
-          cid: $data[i].cid,
+          cid: $data[i].seq,
           cd: {
-            tit: '',
+            tit: $data[i].code,
             xData: [],
             seData: []
           }
@@ -26,7 +26,6 @@ var monitorModel = {
       item.xData.push(parseTime(ftend, true, true))
       item.seData.push($daI.hvalue)
       item.seData.push($daI.lvalue)
-      item.tit = $daI.cid
     } else {
       item.xData.push(parseTime(ftbegin, true, true))
       item.xData.push(parseTime(ftend, true, true))

@@ -63,7 +63,7 @@ export default {
   data() {
     return {
       dialogW: this.$parent.dialogW,
-      deviceList: this.$parent.deviceList,
+      deviceList: [],
       dialogTableVisible: false,
       pageSize: 4,
       pageNo: 1

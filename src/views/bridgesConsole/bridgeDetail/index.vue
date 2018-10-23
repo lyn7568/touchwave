@@ -88,7 +88,7 @@ import Cookies from 'js-cookie'
 import queryInfo from '@/utils/queryInfo'
 import queryDict from '@/utils/queryDict'
 import monModel from '@/utils/timingConstruct'
-import { urlParse, parseTime } from '@/utils'
+import { urlParse, parseTime, isEqualArr } from '@/utils'
 import { getDangerList, getSysTime, getMonitorByTime } from '@/api/bridgeInfo'
 
 import lineChart from '../lineChart/LineChart'
@@ -125,9 +125,9 @@ export default {
       cableMain: {},
       addr: {},
       dangerList: '',
+      dangerAidArr: [],
+      first_Dan: true,
       serverSeqArr: [],
-      serverList: [],
-      deviceList: [],
       transducerList: [],
       currentNo: 1,
       currentSize: 4,
@@ -138,7 +138,8 @@ export default {
       maxShowLength: 300,
       monitorList: [],
       monitorCache: [],
-      jishiTime: ''
+      jishiTime: '',
+      jishiTime2: ''
     }
   },
   computed: {
@@ -162,6 +163,7 @@ export default {
     queryInfo.qaiCb(function() {
       if (that.bridgeId) {
         that.serverSeqArr = queryInfo.queryServers(that.bridgeId, true)
+        that.transducerList = queryInfo.queryTrans(that.bridgeId)
         if (that.serverSeqArr.length) {
           that.updateDataList()
           that.getDangerList()
@@ -171,32 +173,69 @@ export default {
   },
   methods: {
     updateDataList() {
-      clearTimeout(this.jishiTime)
-      this.jishiTime = ''
-      this.sysTime = ''
-      this.monitorList = []
-      this.monitorCache = []
-      this.getSysTime()
+      var that = this
+      clearTimeout(that.jishiTime)
+      that.jishiTime = ''
+      that.sysTime = ''
+      that.monitorList = []
+      that.monitorCache = []
+      if (that.transducerList.length) {
+        monModel.construct(that.monitorCache, that.transducerList)
+      }
+      that.getSysTime()
     },
     getDangerList() {
+      var that = this
       var arr = this.serverSeqArr
       const param = {
         seq: arr,
         pageSize: 5,
         pageNo: 1
       }
-      this.loadprogress1 = true
+      if (that.first_Dan) {
+        this.loadprogress1 = true
+      }
       getDangerList(param).then(res => {
+        var dCache = that.dangerAidArr
+        var DList = []
         if (res.success && res.data.data) {
-          this.loadprogress1 = false
           const dataS = res.data.data
-          for (let i = 0; i < dataS.length; i++) {
-            if (dataS[i].alarmTime) {
-              dataS[i].alarmTime = parseTime(dataS[i].alarmTime, true)
+          if (that.first_Dan) {
+            that.first_Dan = false
+            for (let i = 0; i < dataS.length; i++) {
+              dCache.push(dataS[i].aid)
+              if (dataS[i].alarmTime) {
+                dataS[i].alarmTime = parseTime(dataS[i].alarmTime, true)
+              }
+              dataS[i].device = `${this.bridgeName}大桥${dataS[i].device}采集盒检测到异常情况`
             }
-            dataS[i].device = `${this.bridgeName}大桥${dataS[i].device}采集盒检测到异常情况`
+            that.dangerList = dataS
+          } else {
+            for (let i = 0; i < dataS.length; i++) {
+              DList.push(dataS[i].aid)
+              if (dataS[i].alarmTime) {
+                dataS[i].alarmTime = parseTime(dataS[i].alarmTime, true)
+              }
+              dataS[i].device = `${this.bridgeName}大桥${dataS[i].device}采集盒检测到异常情况`
+            }
+            if (!isEqualArr(DList, dCache)) {
+              dCache = []
+              dCache = DList
+              that.dangerList = dataS
+            }
           }
-          this.dangerList = dataS
+          that.loadprogress1 = false
+          if (that && !that._isDestroyed) {
+            that.jishiTime2 = setTimeout(function() {
+              if (that && !that._isDestroyed) {
+                that.getDangerList(param)
+              }
+            }, 5000)
+          } else {
+            that.jishiTime2 = ''
+          }
+        } else {
+          that.loadprogress1 = false
         }
       })
     },
@@ -204,15 +243,20 @@ export default {
       var that = this
       var arr = this.serverSeqArr
       getSysTime({ seq: arr }).then(res => {
-        if (res.success && res.data && res.data.length > 0) {
-          const nowt = parseTime(res.data[0].ctime, true, true)
-          that.sysTime = (new Date(nowt)).getTime() + that.eastEightDistrict - 2 * 1000
-          const localTime = new Date().getTime() + that.eastEightDistrict
-          that.localTimeiv = localTime - that.sysTime
-          that.first_Q = true
-          that.getTimingMonitor()
-        } else {
-          that.loadprogress2 = false
+        if (res.success) {
+          if (res.data && res.data.length > 0) {
+            const nowt = parseTime(res.data[0].ctime, true, true)
+            that.sysTime = (new Date(nowt)).getTime() + that.eastEightDistrict - 2 * 1000
+            that.first_Q = true
+          } else {
+            that.sysTime = (new Date()).getTime() + that.eastEightDistrict - 2 * 1000
+            that.loadprogress2 = false
+          }
+          setTimeout(function() {
+            const localTime = new Date().getTime() + that.eastEightDistrict
+            that.localTimeiv = localTime - that.sysTime
+            that.getTimingMonitor()
+          }, 1)
         }
       })
     },
@@ -229,16 +273,13 @@ export default {
       var endTime = this.formatTime(this.sysTime)
       that.sysTime += 1000
       getMonitorByTime({ seq: arr, begin: startTime, end: endTime }).then(res => {
-        var mCache = that.monitorCache
         var mList = []
         if (res.success && res.data) {
           if (that.first_Q) {
-            that.loadprogress2 = false
             if (res.data.length) {
               that.first_Q = false
+              that.loadprogress2 = false
               var ftime = res.data[0].ctime
-              monModel.construct(mCache, res.data)
-
               var f_q_t = that.sysTime
 
               for (;;) {
@@ -246,7 +287,7 @@ export default {
                 var ftsE = that.formatTime(f_q_t + 500)
                 if (fts >= ftime) {
                   if (fts > that.sysTime) {
-                    monModel.setData(mCache, res.data, fts, ftsE, null)
+                    monModel.setData(that.monitorCache, res.data, fts, ftsE, null)
                   }
                 }
                 f_q_t += 1000
@@ -254,17 +295,17 @@ export default {
                   break
                 }
               }
-              for (let l = 0; l < mCache.length; ++l) {
-                mList.push(mCache[l].cd)
+              for (let l = 0; l < that.monitorCache.length; ++l) {
+                mList.push(that.monitorCache[l].cd)
               }
             }
           } else {
             var xtime = that.formatTime(that.sysTime)
             var xtimeE = that.formatTime(that.sysTime + 500)
 
-            monModel.setData(mCache, res.data, xtime, xtimeE, that.maxShowLength)
-            for (let l = 0; l < mCache.length; ++l) {
-              mList.push(mCache[l].cd)
+            monModel.setData(that.monitorCache, res.data, xtime, xtimeE, that.maxShowLength)
+            for (let l = 0; l < that.monitorCache.length; ++l) {
+              mList.push(that.monitorCache[l].cd)
             }
           }
           that.monitorList = mList
@@ -343,7 +384,8 @@ export default {
   },
   beforeDestroy() {
     this.$once('hook:beforeDestroy', () => {
-      clearInterval(this.jishiTime)
+      clearTimeout(this.jishiTime)
+      clearTimeout(this.jishiTime2)
     })
   }
 }

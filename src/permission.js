@@ -2,7 +2,6 @@ import router from './router'
 import store from './store'
 import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css'// Progress 进度条样式
-import { Message } from 'element-ui'
 import { getCookiesName } from '@/utils/auth' // 验权
 import queryInfo from '@/utils/queryInfo'
 
@@ -27,16 +26,13 @@ router.beforeEach((to, from, next) => {
       if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
         // console.log(5555)
         store.dispatch('GetUserInfo').then(res => { // 拉取user_info
-          const roles = [res.data.type.toString()]
-          store.dispatch('GenerateRoutes', { roles }).then(() => { // 根据roles权限生成可访问的路由表
-            router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
-            next({ ...to, replace: true })
-          })
-        }).catch((err) => {
-          store.dispatch('FedLogOut').then(() => {
-            Message.error(err || '登录状态失效，请重新登录')
-            next({ path: '/' })
-          })
+          if (res.success) {
+            const roles = [res.data.type.toString()]
+            store.dispatch('GenerateRoutes', { roles }).then(() => { // 根据roles权限生成可访问的路由表
+              router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
+              next({ ...to, replace: true })
+            })
+          }
         })
       } else {
         // console.log(4444)
