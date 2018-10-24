@@ -263,9 +263,6 @@ export default {
         ],
         addrCode: [
           { required: true, message: '请选择桥梁位置信息', trigger: 'blur' }
-        ],
-        email: [
-          { required: true, message: '请输入联系电邮', trigger: 'blur' }
         ]
       },
       timeout: null,

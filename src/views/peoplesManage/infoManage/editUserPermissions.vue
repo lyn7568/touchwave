@@ -167,10 +167,6 @@ export default {
       this.dialogTableVisible = false
     },
     submit() {
-      if (!this.valueBridge.length) {
-        this.$message.error('请至少选择一个桥梁')
-        return
-      }
       updatePermission({ id: this.id, bridges: this.valueBridge }).then(response => {
         if (response.success) {
           this.valueBridge = []

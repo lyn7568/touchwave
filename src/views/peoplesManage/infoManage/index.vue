@@ -63,8 +63,8 @@
         
       </el-table-column>
     </el-table>
-    <editUser :dialog="dialogTableVisible" @chilF='chilF' :id='edit'></editUser>
-    <editUserPermissions :dialog='dialogPerssion' @chilF='chilF' :id='edit'></editUserPermissions>
+    <editUser :dialog="dialogTableVisible" @chilF='chilF' :id='edit1'></editUser>
+    <editUserPermissions :dialog='dialogPerssion' @chilF='chilF' :id='edit2'></editUserPermissions>
     <div class="pagination-container" style="text-align:center;">
       <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="listQuery.page" :page-size="listQuery.limit" layout="prev, pager, next, jumper" :total="total">
       </el-pagination>
@@ -85,7 +85,8 @@ export default {
   },
   data() {
     return {
-      edit: '',
+      edit1: '',
+      edit2: '',
       tableKey: 0,
       list: null,
       total: null,
@@ -160,7 +161,8 @@ export default {
       if (!val) {
         this.getList()
       }
-      this.edit = ''
+      this.edit1 = ''
+      this.edit2 = ''
     },
     handleCurrentChange(val) {
       this.listQuery.pageNo = val
@@ -187,11 +189,11 @@ export default {
       this.dialogTableVisible = !this.dialogTableVisible
     },
     handleUpdate(row) {
-      this.edit = row.id
+      this.edit1 = row.id
       this.dialogTableVisible = !this.dialogTableVisible
     },
     distribution(row) {
-      this.edit = row.id
+      this.edit2 = row.id
       this.dialogPerssion = !this.dialogPerssion
     }
   }
