@@ -19,6 +19,15 @@ var bridgeObj = {},
       cbArr.push(func)
     }
   },
+  sortByCode = function(a, b) {
+    var s = a.code.toLowerCase()
+    var t = b.code.toLowerCase()
+    if (s > t) {
+      return 1
+    } else {
+      return -1
+    }
+  },
   queryAllInfo = function() {
     // setTimeout(function() {
     if (!bridgeObj.server && store.getters.roles.indexOf('1') === -1) {
@@ -52,6 +61,7 @@ var bridgeObj = {},
         serverSeqArr.push(obj[i].seq)
       }
     }
+    servers.sort(sortByCode)
     return flag ? serverSeqArr : servers
   },
   queryDevices = function(bid) {
@@ -66,6 +76,7 @@ var bridgeObj = {},
         }
       }
     }
+    devices.sort(sortByCode)
     return devices
   },
   queryTrans = function(bid) {
@@ -84,6 +95,7 @@ var bridgeObj = {},
         }
       }
     }
+    trans.sort(sortByCode)
     return trans
   },
   ret = {

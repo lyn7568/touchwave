@@ -86,6 +86,9 @@ export function debounce(func, wait, immediate) {
   }
 }
 
+/**
+ * 判断两个数组是否相等
+ */
 export function isEqualArr(arr1, arr2) {
   if (!arr1 || !arr2) {
     return false
@@ -94,10 +97,8 @@ export function isEqualArr(arr1, arr2) {
     return false
   }
   for (var i = 0; i < arr1.length; i++) {
-    if (arr1[i] instanceof Array && arr2[i] instanceof Array) {
-      if (!isEqualArr(arr1[i], arr2[i])) {
-        return false
-      } else if (arr1[i] !== arr2[i]) {
+    if (arr1 instanceof Array && arr2 instanceof Array) {
+      if (arr1[i] !== arr2[i]) {
         return false
       }
     }

@@ -193,30 +193,31 @@ export default {
         pageNo: 1
       }
       if (that.first_Dan) {
-        this.loadprogress1 = true
+        that.loadprogress1 = true
       }
       getDangerList(param).then(res => {
         var dCache = that.dangerAidArr
         var DList = []
         if (res.success && res.data.data) {
-          const dataS = res.data.data
           if (that.first_Dan) {
+            var dataF = res.data.data
             that.first_Dan = false
-            for (let i = 0; i < dataS.length; i++) {
-              dCache.push(dataS[i].aid)
-              if (dataS[i].alarmTime) {
-                dataS[i].alarmTime = parseTime(dataS[i].alarmTime, true)
+            for (let i = 0; i < dataF.length; i++) {
+              dCache.push(dataF[i].aid)
+              if (dataF[i].alarmTime) {
+                dataF[i].alarmTime = parseTime(dataF[i].alarmTime, true)
               }
-              dataS[i].device = `${this.bridgeName}大桥${dataS[i].device}采集盒检测到异常情况`
+              dataF[i].device = `${that.bridgeName}大桥${dataF[i].device}采集盒检测到异常情况`
             }
-            that.dangerList = dataS
+            that.dangerList = dataF
           } else {
+            var dataS = res.data.data
             for (let i = 0; i < dataS.length; i++) {
               DList.push(dataS[i].aid)
               if (dataS[i].alarmTime) {
                 dataS[i].alarmTime = parseTime(dataS[i].alarmTime, true)
               }
-              dataS[i].device = `${this.bridgeName}大桥${dataS[i].device}采集盒检测到异常情况`
+              dataS[i].device = `${that.bridgeName}大桥${dataS[i].device}采集盒检测到异常情况`
             }
             if (!isEqualArr(DList, dCache)) {
               dCache = []

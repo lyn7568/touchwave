@@ -44,7 +44,7 @@ service.interceptors.response.use(response => {
     }
     if (!(data instanceof Object)) {
       // 判断data不是Object时，解析成Object
-      data = JSON.parse(data)
+      // data = JSON.parse(data)
     }
     if (!response.data.success && response.data.code === 1) {
       store.dispatch('FedLogOut').then(() => {
