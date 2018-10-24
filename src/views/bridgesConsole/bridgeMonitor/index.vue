@@ -21,16 +21,16 @@
               @change="changeTimeRange">
             </el-option>
           </el-select>
-          <el-button type="primary" @click="getMonitorByDay">查询</el-button>
+          <el-button type="primary" @click="getMonitorByDay" :disabled="progressShow">查询</el-button>
       </div>
       <el-row class="line-chart-box">
-        <el-col :xs="24" :sm="24" :lg="24" v-for="item in alarmShowList" :key="item.index" v-if="alarmList.length">
-          <lineChart :chartData="item" :historyM="historyM"></lineChart>
-        </el-col>
         <div class="progress-box" v-if="progressShow">
           <span>正在加载 {{proBar}}%</span>
           <el-progress :text-inside="true" :stroke-width="18" :percentage="proBar"></el-progress>
         </div>
+        <el-col :xs="24" :sm="24" :lg="24" v-for="item in alarmShowList" :key="item.index" v-if="alarmList.length">
+          <lineChart :chartData="item" :historyM="historyM"></lineChart>
+        </el-col>
       </el-row>
       <DefaultPage v-if="!alarmList.length && !progressShow"></DefaultPage>
       <div class="pagination-container">
@@ -142,9 +142,9 @@ export default {
       }, 1500 * Math.random())
     },
     getMonitorByDay() {
-      this.progressShow = true
-      NProgress.start()
       var that = this
+      that.progressShow = true
+      NProgress.start()
       that.proBar = 0
       that.alarmList = []
       that.changeProgress()
@@ -159,7 +159,7 @@ export default {
       getMonitorByDay({ seq: arr, begin: sDate, end: eDate }, flag).then(res => {
         NProgress.inc()
         if (res.success && res.data) {
-          this.progressShow = false
+          that.proBar = 100
           var monitorList = []
           for (let i = 0; i < res.data.length; i++) {
             var str = res.data[i].cid
@@ -184,7 +184,12 @@ export default {
             monitorData.seData.push(res.data[i].hvalue)
             monitorData.seData.push(res.data[i].lvalue)
           }
-          that.alarmList = monitorList
+          if (that.proBar === 100) {
+            that.alarmList = monitorList
+            setTimeout(function() {
+              that.progressShow = false
+            }, 1)
+          }
         }
       })
     },
