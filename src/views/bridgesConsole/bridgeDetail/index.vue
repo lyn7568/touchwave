@@ -116,8 +116,8 @@ export default {
   },
   data() {
     return {
-      loadprogress1: true,
-      loadprogress2: true,
+      loadprogress1: false,
+      loadprogress2: false,
       bridgeId: '',
       bridgeName: '',
       dialogW: '860px',

@@ -47,7 +47,7 @@ export default {
     return {
       bridgeId: '',
       bridgeName: '',
-      loadprogress: true,
+      loadprogress: false,
       dangerList: [],
       pageSize: 20,
       pageNo: 1,

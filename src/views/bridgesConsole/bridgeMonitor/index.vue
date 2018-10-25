@@ -156,6 +156,10 @@ export default {
       if (that.valueDate === that.formatTime(Date.now()).substring(0, 8)) {
         flag = true
       }
+      if (arr === null || arr.length === 0) {
+        that.progressShow = false
+        return
+      }
       getMonitorByDay({ seq: arr, begin: sDate, end: eDate }, flag).then(res => {
         NProgress.inc()
         if (res.success && res.data) {

@@ -2,7 +2,7 @@
   <div class="topnavbar">
     <div class="logo-container">
       <div class="logo-wrapper" @click="toHome"><div class="logo-img"></div></div>
-      <el-dropdown v-if="roles.indexOf('1')<0" trigger="click" class="drop-menu">
+      <el-dropdown v-if="roles.indexOf('1')<0 && dataList.length>0" trigger="click" class="drop-menu">
         <span class="el-dropdown-link">
           {{showName ? showName : '选择桥梁'}}<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
