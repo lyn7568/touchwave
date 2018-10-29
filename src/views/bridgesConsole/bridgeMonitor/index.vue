@@ -158,6 +158,11 @@ export default {
       }
       if (arr === null || arr.length === 0) {
         that.progressShow = false
+        that.$alert('该桥梁尚未配置设备', '提示', {
+          type: 'warning',
+          center: true,
+          callback: action => {}
+        })
         return
       }
       getMonitorByDay({ seq: arr, begin: sDate, end: eDate }, flag).then(res => {
